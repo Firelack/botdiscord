@@ -77,7 +77,7 @@ function start() {
 
     // Informations sur le bot et les développeurs
     if (message.content.toLowerCase() === "!botinfo") {
-      message.reply("Ce bot Discord a été développé par [Firelack](https://github.com/Firelack) et [Alfakynz](https://github.com/Alfakynz) (Valtintin) pour le clan Werewolf Online*, si vous avez des suggestions, n'hésitez pas à nous en faire part.\n\n!helpme pour avoir les commandes disponibles.");
+      message.reply("Ce bot Discord a été développé par [Firelack](https://github.com/Firelack) et [Alfakynz](https://github.com/Alfakynz) (Valtintin) pour le clan Werewolf Online*, si vous avez des suggestions, n'hésitez pas à nous en faire part.\n\n!helpme pour avoir les commandes disponibles.\n\nIl permet de récuperer des informations du jeu et de faire quelque chose indisponible en jeu, récupérer un code pour copier un avatar !\n\nLien du code sur GitHub : [lien](https://github.com/Firelack/botdiscord)\n\nLien pour inviter le bot sur votre serveur : [lien](https://discord.com/oauth2/authorize?client_id=1165928098219433995&permissions=0&integration_type=0&scope=bot+applications.commands)");
     }
 
     // Avoir le chapeau api
@@ -148,7 +148,7 @@ function start() {
             message.reply(`**__Avatar demandé:__** [Avatar](${avatarUrl})\n**__Avatar id:__** ${resp}`);
           })
           .catch(error => {
-            message.reply("Une erreur s'est produite lors de la requête.");
+            message.reply("Une erreur s'est produite lors de la requête, vérifier les informations fournies.");
             console.error(error);
           });
       } else {
@@ -177,7 +177,7 @@ function start() {
           message.reply(`**__Id du skin:__** ${selectedInfo.id}:\n**__Avatar correspondant:__** [lien](${newurl})`);
         })
         .catch(error => {
-          message.reply("Une erreur s'est produite lors de la requête.");
+          message.reply("Une erreur s'est produite lors de la requête, vérifier les informations fournies.");
           console.error(error);
         });
     }
@@ -318,7 +318,7 @@ function start() {
         })
         .catch(error => {
           console.error("Error making the request:", error);
-          message.reply("An error occurred while making the request.");
+          message.reply("Une erreur s'est produite lors de la requête.");
         });
     }
 
@@ -668,7 +668,7 @@ function start() {
           message.reply(`**__Date de lancement de l'étape actuelle :__** ${day}/${month}/${year} à ${time}h\n**__Participants:__**\n${participants.map(p => `- ${p.username}: ${p.xp} XP`).join('\n')}\n\n**__Image quête actuelle:__** [lien](${newurl})`);
         })
         .catch(error => {
-          message.reply("Une erreur s'est produite lors de la requête.");
+          message.reply("Une erreur s'est produite lors de la requête, peut être qu'aucune quête n'est en cours.");
           console.error(error);
         });
     }

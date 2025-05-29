@@ -20,6 +20,7 @@ Un bot Discord développé pour améliorer l'expérience des joueurs sur **Wolve
 ## 🧠 Commandes disponibles
 
 Utilisez la commande `!helpme` dans Discord pour afficher la liste complète et mise à jour des commandes.
+
 ## 📌 Remarques
 
 - Les noms de rôles sont en anglais avec des tirets `-` à la place des espaces.
@@ -30,6 +31,7 @@ Utilisez la commande `!helpme` dans Discord pour afficher la liste complète et 
 ## 👨‍💻 Développeurs
 
 Ce projet a été développer par :
+
 - [Firelack](https://github.com/Firelack)
 - [Alfakynz](https://github.com/Alfakynz)
 
@@ -49,16 +51,16 @@ Les contributions, idées ou retours sont les bienvenus !
 4. Installez les dépendances :
    ```bash
    npm install
-   npm install dotenv
-   npm install discord.js
-   npm install axios
+   ```
 5. Créer un fichier .env et mettez :
-    - APIKEY=votrecléapi
-    - BOT_KEY=clédubot
 
-    La clé du bot est la clé de votre propre bot qu'il faut créer sur Discord Developper
-6. Lancer le bot avec node bot.js
-7. Pour changer le clan par defaut :\
-    Modifier ligne 23 l'id du clan \
-    Pour obtenir l'id de votre clan faites idcla{nom_du_clan} \
-    ⚠️ Vous devez ajouter votre API à la liste des bots d'un clan pour avoir les informations du clan
+   - APIKEY=votrecléapi
+   - BOT_KEY=clédubot
+   - CLAN_ID=idduclan
+
+   La clé du bot est la clé de votre propre bot qu'il faut créer sur Discord Developper
+
+6. Lancer le bot avec `node bot.js`
+7. Pour l'id d'un clan :\
+    Faire idcla{nom_du_clan} \
+   ⚠️ Vous devez ajouter votre API à la liste des bots d'un clan pour avoir les informations du clan

@@ -11,6 +11,7 @@ function start() {
 
   const accessToken = process.env['APIKEY'];
   const botKey = process.env['BOT_KEY'];
+  const clanId = process.env['CLAN_ID'];
 
   const client = new Client({
     intents: [
@@ -20,14 +21,11 @@ function start() {
     ]
   });
 
-
-  const clanId = "28f85d51-37b1-4fc6-a938-47656353363c"
   const headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     'Authorization': `Bot ${accessToken}` // Headers de l'api
   }
-
 
   client.on("ready", () => {
     console.log("Bot opérationnel");

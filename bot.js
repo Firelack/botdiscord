@@ -1,6 +1,7 @@
 //A installer : dotenv, discord.js, axios
 // Pour lancer le bot : node bot.js
 require('dotenv').config();
+const keepAlive = require('./keep_alive');
 
 function start() {
 
@@ -817,5 +818,5 @@ function start() {
   });
 }
 
-
+keepAlive();
 start()

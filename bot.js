@@ -1,10 +1,14 @@
+//A installer : dotenv, discord.js, axios
+// Pour lancer le bot : node bot.js
+require('dotenv').config();
+
 function start() {
 
   const { Client, GatewayIntentBits } = require("discord.js");
   const axios = require('axios');
   //const { ReadableStream } = ('web-streams-polyfill');  
 
-  const accessToken = process.env['APIFIRE'];
+  const accessToken = process.env['APIKEY'];
   const botKey = process.env['BOT_KEY'];
 
   const client = new Client({
@@ -30,7 +34,7 @@ function start() {
   client.login(`Bot ${botKey}`); // Code du bot discord
   client.on("messageCreate", message => {
     //console.log(message); // ne mettre que si on veut tout les details du messages c'est plus lisible sans
-    console.log(`Message de ${message.author.tag}: "${message.content}"`);
+    //console.log(`Message de ${message.author.tag}: "${message.content}"`);
     // Désactive le bot si Firelack le demande
     if (message.content === "!desactiver" && message.author.tag === "firelack") {
       console.log('Désactivation du bot.');
@@ -69,7 +73,12 @@ function start() {
 
     // Liste des commandes avec !helpme
     if (message.content.toLowerCase() === "!helpme") {
-      message.reply("# Commandes disponibles :\n\n**__Informations d'un joueur:__**\n- Profil:{nom du joueur}\n- Actualavatar:{nom du joueur}\n- Avatar:{nom du joueur}\n- Avatar:{nom du joueur} {slot}\n- Cartes:{nom du joueur}\n- Stats:{nom du joueur}\n\n**__Infomations sur un clan:__**\n- Clan:{nom du clan}\n- Membersclan:{nom du clan}\n\n**__Informations sur un rôle:__**\n- Role:{nom du role}\n- Advanced:{nom du role}\n\n**__Avatars code:__**\n- Idavatar:{id de l'avatar}\n- Searchid:{nom du joueur} {numéro de slot}\n\n**__Informations du clan WerewoIf OnIine*:__**\n- Actualquest\n- Quest\n- Annonce\n\n**__Offres actives du shop:__**\n- Offres\n\n**__Challenges actif du battlepass:__**\n- Battlepass\n\n**__Rôles en jeu:__ (rapide, sérieuse, sandbox, silver et gold)**\n- Rolerotations:{mode de jeu}\n\n**__Spécial:__** Si vous posséder un bot sur wov et que vous voulez le chapeau de l'API (veuillez réinitialiser votre clé API après cette commande pour plus de sécurité)\n- Apichapeau:{votre clé api}\n\n**__PS:__** Les noms des rôles sont en anglais et avec - à la place des espaces, les pseudos ou noms de clan sont à écrire correctement\n\n|| **__PS bis:__** Il y a des réponses du bot lorsque vous dites certaines choses, à vous de découvrir les easters eggs ||");
+      message.reply("# Commandes disponibles :\n\n**__Informations d'un joueur:__**\n- Profil:{nom du joueur}\n- Actualavatar:{nom du joueur}\n- Avatar:{nom du joueur}\n- Avatar:{nom du joueur} {slot}\n- Cartes:{nom du joueur}\n- Stats:{nom du joueur}\n\n**__Infomations sur un clan:__**\n- Clan:{nom du clan}\n- Membersclan:{nom du clan}\n\n**__Informations sur un rôle:__**\n- Role:{nom du role}\n- Advanced:{nom du role}\n\n**__Avatars code:__**\n- Idavatar:{id de l'avatar}\n- Searchid:{nom du joueur} {numéro de slot}\n\n**__Informations du clan WerewoIf OnIine*:__**\n- Actualquest\n- Quest\n- Annonce\n\n**__Offres actives du shop:__**\n- Offres\n\n**__Challenges actif du battlepass:__**\n- Battlepass\n\n**__Rôles en jeu:__ (rapide, sérieuse, sandbox, silver et gold)**\n- Rolerotations:{mode de jeu}\n\n**__Spécial:__** Si vous posséder un bot sur wov et que vous voulez le chapeau de l'API (veuillez réinitialiser votre clé API après cette commande pour plus de sécurité)\n- Apichapeau:{votre clé api}\n\n**__PS:__** Les noms des rôles sont en anglais et avec - à la place des espaces, les pseudos ou noms de clan sont à écrire correctement\n\n|| **__PS bis:__** Il y a des réponses du bot lorsque vous dites certaines choses, à vous de découvrir les easters eggs ||\n\nCe bot Discord a été développé par Firelack et Alfakynz (Valtintin) pour plus d'info : !botinfo");
+    }
+
+    // Informations sur le bot et les développeurs
+    if (message.content.toLowerCase() === "!botinfo") {
+      message.reply("Ce bot Discord a été développé par [Firelack](https://github.com/Firelack) et [Alfakynz](https://github.com/Alfakynz) (Valtintin) pour le clan Werewolf Online*, si vous avez des suggestions, n'hésitez pas à nous en faire part.\n\n!helpme pour avoir les commandes disponibles.");
     }
 
     // Avoir le chapeau api
@@ -124,13 +133,13 @@ function start() {
             const selectedInfo = {
               "id": responseData.id,
               "username": responseData.username,
-              "avatar": responseData.avatars[slotNumber].url
+              "avatar": responseData.avatars[slotNumber-1].url
             };
             const nouvelleExtension = "@3x.png";
             avatarUrl = selectedInfo.avatar.replace(".png", nouvelleExtension);
 
             // Retourner la promesse de la deuxième requête Axios
-            return axios.get(`https://api.wolvesville.com/avatars/sharedAvatarId/${responseData.id}/${slotNumber}`, {
+            return axios.get(`https://api.wolvesville.com/avatars/sharedAvatarId/${responseData.id}/${slotNumber-1}`, {
               headers: headers
             });
           })
@@ -510,6 +519,26 @@ function start() {
         });
     };
 
+    // Récupérer l'id d'un clan
+    if (message.content.toLowerCase().startsWith("idclan:")) {
+      const clanName = message.content.substring(7).trim();
+
+      axios.get(`https://api.wolvesville.com/clans/search?name=${clanName}`, {
+        headers: headers
+      })
+        .then(response => {
+          const responseData = response.data[0];
+          const selectedInfo = {
+            "id": responseData.id,
+          };
+          message.reply(`# Id du clan ${clanName} : ${selectedInfo.id}`);
+        })
+        .catch(error => {
+          message.reply("Une erreur s'est produite lors de la requête.");
+          console.error(error);
+        });
+    };
+
     // Membres d'un clan
     if (message.content.toLowerCase().startsWith("membersclan:")) {
       const clanName = message.content.substring(12).trim();
@@ -637,7 +666,7 @@ function start() {
           // Tri des participants par XP dans l'ordre décroissant
           participants.sort((a, b) => b.xp - a.xp);
 
-          message.reply(`**__Date de lancement:__** ${day}/${month}/${year} à ${time}h\n**__Participants:__**\n${participants.map(p => `- ${p.username}: ${p.xp} XP`).join('\n')}\n\n**__Image quête actuelle:__** [lien](${newurl})`);
+          message.reply(`**__Date de lancement de l'étape actuelle :__** ${day}/${month}/${year} à ${time}h\n**__Participants:__**\n${participants.map(p => `- ${p.username}: ${p.xp} XP`).join('\n')}\n\n**__Image quête actuelle:__** [lien](${newurl})`);
         })
         .catch(error => {
           message.reply("Une erreur s'est produite lors de la requête.");
@@ -789,3 +818,4 @@ function start() {
 }
 
 
+start()

@@ -49,7 +49,7 @@ Les contributions, idées ou retours sont les bienvenus !
 1. Créez un bot sur le [portail Discord Developer](https://discord.com/developers/applications)
 2. Installez [Node.js](https://nodejs.org/)
 3. Téléchargez les fichiers `bot.js`, `package.json` et `keep_alive.js`  \
-(`keep_alive.js` est utile si vous comptez héberger le bot, si vous n'en voulez pas, supprimez les lignes 819 puis 4 de `bot.js`)  
+(`keep_alive.js` est utile si vous comptez héberger le bot, si vous n'en voulez pas, supprimez les lignes 4 et l'avant dernière de `bot.js`)  
 4. Installez les dépendances :
    ```bash
    npm install

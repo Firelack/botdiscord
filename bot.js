@@ -38,6 +38,7 @@ function start() {
 
   const discordEmojiRegex = /<a?:\w+:\d+>/g;
 
+  // Vérification des conditions pour envoyer le message à Wolvesville
   const canSendToWolvesville =
     !message.author.bot &&                     // Pas un bot
     !discordEmojiRegex.test(message.content) && // Pas d’emoji Discord custom
@@ -45,7 +46,8 @@ function start() {
     message.attachments.size === 0 &&           // Pas de fichiers joints
     message.stickers.size === 0 &&              // Pas de stickers
     message.embeds.length === 0;                 // Pas d’embed
-
+  
+  //envoi du message à Wolvesville si toutes les conditions sont remplies
   if (canSendToWolvesville) {
     const displayName = message.member?.displayName || message.author.username;
 
@@ -66,7 +68,7 @@ function start() {
     }
   }
 
-
+if (message.channel.id !== salonId) {
     // Désactive le bot si Firelack le demande
     if (message.content === "!desactiver" && message.author.tag === "firelack") {
       console.log('Désactivation du bot.');
@@ -93,7 +95,7 @@ function start() {
     if (message.content.toLowerCase().includes("je t'aime") || message.content.toLowerCase().includes("je t aime")) {
       message.reply("Moi aussi 💘");
     }
-    if (message.content.toLowerCase().includes(" ah ") || message.content.toLowerCase().startsWith("ah ") || message.content.toLowerCase().endsWith(" ah")) {
+    if (message.content.toLowerCase().includes(" ah ") || message.content.toLowerCase().startsWith("ah ") || message.content.toLowerCase().endsWith(" ah") || message.content.toLowerCase() === "ah") {
       message.reply("BH (je suis trop drôle rigole 🔫)");
     }
     if (message.content.toLowerCase().includes(";-;")) {
@@ -861,6 +863,7 @@ function start() {
           });
       }
     }
+  }
   });
 }
 

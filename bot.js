@@ -36,16 +36,17 @@ function start() {
     //console.log(message); // ne mettre que si on veut tout les details du messages c'est plus lisible sans
     //console.log(`Message de ${message.author.tag}: "${message.content}"`);
 
-    // Ne rien faire si le message vient du bot ou si ce n'est pas dans le bon salon
-    if (message.author.bot || message.channel.id !== salonId) return;
+  const discordEmojiRegex = /<a?:\w+:\d+>/g;
 
-    // Bloquer si message a des pièces jointes, stickers, embeds
-    if (message.attachments.size > 0 || message.stickers.size > 0 || message.embeds.length > 0) return;
+  const canSendToWolvesville =
+    !message.author.bot &&                     // Pas un bot
+    !discordEmojiRegex.test(message.content) && // Pas d’emoji Discord custom
+    message.channel.id === salonId &&           // Dans le bon salon
+    message.attachments.size === 0 &&           // Pas de fichiers joints
+    message.stickers.size === 0 &&              // Pas de stickers
+    message.embeds.length === 0;                 // Pas d’embed
 
-    // Bloquer si message contient emoji Discord custom
-    const discordEmojiRegex = /<a?:\w+:\d+>/g;
-    if (discordEmojiRegex.test(message.content)) return;
-
+  if (canSendToWolvesville) {
     const displayName = message.member?.displayName || message.author.username;
 
     try {
@@ -63,6 +64,8 @@ function start() {
     } catch (error) {
       console.error("Erreur lors de l'envoi du message à Wolvesville :", error.message);
     }
+  }
+
 
     // Désactive le bot si Firelack le demande
     if (message.content === "!desactiver" && message.author.tag === "firelack") {
@@ -90,7 +93,7 @@ function start() {
     if (message.content.toLowerCase().includes("je t'aime") || message.content.toLowerCase().includes("je t aime")) {
       message.reply("Moi aussi 💘");
     }
-    if (message.content.toLowerCase().includes("ah")) {
+    if (message.content.toLowerCase().includes(" ah ") || message.content.toLowerCase().startsWith("ah ") || message.content.toLowerCase().endsWith(" ah")) {
       message.reply("BH (je suis trop drôle rigole 🔫)");
     }
     if (message.content.toLowerCase().includes(";-;")) {
@@ -101,6 +104,18 @@ function start() {
     }
     if (message.content.toLowerCase().includes("!test")) {
       message.reply("Je suis sûre t'as raté");
+    }
+    if (message.content.toLowerCase().includes("prison")) {
+      message.reply("L'endroit préféré de Valtintin");
+    }
+    if (message.content.toLowerCase().includes("staline")) {
+      message.reply("Notre cheffe");
+    }
+    if (message.content.toLowerCase().includes("révolution")) {
+      message.reply("REVOLUTION !");
+    }
+    if (message.content.toLowerCase().includes("menotte")) {
+      message.reply("Surtout avec de la fourrure 👀");
     }
 
     // Liste des commandes avec !helpme

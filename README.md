@@ -68,3 +68,4 @@ Les contributions, idées ou retours sont les bienvenus !
 7. Pour l'id d'un clan :\
     Faire idclan{nom_du_clan} \
    ⚠️ Vous devez ajouter votre API à la liste des bots d'un clan pour avoir les informations du clan
+8. Conseil : modifier les réponses du bot après "// Plein de truc fun" par des choses de votre clan.

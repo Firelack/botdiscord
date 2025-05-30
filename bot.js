@@ -27,7 +27,7 @@ function start() {
 
     // Création de la fonction checkClanChat avec les bons paramètres
     const checkClanChat = createCheckClanChat(client, clanId, salonId, accessToken);
-    setInterval(checkClanChat, 10000);
+    setInterval(checkClanChat, 5000);
   });
 
   client.login(`Bot ${botKey}`); // Code du bot discord

@@ -1,17 +1,9 @@
 const axios = require("axios");
-const fs = require("fs");
-const path = require("path");
 
 module.exports = function createCheckClanChat(client, clanId, salonId, accessToken) {
-  const filePath = path.join(__dirname, "lastSeen.json");
-  const playerNameCache = {}; // ✅ Cache pour éviter de surcharger l’API
-
-  // Charger la dernière date depuis le fichier
+  const playerNameCache = {};
   let lastSeenDate = null;
-  if (fs.existsSync(filePath)) {
-    const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
-    lastSeenDate = data.lastSeenDate ? new Date(data.lastSeenDate) : null;
-  }
+  let initialized = false;
 
   const headers = {
     'Content-Type': 'application/json',
@@ -21,13 +13,22 @@ module.exports = function createCheckClanChat(client, clanId, salonId, accessTok
 
   return async function checkClanChat() {
     try {
-      const response = await axios.get(`https://api.wolvesville.com/clans/${clanId}/chat`, {
-        headers: headers
-      });
+      const response = await axios.get(`https://api.wolvesville.com/clans/${clanId}/chat`, { headers });
 
       const messages = response.data;
+      if (!messages.length) return;
+
       const channel = await client.channels.fetch(salonId);
       const sortedMessages = messages.reverse();
+
+      // Première exécution : on initialise lastSeenDate à la date du dernier message moins 1 seconde
+      if (!initialized) {
+        const lastMsgDate = new Date(sortedMessages[sortedMessages.length - 1].date);
+        lastSeenDate = new Date(lastMsgDate.getTime() - 1000); // -1 sec
+        initialized = true;
+        console.log(`Initialisation lastSeenDate à ${lastSeenDate.toISOString()} (1 sec avant dernier message)`);
+      }
+
       let newLastSeen = lastSeenDate;
 
       for (const msg of sortedMessages) {
@@ -35,36 +36,31 @@ module.exports = function createCheckClanChat(client, clanId, salonId, accessTok
         if (msg.playerBotOwnerUsername === "BOT(Firelack)") continue;
 
         const msgDate = new Date(msg.date);
-        if (!lastSeenDate || msgDate > lastSeenDate) {
-          const playerId = msg.playerId;
+        if (msgDate <= lastSeenDate) continue;
 
-          // 🔍 Récupération du pseudo via le cache ou l’API
-          let username = "Inconnu";
-          if (playerNameCache[playerId]) {
-            username = playerNameCache[playerId];
-          } else {
-            try {
-              const playerResponse = await axios.get(`https://api.wolvesville.com/players/${playerId}`, {
-                headers: headers
-              });
-              username = playerResponse.data.username;
-              playerNameCache[playerId] = username;
-            } catch (e) {
-              console.error(`Erreur lors de la récupération du joueur ${playerId}:`, e.message);
-            }
+        const playerId = msg.playerId;
+
+        let username = playerNameCache[playerId];
+        if (!username) {
+          try {
+            const playerResponse = await axios.get(`https://api.wolvesville.com/players/${playerId}`, { headers });
+            username = playerResponse.data.username;
+            playerNameCache[playerId] = username;
+          } catch (e) {
+            console.error(`Erreur lors de la récupération du joueur ${playerId}:`, e.message);
+            username = "Inconnu";
           }
+        }
 
-          await channel.send(`${username}: ${msg.msg}`);
+        await channel.send(`${username}: ${msg.msg}`);
 
-          if (!newLastSeen || msgDate > newLastSeen) {
-            newLastSeen = msgDate;
-          }
+        if (msgDate > newLastSeen) {
+          newLastSeen = msgDate;
         }
       }
 
-      if (newLastSeen && (!lastSeenDate || newLastSeen > lastSeenDate)) {
+      if (newLastSeen > lastSeenDate) {
         lastSeenDate = newLastSeen;
-        fs.writeFileSync(filePath, JSON.stringify({ lastSeenDate: lastSeenDate.toISOString() }, null, 2));
       }
 
     } catch (error) {

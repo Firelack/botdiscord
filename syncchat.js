@@ -27,7 +27,7 @@ module.exports = function createCheckClanChat(client, clanId, salonId, accessTok
 
       const messages = response.data;
       const channel = await client.channels.fetch(salonId);
-      const sortedMessages = messages.slice(-10).reverse();
+      const sortedMessages = messages.reverse();
       let newLastSeen = lastSeenDate;
 
       for (const msg of sortedMessages) {

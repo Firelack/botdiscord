@@ -2,16 +2,17 @@
 // Pour lancer le bot : node bot.js
 require('dotenv').config();
 const keepAlive = require('./keep_alive');
+const createCheckClanChat = require('./syncchat'); // fonction génératrice
+const axios = require('axios');
 
 function start() {
 
   const { Client, GatewayIntentBits } = require("discord.js");
-  const axios = require('axios');
-  //const { ReadableStream } = ('web-streams-polyfill');  
 
   const accessToken = process.env['APIKEY'];
   const botKey = process.env['BOT_KEY'];
   const clanId = process.env['CLAN_ID'];
+  const salonId = process.env['SALON_ID'];
 
   const client = new Client({
     intents: [
@@ -21,19 +22,39 @@ function start() {
     ]
   });
 
-  const headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Authorization': `Bot ${accessToken}` // Headers de l'api
-  }
-
   client.on("ready", () => {
     console.log("Bot opérationnel");
+
+    // Création de la fonction checkClanChat avec les bons paramètres
+    const checkClanChat = createCheckClanChat(client, clanId, salonId, accessToken);
+    setInterval(checkClanChat, 10000);
   });
+
   client.login(`Bot ${botKey}`); // Code du bot discord
-  client.on("messageCreate", message => {
+
+  client.on("messageCreate", async (message) => {
     //console.log(message); // ne mettre que si on veut tout les details du messages c'est plus lisible sans
     //console.log(`Message de ${message.author.tag}: "${message.content}"`);
+
+    // Ne rien faire si le message vient du bot ou si ce n'est pas dans le bon salon
+    if (message.author.bot || message.channel.id !== salonId) return;
+    const displayName = message.member?.displayName || message.author.username;
+    try {
+      await axios.post(
+        `https://api.wolvesville.com/clans/${clanId}/chat`,
+        { message : `${displayName} : ${message.content}` },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bot ${accessToken}`
+          }
+        }
+      );
+    } catch (error) {
+      console.error("Erreur lors de l'envoi du message à Wolvesville :", error.message);
+    }
+
     // Désactive le bot si Firelack le demande
     if (message.content === "!desactiver" && message.author.tag === "firelack") {
       console.log('Désactivation du bot.');
@@ -68,6 +89,9 @@ function start() {
     }
     if (message.content.toLowerCase().includes("mouton") || message.content.toLowerCase().includes("🐑") || message.content.toLowerCase().includes("sheep")) {
       message.reply("Si il est sur une roue faites le cramer");
+    }
+    if (message.content.toLowerCase().includes("!test")) {
+      message.reply("Je suis sûre t'as raté");
     }
 
     // Liste des commandes avec !helpme

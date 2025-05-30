@@ -38,11 +38,20 @@ function start() {
 
     // Ne rien faire si le message vient du bot ou si ce n'est pas dans le bon salon
     if (message.author.bot || message.channel.id !== salonId) return;
+
+    // Bloquer si message a des pièces jointes, stickers, embeds
+    if (message.attachments.size > 0 || message.stickers.size > 0 || message.embeds.length > 0) return;
+
+    // Bloquer si message contient emoji Discord custom
+    const discordEmojiRegex = /<a?:\w+:\d+>/g;
+    if (discordEmojiRegex.test(message.content)) return;
+
     const displayName = message.member?.displayName || message.author.username;
+
     try {
       await axios.post(
         `https://api.wolvesville.com/clans/${clanId}/chat`,
-        { message : `${displayName} : ${message.content}` },
+        { message: `${displayName} : ${message.content}` },
         {
           headers: {
             'Content-Type': 'application/json',

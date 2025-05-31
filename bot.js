@@ -5,8 +5,8 @@ const axios = require('axios');
 // Import des fonctions pour les commandes
 const { avatarPlayer, actualAvatar, questAvailable, announcement, clanMembers, getClanId, getClanInfo,
   playerStats, playerCards, playerProfil, infoRole, getAdvancedRoles, activeShopOffers, battlepassChallenges,
-  roleRotations, idAvatar, searchAvatarId, getApiHat, botInfo, commandList, easterEggs, checkClanChat, sendToWolvesville,
-  handleDiscordMessage } = require('./API_function');
+  roleRotations, idAvatar, searchAvatarId, getApiHat, botInfo, commandList, easterEggs, checkClanChat,
+  handleDiscordMessage, scheduleMidnightTask, deleteOldMessages, resetDailyDeletedMessages } = require('./API_function');
 
 function start() {
   const { Client, GatewayIntentBits } = require("discord.js");
@@ -30,11 +30,20 @@ function start() {
     'Authorization': `Bot ${accessToken}`
   };
 
-  client.on("ready", () => {
+  client.on("ready", async () => {
     console.log("Bot opérationnel");
 
-    // Appel direct avec tous les paramètres
+    // Lancement de la boucle de check toutes les 5 secondes
     setInterval(() => checkClanChat(client, clanId, salonId, axios, headers), 5000);
+
+    // Récupération du salon Discord de façon asynchrone
+    const channel = await client.channels.fetch(salonId);
+
+    // Planification de la tâche de suppression à minuit
+    scheduleMidnightTask(async () => {
+      resetDailyDeletedMessages();
+      await deleteOldMessages(channel, 2 * 24 * 60 * 60 * 1000); // Supprimer les messages de plus de 2 jours
+    });
   });
 
   client.login(`Bot ${botKey}`);

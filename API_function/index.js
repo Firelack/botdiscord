@@ -22,5 +22,8 @@ module.exports = {
   easterEggs: require('./easterEggs'),
   checkClanChat: require('./syncchat').checkClanChat,
   sendToWolvesville: require('./syncchat').sendToWolvesville,
-  handleDiscordMessage: require('./syncchat').handleDiscordMessage
+  handleDiscordMessage: require('./syncchat').handleDiscordMessage,
+  deleteOldMessages: require('./deleteOldMessages').deleteOldMessages,
+  scheduleMidnightTask: require('./deleteOldMessages').scheduleMidnightTask,
+  resetDailyDeletedMessages: require('./deleteOldMessages').resetDailyDeletedMessages,
 };

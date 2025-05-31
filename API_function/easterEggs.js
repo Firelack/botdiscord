@@ -34,7 +34,7 @@ function easterEggs(message) {
       message.reply("J'adore les maths, surtout quand c'est pour faire des calculs de probabilité pour le jeu !");
     } else if (message.content.toLowerCase().includes("herbe")) {
       message.reply("C'est quoi ?");
-    } else if (message.content.toLowerCase().includes("informatique") || message.content.toLowerCase().includes("info")) {
+    } else if (message.content.toLowerCase().includes("informatique")) {
       message.reply("J'en dors plus...");
     }
     if (message.content.toLowerCase().includes("!test")) {
@@ -46,6 +46,12 @@ function easterEggs(message) {
       message.reply("La super dev de ce bot !");
     } else if (message.content.toLowerCase().includes("valtintin") || message.content.toLowerCase().includes("alfakynz")) {
       message.reply("Le super dev de ce bot !");
+    } else if (message.content.toLowerCase().includes("lalouve") || message.content.toLowerCase().includes("louve")) {
+      message.reply("Le meilleur des devs !");
+    } else if (message.content.toLowerCase().includes("platy") || message.content.toLowerCase().includes("platypus")) {
+      message.reply("Le révolutionnaire");
+    } else if (message.content.toLowerCase().includes("soline")) {
+      message.reply("Elle peut pas répondre elle dors.");
     }
 }
 module.exports = easterEggs;

@@ -42,7 +42,7 @@ Les contributions, idées ou retours sont les bienvenus !
 
 ### ➕ Ajouter le bot à votre serveur
 
-👉 [Lien d’invitation du bot](https://discord.com/oauth2/authorize?client_id=1165928098219433995)
+👉 [Lien d’invitation du bot](https://discord.com/oauth2/authorize?client_id=1165928098219433995&permissions=141312&integration_type=0&scope=bot)
 
 ### 🛠 Modifier le bot (ex. pour votre propre clan)
 
@@ -70,4 +70,5 @@ Les contributions, idées ou retours sont les bienvenus !
    ⚠️ Vous devez ajouter votre API à la liste des bots d'un clan pour avoir les informations du clan
 8. Conseil : modifier les réponses du bot dans `API_function/easterEggs.js` avec ce que vous voulez ! \
 Si vous ne comptez pas heberger le bot, l'avant dernière ligne n'est pas utile. \
-De même si vous ne voulez pas du chat lié, enlever les lignes 43, puis 37/38.
+De même si vous ne voulez pas du chat lié, enlever les lignes 52, puis 36/46. \
+Si vous garder le chat du clan, le bot doit avoir la permission de gérer les messages (il supprime les anciens), et dans tout les cas, il doit pouvoir envoyer des messages, et tag des gens !

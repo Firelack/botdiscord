@@ -1,3 +1,5 @@
+const actualquest = require('./actualquest');
+
 module.exports = {
   avatarPlayer: require('./avatarplayer'),
   actualAvatar: require('./actualavatar'),
@@ -26,4 +28,6 @@ module.exports = {
   deleteOldMessages: require('./deleteOldMessages').deleteOldMessages,
   scheduleMidnightTask: require('./deleteOldMessages').scheduleMidnightTask,
   resetDailyDeletedMessages: require('./deleteOldMessages').resetDailyDeletedMessages,
+  actualquest: require('./actualquest'),
+  checkQuestStatus: require('./questChannel'),
 };

@@ -1,4 +1,4 @@
-# 🤖 Bot Wolvesville
+# 🤖 Unofficial Wolvesville Bot
 
 Un bot Discord développé pour améliorer l'expérience des joueurs sur **Wolvesville**. Il permet d'obtenir des informations détaillées sur les joueurs, les clans, les rôles, les rotations et plus encore, directement depuis Discord. Il permet également de lié un salon discord au message du jeu.
 
@@ -59,10 +59,12 @@ Les contributions, idées ou retours sont les bienvenus !
    - APIKEY=votrecléapi
    - BOT_KEY=clédubot
    - CLAN_ID=idduclan
-   - SALON_ID=iddiscord
+   - CHAT_CHANNEL_ID=iddiscord
+   - QUEST_CHANNEL_ID=iddiscord2
 
    La clé du bot est la clé de votre propre bot qu'il faut créer sur Discord Developper
-   L'id discord est l'id du salon ou vous voulez que les messages soient liés.
+   L'id discord est l'id du salon ou vous voulez que les messages de wov et de discord soient liés.
+   L'id discord 2 est l'id du salon ou vous voulez être informés de l'anvancé des quêtes.
 
 6. Lancer le bot avec `node bot.js`
 7. Pour l'id d'un clan :\
@@ -70,5 +72,4 @@ Les contributions, idées ou retours sont les bienvenus !
    ⚠️ Vous devez ajouter votre API à la liste des bots d'un clan pour avoir les informations du clan
 8. Conseil : modifier les réponses du bot dans `API_function/easterEggs.js` avec ce que vous voulez ! \
 Si vous ne comptez pas heberger le bot, l'avant dernière ligne n'est pas utile. \
-De même si vous ne voulez pas du chat lié, enlever les lignes 52, puis 36/46. \
-Si vous garder le chat du clan, le bot doit avoir la permission de gérer les messages (il supprime les anciens), et dans tout les cas, il doit pouvoir envoyer des messages, et tag des gens !
+Si vous ne voulez pas du chat lié, et de la fonction qui donne l'avancée des quêtes supprimez les lignes 37 à 50 puis les lignes 19 et 18

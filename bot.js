@@ -6,7 +6,8 @@ const axios = require('axios');
 const { avatarPlayer, actualAvatar, questAvailable, announcement, clanMembers, getClanId, getClanInfo,
   playerStats, playerCards, playerProfil, infoRole, getAdvancedRoles, activeShopOffers, battlepassChallenges,
   roleRotations, idAvatar, searchAvatarId, getApiHat, botInfo, commandList, easterEggs, checkClanChat,
-  handleDiscordMessage, scheduleMidnightTask, deleteOldMessages, resetDailyDeletedMessages } = require('./API_function');
+  handleDiscordMessage, scheduleMidnightTask, deleteOldMessages, resetDailyDeletedMessages, actualquest,
+  checkQuestStatus } = require('./API_function');
 
 function start() {
   const { Client, GatewayIntentBits } = require("discord.js");
@@ -14,7 +15,8 @@ function start() {
   const accessToken = process.env['APIKEY'];
   const botKey = process.env['BOT_KEY'];
   const clanId = process.env['CLAN_ID'];
-  const salonId = process.env['SALON_ID'];
+  const chatChannelId = process.env['CHAT_CHANNEL_ID'];
+  const questChannelId = process.env['QUEST_CHANNEL_ID'];
 
   const client = new Client({
     intents: [
@@ -34,24 +36,26 @@ function start() {
     console.log("Bot opérationnel");
 
     // Lancement de la boucle de check toutes les 5 secondes
-    setInterval(() => checkClanChat(client, clanId, salonId, axios, headers), 5000);
+    //setInterval(() => checkClanChat(client, clanId, chatChannelId, axios, headers), 10000);
+    setInterval(() => checkQuestStatus(client, clanId, questChannelId, axios, headers), 600000); // Toutes les 10 minutes
+
 
     // Récupération du salon Discord de façon asynchrone
-    const channel = await client.channels.fetch(salonId);
+    const channel = await client.channels.fetch(chatChannelId);
 
     // Planification de la tâche de suppression à minuit
-    scheduleMidnightTask(async () => {
-      resetDailyDeletedMessages();
-      await deleteOldMessages(channel, 2 * 24 * 60 * 60 * 1000); // Supprimer les messages de plus de 2 jours
-    });
+    //scheduleMidnightTask(async () => {
+    //  resetDailyDeletedMessages();
+    //  await deleteOldMessages(channel, 2 * 24 * 60 * 60 * 1000); // Supprimer les messages de plus de 2 jours
+    //});
   });
 
   client.login(`Bot ${botKey}`);
 
   client.on("messageCreate", async (message) => {
-    await handleDiscordMessage(message, clanId, salonId, axios, headers);
+    await handleDiscordMessage(message, clanId, chatChannelId, axios, headers);
 
-    if (message.channel.id !== salonId) { // Ignore les message du salon lié au clan
+    if (message.channel.id !== chatChannelId) { // Ignore les message du salon lié au clan
 
       if (message.content === "!desactiver" && message.author.tag === "firelack") { // Désactivation du bot si Firelack le demande
         console.log('Désactivation du bot.');
@@ -63,6 +67,7 @@ function start() {
 
       commandList(message);
       botInfo(message);
+      actualquest(message, clanId, axios, headers);
       getApiHat(message, axios, headers);
       searchAvatarId(message, axios, headers);
       idAvatar(message, axios, headers);

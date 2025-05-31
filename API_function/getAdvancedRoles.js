@@ -1,0 +1,29 @@
+function getAdvancedRoles(message, axios, headers) {
+// Récupérer les rôles avancés
+    if (message.content.toLowerCase().startsWith("advanced:")) {
+      var requestedRole = message.content.substring(9).trim();
+      requestedRole = requestedRole.toLowerCase();
+
+      axios.get(`https://api.wolvesville.com/roles`, {
+        headers: headers
+      })
+        .then(response => {
+          const data = response.data;
+          if (data.advancedRolesMapping && data.advancedRolesMapping.hasOwnProperty(requestedRole)) {
+            const mapping = data.advancedRolesMapping[requestedRole];
+            const mappingEntries = Object.entries(mapping);
+
+            const formattedResponse = mappingEntries.map(([key, value], index) => `> - ${value}`).join('\n');
+
+            message.reply(`**__Mapping du rôle avancé "${requestedRole}":__**\n${formattedResponse}`);
+          } else {
+            message.reply(`Le rôle avancé de "${requestedRole}" n'a pas été trouvé.`);
+          }
+        })
+        .catch(error => {
+          message.reply("Une erreur s'est produite lors de la requête.");
+          console.error(error);
+        });
+    }
+}
+module.exports = getAdvancedRoles;

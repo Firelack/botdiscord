@@ -22,4 +22,5 @@ module.exports = {
   easterEggs: require('./easterEggs'),
   checkClanChat: require('./syncchat').checkClanChat,
   sendToWolvesville: require('./syncchat').sendToWolvesville,
+  handleDiscordMessage: require('./syncchat').handleDiscordMessage
 };

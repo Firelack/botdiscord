@@ -48,7 +48,7 @@ Les contributions, idées ou retours sont les bienvenus !
 
 1. Créez un bot sur le [portail Discord Developer](https://discord.com/developers/applications)
 2. Installez [Node.js](https://nodejs.org/)
-3. Téléchargez les fichiers `bot.js`, `package.json` et `keep_alive.js`  \
+3. Téléchargez les fichiers `bot.js`, `package.json`, `keep_alive.js` et le dossier `API_function`  \
 (`keep_alive.js` est utile si vous comptez héberger le bot, si vous n'en voulez pas, supprimez les lignes 4 et l'avant dernière de `bot.js`)  
 4. Installez les dépendances :
    ```bash
@@ -68,4 +68,6 @@ Les contributions, idées ou retours sont les bienvenus !
 7. Pour l'id d'un clan :\
     Faire idclan{nom_du_clan} \
    ⚠️ Vous devez ajouter votre API à la liste des bots d'un clan pour avoir les informations du clan
-8. Conseil : modifier les réponses du bot après "// Plein de truc fun" par des choses de votre clan.
+8. Conseil : modifier les réponses du bot dans `API_function/easterEggs.js` avec ce que vous voulez ! \
+Si vous ne comptez pas heberger le bot, l'avant dernière ligne n'est pas utile. \
+De même si vous ne voulez pas du chat lié, enlever les lignes 43, puis 37/38.

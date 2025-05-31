@@ -70,7 +70,28 @@ async function sendToWolvesville(authorName, content, clanId, axios, headers) {
   }
 }
 
+function shouldSendToWolvesville(message, salonId) {
+  const discordEmojiRegex = /<a?:\w+:\d+>/g;
+
+  return (
+    !message.author.bot &&
+    !discordEmojiRegex.test(message.content) &&
+    message.channel.id === salonId &&
+    message.attachments.size === 0 &&
+    message.stickers.size === 0 &&
+    message.embeds.length === 0
+  );
+}
+
+async function handleDiscordMessage(message, clanId, salonId, axios, headers) {
+  if (shouldSendToWolvesville(message, salonId)) {
+    const displayName = message.member?.displayName || message.author.username;
+    await sendToWolvesville(displayName, message.content, clanId, axios, headers);
+  }
+}
+
 module.exports = {
   checkClanChat,
-  sendToWolvesville
+  sendToWolvesville,
+  handleDiscordMessage
 };

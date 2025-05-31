@@ -5,7 +5,8 @@ const axios = require('axios');
 // Import des fonctions pour les commandes
 const { avatarPlayer, actualAvatar, questAvailable, announcement, clanMembers, getClanId, getClanInfo,
   playerStats, playerCards, playerProfil, infoRole, getAdvancedRoles, activeShopOffers, battlepassChallenges,
-  roleRotations, idAvatar, searchAvatarId, getApiHat, botInfo, commandList, easterEggs, checkClanChat, sendToWolvesville } = require('./API_function');
+  roleRotations, idAvatar, searchAvatarId, getApiHat, botInfo, commandList, easterEggs, checkClanChat, sendToWolvesville,
+  handleDiscordMessage } = require('./API_function');
 
 function start() {
   const { Client, GatewayIntentBits } = require("discord.js");
@@ -39,20 +40,7 @@ function start() {
   client.login(`Bot ${botKey}`);
 
   client.on("messageCreate", async (message) => {
-    const discordEmojiRegex = /<a?:\w+:\d+>/g;
-
-    const canSendToWolvesville =
-      !message.author.bot &&
-      !discordEmojiRegex.test(message.content) &&
-      message.channel.id === salonId &&
-      message.attachments.size === 0 &&
-      message.stickers.size === 0 &&
-      message.embeds.length === 0;
-
-    if (canSendToWolvesville) {
-      const displayName = message.member?.displayName || message.author.username;
-      await sendToWolvesville(displayName, message.content, clanId, axios, headers);
-    }
+    await handleDiscordMessage(message, clanId, salonId, axios, headers);
 
     if (message.channel.id !== salonId) { // Ignore les message du salon lié au clan
 
@@ -64,7 +52,6 @@ function start() {
 
       if (message.author.id === client.user.id) return; // Ignore les messages du bot lui-même
 
-      easterEggs(message);
       commandList(message);
       botInfo(message);
       getApiHat(message, axios, headers);
@@ -85,6 +72,7 @@ function start() {
       questAvailable(message, clanId, axios, headers);
       actualAvatar(message, axios, headers);
       avatarPlayer(message, axios, headers);
+      easterEggs(message, axios, headers);
     }
   });
 }

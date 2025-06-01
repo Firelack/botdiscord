@@ -7,7 +7,7 @@ const { avatarPlayer, actualAvatar, questAvailable, announcement, clanMembers, g
   playerStats, playerCards, playerProfil, infoRole, getAdvancedRoles, activeShopOffers, battlepassChallenges,
   roleRotations, idAvatar, searchAvatarId, getApiHat, botInfo, commandList, easterEggs, checkClanChat,
   handleDiscordMessage, scheduleMidnightTask, deleteOldMessages, resetDailyDeletedMessages, actualquest,
-  checkQuestStatus } = require('./API_function');
+  checkQuestStatus, activedesactiveParticipations } = require('./API_function');
 
 function start() {
   const { Client, GatewayIntentBits } = require("discord.js");
@@ -17,6 +17,7 @@ function start() {
   const clanId = process.env['CLAN_ID'];
   const chatChannelId = process.env['CHAT_CHANNEL_ID'];
   const questChannelId = process.env['QUEST_CHANNEL_ID'];
+  const participationChannelId = process.env['PARTICIPATION_CHANNEL_ID'];
 
   const client = new Client({
     intents: [
@@ -36,7 +37,7 @@ function start() {
     console.log("Bot opérationnel");
 
     // Lancement de la boucle de check toutes les 5 secondes
-    //setInterval(() => checkClanChat(client, clanId, chatChannelId, axios, headers), 10000);
+    setInterval(() => checkClanChat(client, clanId, chatChannelId, axios, headers), 20000);
     setInterval(() => checkQuestStatus(client, clanId, questChannelId, axios, headers), 600000); // Toutes les 10 minutes
 
 
@@ -44,10 +45,10 @@ function start() {
     const channel = await client.channels.fetch(chatChannelId);
 
     // Planification de la tâche de suppression à minuit
-    //scheduleMidnightTask(async () => {
-    //  resetDailyDeletedMessages();
-    //  await deleteOldMessages(channel, 2 * 24 * 60 * 60 * 1000); // Supprimer les messages de plus de 2 jours
-    //});
+    scheduleMidnightTask(async () => {
+      resetDailyDeletedMessages();
+      await deleteOldMessages(channel, 2 * 24 * 60 * 60 * 1000); // Supprimer les messages de plus de 2 jours
+    });
   });
 
   client.login(`Bot ${botKey}`);
@@ -64,6 +65,11 @@ function start() {
       }
 
       if (message.author.id === client.user.id) return; // Ignore les messages du bot lui-même
+
+      if (message.channel.id === participationChannelId) {
+      activedesactiveParticipations(message, clanId, participationChannelId, axios, headers);
+      return; // Sort de la fonction pour ne pas traiter les autres commandes
+    }
 
       commandList(message);
       botInfo(message);
@@ -86,7 +92,10 @@ function start() {
       questAvailable(message, clanId, axios, headers);
       actualAvatar(message, axios, headers);
       avatarPlayer(message, axios, headers);
-      easterEggs(message, axios, headers);
+
+      if (message.channel.id !== participationChannelId) {
+        easterEggs(message, axios, headers); 
+      }
     }
   });
 }

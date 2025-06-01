@@ -13,8 +13,7 @@ Un bot Discord développé pour améliorer l'expérience des joueurs sur **Wolve
 - 🎁 Commande spéciale pour récupérer un **chapeau API** si vous possédez un bot wov.
 - 📧 Liaison entre un salon discord et le chat du clan.
 - 🎉 Des easters eggs sont cachés dans certaines réponses du bot 😄
-
-⚠️ Ce bot n'effectue que des actions qui donnent des informations ou envoie des messages.
+- 📰 Un salon discord pour activer et desactiver la participation des membres d'un clan
 
 ---
 
@@ -49,7 +48,6 @@ Les contributions, idées ou retours sont les bienvenus !
 1. Créez un bot sur le [portail Discord Developer](https://discord.com/developers/applications)
 2. Installez [Node.js](https://nodejs.org/)
 3. Téléchargez les fichiers `bot.js`, `package.json`, `keep_alive.js` et le dossier `API_function`  \
-(`keep_alive.js` est utile si vous comptez héberger le bot, si vous n'en voulez pas, supprimez les lignes 4 et l'avant dernière de `bot.js`)  
 4. Installez les dépendances :
    ```bash
    npm install
@@ -61,10 +59,12 @@ Les contributions, idées ou retours sont les bienvenus !
    - CLAN_ID=idduclan
    - CHAT_CHANNEL_ID=iddiscord
    - QUEST_CHANNEL_ID=iddiscord2
+   - PARTICIPATION_CHANNEL_ID=discord3
 
    La clé du bot est la clé de votre propre bot qu'il faut créer sur Discord Developper
    L'id discord est l'id du salon ou vous voulez que les messages de wov et de discord soient liés.
    L'id discord 2 est l'id du salon ou vous voulez être informés de l'anvancé des quêtes.
+   L'id discord 3 est l'id du salon ou vous voulez pouvoir activer et desactiver la participation aux quêtes de chaques personnes.
 
 6. Lancer le bot avec `node bot.js`
 7. Pour l'id d'un clan :\
@@ -72,4 +72,4 @@ Les contributions, idées ou retours sont les bienvenus !
    ⚠️ Vous devez ajouter votre API à la liste des bots d'un clan pour avoir les informations du clan
 8. Conseil : modifier les réponses du bot dans `API_function/easterEggs.js` avec ce que vous voulez ! \
 Si vous ne comptez pas heberger le bot, l'avant dernière ligne n'est pas utile. \
-Si vous ne voulez pas du chat lié, et de la fonction qui donne l'avancée des quêtes supprimez les lignes 37 à 50 puis les lignes 19 et 18
+Si vous ne voulez pas du chat lié, et de la fonction qui donne l'avancée des quêtes, et de celle pour changer les participations,  supprimez les lignes 98, 96, 69-73, 39-51, 18-20.

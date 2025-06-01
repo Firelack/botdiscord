@@ -30,4 +30,5 @@ module.exports = {
   resetDailyDeletedMessages: require('./deleteOldMessages').resetDailyDeletedMessages,
   actualquest: require('./actualquest'),
   checkQuestStatus: require('./questChannel'),
+  activedesactiveParticipations: require('./activedesactiveParticipation'),
 };

@@ -52,6 +52,8 @@ function easterEggs(message) {
       message.reply("Le révolutionnaire");
     } else if (message.content.toLowerCase().includes("soline")) {
       message.reply("Elle peut pas répondre elle dors.");
+    } else if (message.content.toLowerCase().includes("lost") || message.content.toLowerCase().includes("lostinred")) {
+      message.reply("Aboule le FRIC 🔫");
     }
 }
 module.exports = easterEggs;

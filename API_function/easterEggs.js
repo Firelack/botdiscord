@@ -47,7 +47,7 @@ function easterEggs(message) {
     } else if (message.content.toLowerCase().includes("valtintin") || message.content.toLowerCase().includes("alfakynz")) {
       message.reply("Le super dev de ce bot !");
     } else if (message.content.toLowerCase().includes("lalouve") || message.content.toLowerCase().includes("louve")) {
-      message.reply("Le meilleur des devs !");
+      message.reply("Je sais pas by platypus");
     } else if (message.content.toLowerCase().includes("platy") || message.content.toLowerCase().includes("platypus")) {
       message.reply("Le révolutionnaire");
     } else if (message.content.toLowerCase().includes("soline")) {

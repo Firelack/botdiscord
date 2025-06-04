@@ -94,7 +94,7 @@ function start() {
       avatarPlayer(message, axios, headers);
 
       if (message.channel.id !== participationChannelId) {
-        easterEggs(message, axios, headers); 
+        easterEggs(message); 
       }
     }
   });

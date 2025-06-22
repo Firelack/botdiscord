@@ -4,6 +4,41 @@ const playerNameCache = {};
 let lastSeenDate = null;
 let initialized = false;
 
+async function smartReplaceMentions(guild, messageText) {
+  const mentionRegex = /@([^\s@]+)/g;
+  const matches = [...messageText.matchAll(mentionRegex)];
+  if (!matches.length) return messageText;
+
+  let replaced = messageText;
+
+  for (const match of matches) {
+    const rawMatch = match[0]; // ex: @Firelack
+    const pseudo = match[1];
+    let replacement = rawMatch;
+
+    try {
+      // ❌ Ne pas mettre await ici
+      let member = guild.members.cache.find(m => m.nickname === pseudo);
+
+      if (!member) {
+        member = guild.members.cache.find(
+          m => m.user.username === pseudo && !m.nickname
+        );
+      }
+
+      if (member) {
+        replacement = `<@${member.id}>`;
+      }
+
+      replaced = replaced.split(rawMatch).join(replacement);
+    } catch (err) {
+      console.warn(`⚠️ Erreur lors de la tentative de tag ${pseudo} :`, err.message);
+    }
+  }
+
+  return replaced;
+}
+
 async function checkClanChat(client, clanId, salonId, axios, headers) {
   try {
     const response = await axios.get(`https://api.wolvesville.com/clans/${clanId}/chat`, { headers });
@@ -11,6 +46,12 @@ async function checkClanChat(client, clanId, salonId, axios, headers) {
     if (!messages.length) return;
 
     const channel = await client.channels.fetch(salonId);
+    if (!channel || !channel.isTextBased()) {
+      console.error("❌ Salon introuvable ou non textuel.");
+      return;
+    }
+
+    const guild = channel.guild;
     const sortedMessages = messages.reverse();
 
     if (!initialized) {
@@ -42,7 +83,20 @@ async function checkClanChat(client, clanId, salonId, axios, headers) {
         }
       }
 
-      await channel.send(`${username}: ${msg.msg}`);
+      // ✅ Remplacer les @pseudo dans le message du jeu
+      let formattedMessage;
+      try {
+        formattedMessage = await smartReplaceMentions(guild, msg.msg);
+      } catch (err) {
+        console.error("❌ Erreur remplacement mentions :", err);
+        formattedMessage = msg.msg; // On continue quand même
+      }
+
+      try {
+        await channel.send(`${username}: ${formattedMessage}`);
+      } catch (err) {
+        console.error("❌ Erreur lors de l'envoi dans le salon :", err);
+      }
 
       if (msgDate > newLastSeen) {
         newLastSeen = msgDate;
@@ -85,10 +139,28 @@ function shouldSendToWolvesville(message, salonId) {
 
 async function handleDiscordMessage(message, clanId, salonId, axios, headers) {
   if (shouldSendToWolvesville(message, salonId)) {
-    const displayName = message.member?.displayName || message.author.username;
-    await sendToWolvesville(displayName, message.content, clanId, axios, headers);
+    let content = message.content;
+
+    // Si message contient des mentions, on remplace par @pseudo
+    if (message.mentions.users.size > 0) {
+      for (const [id, user] of message.mentions.users) {
+        // Récupérer le membre complet pour displayName
+        const member = message.guild ? await message.guild.members.fetch(id) : null;
+        const displayName = member ? member.displayName : user.username;
+
+        // Construire la mention Discord possible (avec ou sans le !)
+        const mentionRegex = new RegExp(`<@!?${id}>`, 'g');
+
+        // Remplacer la mention par @displayName
+        content = content.replace(mentionRegex, `@${displayName}`);
+      }
+    }
+
+    const displayNameAuthor = message.member?.displayName || message.author.username;
+    await sendToWolvesville(displayNameAuthor, content, clanId, axios, headers);
   }
 }
+
 
 module.exports = {
   checkClanChat,

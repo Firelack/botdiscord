@@ -31,4 +31,5 @@ module.exports = {
   actualquest: require('./actualquest'),
   checkQuestStatus: require('./questChannel'),
   activedesactiveParticipations: require('./activedesactiveParticipation'),
+  changeFlair: require('./changeFlair'),
 };

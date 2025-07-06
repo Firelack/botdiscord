@@ -7,7 +7,7 @@ const { avatarPlayer, actualAvatar, questAvailable, announcement, clanMembers, g
   playerStats, playerCards, playerProfil, infoRole, getAdvancedRoles, activeShopOffers, battlepassChallenges,
   roleRotations, idAvatar, searchAvatarId, getApiHat, botInfo, commandList, easterEggs, checkClanChat,
   handleDiscordMessage, scheduleMidnightTask, deleteOldMessages, resetDailyDeletedMessages, actualquest,
-  checkQuestStatus, activedesactiveParticipations } = require('./API_function');
+  checkQuestStatus, activedesactiveParticipations, changeFlair } = require('./API_function');
 
 function start() {
   const { Client, GatewayIntentBits } = require("discord.js");
@@ -68,6 +68,7 @@ function start() {
 
       if (message.channel.id === participationChannelId) {
       activedesactiveParticipations(message, clanId, participationChannelId, axios, headers);
+      changeFlair(message, clanId, participationChannelId, axios, headers);
       return; // Sort de la fonction pour ne pas traiter les autres commandes
     }
 

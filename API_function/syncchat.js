@@ -12,12 +12,11 @@ async function smartReplaceMentions(guild, messageText) {
   let replaced = messageText;
 
   for (const match of matches) {
-    const rawMatch = match[0]; // ex: @Firelack
+    const rawMatch = match[0];
     const pseudo = match[1];
     let replacement = rawMatch;
 
     try {
-      // ❌ Ne pas mettre await ici
       let member = guild.members.cache.find(m => m.nickname === pseudo);
 
       if (!member) {

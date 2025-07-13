@@ -21,7 +21,7 @@ function checkQuestStatus(client, clanId, questChannelId, axios, headers) {
         return;
       }
 
-      if (quest.tierFinished && !quest.claimedTime) {
+      if (quest.tierFinished) {
         if (ok) {
           channel.send("L'étape actuelle de la quête est terminée");
           ok = false;

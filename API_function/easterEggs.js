@@ -15,7 +15,9 @@ function easterEggs(message) {
     } //else if (message.content.toLowerCase().includes(" ah ") || message.content.toLowerCase().startsWith("ah ") || message.content.toLowerCase().endsWith(" ah") || message.content.toLowerCase() === "ah") {
       //message.reply("BH (je suis trop drôle rigole 🔫)");
     //} 
-    else if (message.content.toLowerCase().includes(";-;")) {
+    else if (message.content.toLowerCase().includes("barbie")) {
+      message.reply("Pire maison du jeu (by Platypus)");
+    } else if (message.content.toLowerCase().includes(";-;")) {
       message.reply("SOURIS UN PEU !");
     } else if (message.content.toLowerCase().includes("mouton") || message.content.toLowerCase().includes("🐑") || message.content.toLowerCase().includes("sheep")) {
       message.reply("Si il est sur une roue faites le cramer");

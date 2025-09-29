@@ -7,7 +7,7 @@ const { avatarPlayer, actualAvatar, questAvailable, announcement, clanMembers, g
   playerStats, playerCards, playerProfil, infoRole, getAdvancedRoles, activeShopOffers, battlepassChallenges,
   roleRotations, idAvatar, searchAvatarId, getApiHat, botInfo, commandList, easterEggs, checkClanChat,
   handleDiscordMessage, scheduleMidnightTask, deleteOldMessages, resetDailyDeletedMessages, actualquest,
-  checkQuestStatus, activedesactiveParticipations, changeFlair } = require('./API_function');
+  checkQuestStatus, activedesactiveParticipations, changeFlair, sendMessage } = require('./API_function');
 
 function start() {
   const { Client, GatewayIntentBits } = require("discord.js");
@@ -18,6 +18,8 @@ function start() {
   const chatChannelId = process.env['CHAT_CHANNEL_ID'];
   const questChannelId = process.env['QUEST_CHANNEL_ID'];
   const participationChannelId = process.env['PARTICIPATION_CHANNEL_ID'];
+  const messageChannelId = process.env['MESSAGE_CHANNEL_ID'];
+  const personMentionId = process.env['PERSON_MENTION_ID'];
 
   const client = new Client({
     intents: [
@@ -43,6 +45,11 @@ function start() {
 
     // Récupération du salon Discord de façon asynchrone
     const channel = await client.channels.fetch(chatChannelId);
+
+    const messageHour = 10; // 10h
+    const messageMinute = 0; // 00 minutes
+
+    sendMessage(client, messageChannelId, personMentionId, "Envoie ton temps d'écran maintenant !", messageHour, messageMinute);
 
     // Planification de la tâche de suppression à minuit
     scheduleMidnightTask(async () => {

@@ -1,6 +1,8 @@
 function easterEggs(message) {
 // Si quelqu'un tag le bot xD
-    if (message.content.includes(`<@1165928098219433995>`) || message.mentions.users.has('1165928098219433995')) {
+    const messageChannelId = process.env['MESSAGE_CHANNEL_ID'];
+
+    if ((message.content.includes(`<@1165928098219433995>`) || message.mentions.users.has('1165928098219433995'))&& message.channel.id !== messageChannelId) {
       message.reply("Pourquoi tu me tag, achète-toi une vie");
     }
 

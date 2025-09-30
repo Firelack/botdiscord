@@ -1,5 +1,5 @@
 function announcement(message, clanId, axios, headers) {
-// Annonce du clan werewolf online
+// Announcement of a clan
     if (message.content.toLowerCase().startsWith("annonce")) {
       axios.get(`https://api.wolvesville.com/clans/${clanId}/announcements`, {
         headers: headers

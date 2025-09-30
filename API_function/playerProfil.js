@@ -1,5 +1,5 @@
 function playerProfil(message, axios, headers) {
-// Récupérer un profil de joueur
+// Fetch player profile
     if (message.content.toLowerCase().startsWith("profil:")) {
       const profilName = message.content.substring(7).trim();
 

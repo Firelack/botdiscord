@@ -1,11 +1,11 @@
 /**
- * Programme l'envoi d'un message dans un salon Discord avec rappels, tous les jours à la même heure.
- * @param {Client} client - L'instance du bot Discord
- * @param {string} channelId - L'ID du salon où envoyer le message
- * @param {string} userId - L'ID de la personne à mentionner
- * @param {string} messageText - Le message personnalisé
- * @param {number} hour - Heure du jour pour envoyer le message (0-23)
- * @param {number} minute - Minute de l'heure (0-59)
+ * Schedule a message to be sent in a Discord channel with reminders, every day at the same time.
+ * @param {Client} client - Bot Discord instance
+ * @param {string} channelId - ID of the channel to send the message in
+ * @param {string} userId - ID of the user to mention
+ * @param {string} messageText - Personalised message to send
+ * @param {number} hour - Hour of the day to send the message (0-23)
+ * @param {number} minute - Minute of the hour to send the message (0-59)
  */
 function sendMessage(client, channelId, userId, messageText, hour, minute) {
 
@@ -15,7 +15,7 @@ function sendMessage(client, channelId, userId, messageText, hour, minute) {
       let sendTime = new Date();
       sendTime.setHours(hour, minute, 0, 0);
 
-      // Si l'heure est déjà passée, on programme pour demain
+      // If date already passed, schedule for the next day
       if (sendTime <= now) {
         sendTime.setDate(sendTime.getDate() + 1);
       }
@@ -31,11 +31,11 @@ function sendMessage(client, channelId, userId, messageText, hour, minute) {
             return;
           }
 
-          // Premier envoi
+          // Send the initial message
           await channel.send(`<@${userId}> ${messageText}`);
           console.log(`✅ Premier message envoyé à <@${userId}> dans #${channel.name}`);
 
-          // Flag pour savoir si la personne a répondu
+          // Flag to know if the person replied
           let userReplied = false;
 
           const messageListener = (msg) => {
@@ -48,7 +48,7 @@ function sendMessage(client, channelId, userId, messageText, hour, minute) {
 
           client.on("messageCreate", messageListener);
 
-          // Rappels toutes les 30 min tant que pas de réponse
+          // Set up reminders every 30 minutes until user replies
           const reminderInterval = setInterval(async () => {
             if (userReplied) {
               clearInterval(reminderInterval);
@@ -58,7 +58,7 @@ function sendMessage(client, channelId, userId, messageText, hour, minute) {
             console.log(`🔄 Rappel envoyé à <@${userId}>`);
           }, 30 * 60 * 1000);
 
-          // Reprogrammer automatiquement pour le lendemain
+          // Automatically add reminder for the next day
           scheduleNextMessage();
 
         } catch (err) {
@@ -71,7 +71,7 @@ function sendMessage(client, channelId, userId, messageText, hour, minute) {
     }
   }
 
-  // Lancer la première planification
+  // Start the scheduling process
   scheduleNextMessage();
 }
 

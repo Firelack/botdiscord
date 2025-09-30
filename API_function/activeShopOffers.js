@@ -1,6 +1,6 @@
 
 function activeShopOffers(message, axios, headers) {
-// Offre active du shop
+// Active shop offers
     if (message.content.toLowerCase() === "offres") {
       axios.get("https://api.wolvesville.com/shop/activeOffers", {
         headers: headers,
@@ -8,12 +8,12 @@ function activeShopOffers(message, axios, headers) {
         .then(response => {
           const activeOffers = response.data;
 
-          // Filtrer les offres avec une URL d'image non nulle
+          // Filter offers with a non-null image URL
           const offersWithImage = activeOffers.filter(offer => offer.promoImageUrl);
 
           if (offersWithImage.length > 0) {
             offersWithImage.forEach(offer => {
-              // Formatter la date en format français avec date et heure
+              // Format the date in French with date and time
               const formattedDate = new Intl.DateTimeFormat('fr-FR', {
                 dateStyle: 'full',
                 timeStyle: 'short',
@@ -26,7 +26,7 @@ function activeShopOffers(message, axios, headers) {
               messageText += `Prix: ${offer.costInGems} gemmes\n`;
               messageText += `Image URL: [lien](${imageUrl})\n\n`;
 
-              // Envoyer un message distinct pour chaque offre
+              // Send the message with the image URL as a clickable link
               message.reply(`**__Offres actives:__**\n${messageText}`);
             });
           } else {

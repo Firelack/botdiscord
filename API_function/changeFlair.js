@@ -1,15 +1,15 @@
 function changerFlair(message, clanId, salonId, axios, headers) {
   if (message.channel.id !== salonId) return;
 
-  // Commande : titre:NomDuJoueur[:NouveauTitre]
+  // Command : titre:NomDuJoueur[:NouveauTitre]
   if (message.content.toLowerCase().startsWith("titre:")) {
-    const contenu = message.content.substring(6).trim(); // enlève "titre:" au début
+    const contenu = message.content.substring(6).trim(); // delete "titre:" and trim spaces
     const premierDeuxPoints = contenu.indexOf(":");
 
     let profilName, nouveauFlair;
 
     if (premierDeuxPoints === -1) {
-      // Pas de second ":", donc on supprime le titre
+      // No new flair provided, remove flair
       profilName = contenu;
       nouveauFlair = "";
     } else {

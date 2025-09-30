@@ -1,5 +1,5 @@
 function questAvailable(message, clanId, headers, axios) {
-// Quest disponible du clan werewolf online
+// Quest available for a clan
     if (message.content.toLowerCase().startsWith("quest")) {
       axios.get(`https://api.wolvesville.com/clans/${clanId}/quests/available`, {
         headers: headers
@@ -7,18 +7,18 @@ function questAvailable(message, clanId, headers, axios) {
         .then(response => {
           const responseData = response.data;
 
-          // Parcourir le tableau d'objets
+          // Loop through each quest in the response
           for (const quest of responseData) {
-            // Récupérer les informations nécessaires
+            // Fetch necessary information
             const promoImageUrl = quest.promoImageUrl;
             const purchasableWithGems = quest.purchasableWithGems;
             const questId = quest.id;
 
-            // Créer le nouveau URL
+            // Create new URL
             const nouvelleExtension = "@3x.jpg";
             const newurl = promoImageUrl.replace(".jpg", nouvelleExtension);
 
-            // Déterminer la devise pour l'achat
+            // Determine currency for purchase
             const currency = purchasableWithGems ? "Gemmes" : "Or";
 
             axios.get(`https://api.wolvesville.com/clans/${clanId}/quests/votes`, {
@@ -31,7 +31,7 @@ function questAvailable(message, clanId, headers, axios) {
                 const responseData = response.data;
                 const voteCount = responseData.votes[questId].length;
 
-                // Envoyer le message avec les détails de la quête
+                // Send message with quest details
                 message.reply(`**__Type d'achat:__** ${currency}\n**__Nombre de votes:__** ${voteCount}\n**__Image quête actuelle:__** [lien](${newurl})`);
               })
               .catch(error => {

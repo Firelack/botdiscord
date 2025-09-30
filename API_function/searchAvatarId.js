@@ -1,17 +1,17 @@
 function searchAvatarId(message, axios, headers) {
-//recuperer id correspondant a un  avatar 
+// Fetch avatar ID of a avatar in a specific slot for a player
     if (message.content.toLowerCase().startsWith("searchid:")) {
-      // Extraire le nom du joueur et le numéro de slot
+      // Extract player name and slot number
       const contentArray = message.content.substring(9).trim().split(" ");
 
-      // Assurer qu'il y a au moins un élément après "searchid:"
+      // Ensure there is at least one element after "searchid:"
       if (contentArray.length > 0) {
         const profilName = contentArray[0];
 
-        // Vérifier si un numéro de slot est fourni
+        // Check if a slot number is provided
         const slotNumber = contentArray.length > 1 ? contentArray[1] : null;
 
-        // Déclarer resp en dehors de la portée de la deuxième requête Axios
+        // Declare resp outside the scope of the second Axios request
         let avatarUrl;
         let resp;
 
@@ -28,14 +28,14 @@ function searchAvatarId(message, axios, headers) {
             const nouvelleExtension = "@3x.png";
             avatarUrl = selectedInfo.avatar.replace(".png", nouvelleExtension);
 
-            // Retourner la promesse de la deuxième requête Axios
+            // Return the promise of the second Axios request
             return axios.get(`https://api.wolvesville.com/avatars/sharedAvatarId/${responseData.id}/${slotNumber-1}`, {
               headers: headers
             });
           })
           .then(response => {
             resp = response.data;
-            // Répondre ici après que les deux requêtes aient réussi
+            // RRespond here after both requests have succeeded
             message.reply(`**__Avatar demandé:__** [Avatar](${avatarUrl})\n**__Avatar id:__** ${resp}`);
           })
           .catch(error => {
@@ -43,7 +43,7 @@ function searchAvatarId(message, axios, headers) {
             console.error(error);
           });
       } else {
-        // Gérer le cas où aucun nom de joueur n'est fourni
+        // Handle case where no player name is provided
         console.log("Aucun nom de joueur fourni après 'searchid:'");
       }
     }

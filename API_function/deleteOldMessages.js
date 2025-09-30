@@ -10,25 +10,25 @@ async function deleteOldMessages(channel, dateago) {
     let totalDeleted = 0;
 
     while (true) {
-      // Récupération des messages par lots de 100, en partant du dernier récupéré
+      // Fetch messages in batches of 100, starting from the last one retrieved
       const options = { limit: 100 };
       if (lastMessageId) options.before = lastMessageId;
 
       const messagesFetched = await channel.messages.fetch(options);
-      if (messagesFetched.size === 0) break; // Plus aucun message à récupérer
+      if (messagesFetched.size === 0) break; // No more messages to fetch
 
-      // Filtrage des messages à supprimer
+      // Filter messages to delete
       const messagesToDelete = messagesFetched.filter(msg =>
         now - msg.createdTimestamp > dateago &&
         !deletedMessagesToday.has(msg.id)
       );
 
       if (messagesToDelete.size === 0) {
-        // Pas de message à supprimer dans ce lot, on peut arrêter
+        // No messages to delete in this batch, we can stop
         break;
       }
 
-      // Suppression séquentielle pour éviter les erreurs de rate limit
+      // Sequential deletion to avoid rate limit errors
       for (const msg of messagesToDelete.values()) {
         try {
           await msg.delete();
@@ -40,10 +40,10 @@ async function deleteOldMessages(channel, dateago) {
         }
       }
 
-      // Pour la pagination, on prend l'id du dernier message du lot actuel
+      // For pagination, take the ID of the last message in the current batch
       lastMessageId = messagesFetched.last().id;
 
-      // Si on a récupéré moins de 100 messages, c'est que c'est la fin
+      // If we fetched less than 100 messages, it's the end
       if (messagesFetched.size < 100) break;
     }
 
@@ -60,7 +60,7 @@ function resetDailyDeletedMessages() {
 }
 
 function scheduleMidnightTask(task) {
-  const checkInterval = 60 * 1000; // Vérifie chaque minute
+  const checkInterval = 60 * 1000; // Check every minute
   let alreadyRunToday = false;
 
   setInterval(() => {

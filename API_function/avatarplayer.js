@@ -1,9 +1,9 @@
 function avatarPlayer(message, axios, headers) { 
-  // Tout les avatars ou un avatars en particulier d'un joueur
+  // All avatar or a particular avatar of a player
   if (message.content.toLowerCase().startsWith("avatar:")) {
     const profilNameWithNumber = message.content.substring(7).trim();
 
-    // Utiliser une expression régulière pour vérifier si le message se termine par un espace puis un nombre
+    // Use a regular expression to check if the message ends with a space followed by a number
     const match = profilNameWithNumber.match(/^(.*) (\d+)$/);
 
     if (match) {
@@ -32,7 +32,7 @@ function avatarPlayer(message, axios, headers) {
     } else {
       const profilName = profilNameWithNumber;
 
-      // Utiliser Axios pour effectuer la requête HTTP pour les avatars
+      // Use Axios to make the HTTP request for avatars
       axios.get(`https://api.wolvesville.com/players/search?username=${profilName}`, {
         headers: headers
       })
@@ -49,7 +49,7 @@ function avatarPlayer(message, axios, headers) {
             const formattedAvatars = avatarUrls.map(url => `> - ${url}`);
             message.reply(`**__Avatars de ${profilName}:__**\n${formattedAvatars.join('\n')}`);
           } else {
-            // Diviser en groupes de 12 avatars maximum
+            // Divide into groups of 12 avatars maximum
             const chunkSize = 12;
             for (let i = 0; i < avatarUrls.length; i += chunkSize) {
               const chunk = avatarUrls.slice(i, i + chunkSize);

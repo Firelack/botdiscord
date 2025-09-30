@@ -1,5 +1,5 @@
 function playerCards(message, axios, headers) {
-  // Cartes d'un joueur
+  // Card of a player
   if (message.content.toLowerCase().startsWith("cartes:")) {
     const profilName = message.content.substring(7).trim();
 
@@ -15,10 +15,10 @@ function playerCards(message, axios, headers) {
 
         // Build a string representation of the role cards
         const roleCardsString = selectedInfo.roleCards.map(card => {
-          // Rôle de base
+          // Base role
           let roleString = `**${card.roleIdBase}:** ${card.rarity}`;
 
-          // Tous les rôles avancés s'il y en a
+          // All advanced roles if any
           if (Array.isArray(card.roleIdsAdvanced) && card.roleIdsAdvanced.length > 0) {
             const advancedRoles = card.roleIdsAdvanced.map(role => `**${role}**`).join(' / ');
             roleString += ` / Rôles avancés: ${advancedRoles}`;

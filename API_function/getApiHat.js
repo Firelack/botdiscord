@@ -1,21 +1,21 @@
 function getApiHat(message) {
-// Avoir le chapeau api
+// Get API hat
     if (message.content.toLowerCase().startsWith("apichapeau:")) {
-      // Récupérer la clé utilisateur à partir du message
+      // Get user key from message
       var userKey = message.content.substring(11).trim();
 
-      // Mettre à jour les options de la deuxième requête avec la clé utilisateur
+      // Update options for second request with user key
       var options = {
         'method': 'POST',
         'url': 'https://api.wolvesville.com/items/redeemApiHat',
         'headers': {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': `Bot ${userKey}` // Utiliser la clé utilisateur comme clé de bot
+          'Authorization': `Bot ${userKey}` // Use user key as bot key
         }
       };
 
-      // Effectuer la deuxième requête
+      // Make the second request
       axios(options)
         .then(response => {
           console.log(response.data);

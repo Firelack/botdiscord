@@ -1,12 +1,12 @@
 function easterEggs(message) {
-// Si quelqu'un tag le bot xD
+// If someone tags the bot
     const messageChannelId = process.env['MESSAGE_CHANNEL_ID'];
 
     if ((message.content.includes(`<@1165928098219433995>`) || message.mentions.users.has('1165928098219433995'))&& message.channel.id !== messageChannelId) {
       message.reply("Pourquoi tu me tag, achète-toi une vie");
     }
 
-    // Plein de truc fun
+    // Easter eggs
     if (message.content.toLowerCase().includes("i love you") || message.content.toLowerCase().includes("i love u")) {
       message.reply("Me too 💘");
     } else if (message.content.toLowerCase().includes("je t'aime") || message.content.toLowerCase().includes("je t aime")) {
@@ -45,7 +45,7 @@ function easterEggs(message) {
     if (message.content.toLowerCase().includes("!test")) {
       message.reply("Je suis sûr t'as raté");
     }
-  const randomChance = Math.floor(Math.random() * 4); // Valeur entre 0 et 3
+  const randomChance = Math.floor(Math.random() * 4); // 25% chance
   if (randomChance === 0) {
     if (message.content.toLowerCase().includes("firelack") && (message.content.toLowerCase().includes("valtintin") || message.content.toLowerCase().includes("alfakynz"))) {
       message.reply("Les deux super devs de ce bot !");

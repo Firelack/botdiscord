@@ -1,7 +1,7 @@
 function roleRotations(message, axios, headers) {
-// Rôle Rotations
+// Role rotations for a game mode
     if (message.content.toLowerCase().startsWith("rolerotations:")) {
-      // Extraire le mode de jeu de la commande
+      // Extract game mode from command
       let gameModeInput = message.content.substring("rolerotations:".length).trim().toLowerCase();
       let gameMode;
 
@@ -21,17 +21,17 @@ function roleRotations(message, axios, headers) {
         gameMode = gameModeInput;
       }
 
-      // Vérifier si le mode de jeu est valide
+      // Verify if the game mode is valid
       const validGameModes = ["ranked-league-silver", "ranked-league-gold", "sandbox", "advanced", "quick"];
       if (validGameModes.includes(gameMode)) {
-        // Effectuer une requête pour obtenir les rotations de rôles pour le mode de jeu spécifié
+        // Make a request to get role rotations for the specified game mode
         axios.get(`https://api.wolvesville.com/roleRotations`, {
           headers: headers
         })
           .then(response => {
             const roleRotations = response.data;
 
-            // Rechercher les rotations de rôles pour le mode de jeu spécifié
+            // Search for role rotations for the specified game mode
             const selectedRotation = roleRotations.find(rotation => rotation.gameMode === gameMode);
 
             if (selectedRotation) {

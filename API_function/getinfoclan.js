@@ -1,5 +1,5 @@
 function getClanInfo(message, axios, headers) {
-// Récupérer les infos d'un clan
+// Fetch clan information
     if (message.content.toLowerCase().startsWith("clan:")) {
       const clanName = message.content.substring(5).trim();
 

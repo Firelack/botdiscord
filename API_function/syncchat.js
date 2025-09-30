@@ -1,5 +1,3 @@
-// syncchat.js
-
 const playerNameCache = {};
 let lastSeenDate = null;
 let initialized = false;
@@ -82,13 +80,13 @@ async function checkClanChat(client, clanId, salonId, axios, headers) {
         }
       }
 
-      // ✅ Remplacer les @pseudo dans le message du jeu
+      // Replace mentions in the message
       let formattedMessage;
       try {
         formattedMessage = await smartReplaceMentions(guild, msg.msg);
       } catch (err) {
         console.error("❌ Erreur remplacement mentions :", err);
-        formattedMessage = msg.msg; // On continue quand même
+        formattedMessage = msg.msg;
       }
 
       try {
@@ -140,17 +138,17 @@ async function handleDiscordMessage(message, clanId, salonId, axios, headers) {
   if (shouldSendToWolvesville(message, salonId)) {
     let content = message.content;
 
-    // Si message contient des mentions, on remplace par @pseudo
+    // If message contains mentions, replace with @username
     if (message.mentions.users.size > 0) {
       for (const [id, user] of message.mentions.users) {
-        // Récupérer le membre complet pour displayName
+        // Fetch full member for displayName
         const member = message.guild ? await message.guild.members.fetch(id) : null;
         const displayName = member ? member.displayName : user.username;
 
-        // Construire la mention Discord possible (avec ou sans le !)
+        // Build the possible Discord mention (with or without the !)
         const mentionRegex = new RegExp(`<@!?${id}>`, 'g');
 
-        // Remplacer la mention par @displayName
+        // Replace the mention with @displayName
         content = content.replace(mentionRegex, `@${displayName}`);
       }
     }

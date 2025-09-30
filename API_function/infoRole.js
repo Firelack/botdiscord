@@ -1,5 +1,5 @@
 function infoRole(message, axios, headers) {
-// Récupérer les informations d'un rôle
+// Fetch role information
     if (message.content.toLowerCase().startsWith("role:") || message.content.toLowerCase().startsWith("rôle:")) {
       var roleName = message.content.substring(5).trim();
       roleName = roleName.toLowerCase();

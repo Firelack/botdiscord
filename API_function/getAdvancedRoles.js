@@ -1,5 +1,5 @@
 function getAdvancedRoles(message, axios, headers) {
-// Récupérer les rôles avancés
+// Fetch advanced role mapping
     if (message.content.toLowerCase().startsWith("advanced:")) {
       var requestedRole = message.content.substring(9).trim();
       requestedRole = requestedRole.toLowerCase();

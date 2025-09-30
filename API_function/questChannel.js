@@ -1,4 +1,4 @@
-let ok = true; // Variable de contrôle initialisée à true (en dehors de la fonction)
+let ok = true; // Flag to control message sending
 
 function checkQuestStatus(client, clanId, questChannelId, axios, headers) {
   const channel = client.channels.cache.get(questChannelId);
@@ -29,7 +29,7 @@ function checkQuestStatus(client, clanId, questChannelId, axios, headers) {
         return;
       }
 
-      ok = true; // Réinitialiser ok si tout est normal
+      ok = true; // Reset ok if everything is normal
     })
     .catch(error => {
       if (ok) {

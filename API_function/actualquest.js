@@ -1,6 +1,6 @@
 
 function actualquest(message, clanId, axios, headers ) {
-// Quête actuelle du clan werewolf online
+// Actual quest of a clan
     if (message.content.toLowerCase().startsWith("actualquest")) {
       axios.get(`https://api.wolvesville.com/clans/${clanId}/quests/active`, {
         headers: headers
@@ -14,10 +14,10 @@ function actualquest(message, clanId, axios, headers ) {
           const nouvelleExtension = "@3x.jpg";
           const newurl = selectedInfo.url.replace(".jpg", nouvelleExtension);
 
-          // Extraire les composants de la date
+          // Extract date components
           const [year, month, day, time] = selectedInfo.tierStartTime.split(/[-T:.Z]/);
 
-          // Liste des participants
+          // List of participants
           const participants = responseData.participants.map(participant => {
             return {
               username: participant.username,
@@ -25,7 +25,7 @@ function actualquest(message, clanId, axios, headers ) {
             };
           });
 
-          // Tri des participants par XP dans l'ordre décroissant
+          // Sort participants by XP in descending order
           participants.sort((a, b) => b.xp - a.xp);
 
           message.reply(`**__Date de lancement de l'étape actuelle :__** ${day}/${month}/${year} à ${time}h\n**__Participants:__**\n${participants.map(p => `- ${p.username}: ${p.xp} XP`).join('\n')}\n\n**__Image quête actuelle:__** [lien](${newurl})`);

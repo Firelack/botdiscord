@@ -1,5 +1,5 @@
     function clanMembers(message, axios, headers) {
-    // Membres d'un clan
+    // Member of a clan
     if (message.content.toLowerCase().startsWith("membersclan:")) {
       const clanName = message.content.substring(12).trim();
 
@@ -7,12 +7,12 @@
         headers: headers
       })
         .then(response => {
-          const clanId = response.data[0].id; // Assurez-vous que le champ clanId est correctement défini dans la réponse de la première requête
-          const batchSize = 10; // Nombre de membres par lot
-          const totalMembers = response.data[0].memberCount; // Nombre total de membres dans le clan
+          const clanId = response.data[0].id; // Get the clan ID from the response
+          const batchSize = 10; // Number of members to fetch per request
+          const totalMembers = response.data[0].memberCount; // Total number of members in the clan
           const numBatches = Math.ceil(totalMembers / batchSize);
 
-          // Effectuez une requête par lot
+          // Make batch requests
           const batchRequests = Array.from({ length: numBatches }, (_, batchIndex) => {
             const offset = batchIndex * batchSize;
             return axios.get(`https://api.wolvesville.com/clans/${clanId}/members?limit=${batchSize}&offset=${offset}`, {
@@ -20,19 +20,19 @@
             });
           });
 
-          // Attendez toutes les requêtes en parallèle
+          // Wait for all requests to complete
           return Promise.all(batchRequests);
         })
         .then(batchResponses => {
-          // Utilisez un ensemble pour suivre les membres déjà inclus
+          // Use a set to track already included members
           const includedMembers = new Set();
 
-          // Traitez les données des membres comme nécessaire
+          // Process member data as needed
           const memberInfoArray = batchResponses.flatMap(batchResponse => {
             return batchResponse.data.map(member => {
-              // Vérifiez si le membre a déjà été inclus
+              // Check if the member has already been included
               if (!includedMembers.has(member.username)) {
-                // Ajoutez le membre à l'ensemble pour éviter les duplications
+                // Add the member to the set to avoid duplicates
                 includedMembers.add(member.username);
 
                 return {
@@ -40,15 +40,15 @@
                   "XP": member.xp,
                 };
               } else {
-                return null; // Membre déjà inclus, renvoyer null pour l'ignorer
+                return null; // Member already included, return null to ignore
               }
             });
           });
 
-          // Filtrez les membres nuls (déjà inclus) avant d'envoyer les messages
+          // Filter out null members (already included) before sending messages
           const filteredMembers = memberInfoArray.filter(member => member !== null);
 
-          // Envoyez les messages par lots de 10 membres
+          // Send messages in batches of 10 members
           for (let i = 0; i < filteredMembers.length; i += 10) {
             const currentBatch = filteredMembers.slice(i, i + 10);
             const formattedBatch = currentBatch.map(member => {

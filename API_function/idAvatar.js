@@ -1,5 +1,5 @@
 function idAvatar(message, axios, headers) {
-// Récupérer l'avatar correspondant a un id
+// Fetch avatar ID
     if (message.content.toLowerCase().startsWith("idavatar:")) {
       var sharedAvatarId = message.content.substring(9).trim();
 
@@ -9,8 +9,8 @@ function idAvatar(message, axios, headers) {
         .then(response => {
           const data = response.data;
           const selectedInfo = {
-            "id": data.id, // Utiliser data.id au lieu de response.id
-            "url": data.avatar.url // Utiliser data.avatar.url au lieu de reponse.avatar.url
+            "id": data.id,
+            "url": data.avatar.url
           };
 
           const nouvelleExtension = "@3x.png";

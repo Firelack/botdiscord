@@ -1,4 +1,4 @@
-    // Avatar actuel d'un joueur
+    // Actual avatar of a player
 function actualAvatar(message, axios, headers) {
     if (message.content.toLowerCase().startsWith("actualavatar:")) {
       const profilName = message.content.substring(13).trim();

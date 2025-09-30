@@ -61,10 +61,10 @@ Les contributions, idées ou retours sont les bienvenus !
    - QUEST_CHANNEL_ID=iddiscord2
    - PARTICIPATION_CHANNEL_ID=discord3
 
-   La clé du bot est la clé de votre propre bot qu'il faut créer sur Discord Developper
-   L'id discord est l'id du salon ou vous voulez que les messages de wov et de discord soient liés.
-   L'id discord 2 est l'id du salon ou vous voulez être informés de l'anvancé des quêtes.
-   L'id discord 3 est l'id du salon ou vous voulez pouvoir activer et desactiver la participation aux quêtes de chaques personnes.
+   La clé du bot est la clé de votre propre bot qu'il faut créer sur Discord Developper \
+   L'id discord est l'id du salon ou vous voulez que les messages de wov et de discord soient liés. \
+   L'id discord 2 est l'id du salon ou vous voulez être informés de l'anvancé des quêtes.\
+   L'id discord 3 est l'id du salon ou vous voulez pouvoir activer et desactiver la participation aux quêtes de chaques personnes.\
 Attention : Vous devez supprimer le sendMessage.js et toutes les allusions à sa fonction dans index.js et bot.js (ainsi que les MESSAGE_CHANNEL_ID et PERSON_MENTION_ID) de même pensez à supprimer le MESSAGE_CHANNEL_ID de easterEggs.js
 
 6. Lancer le bot avec `node bot.js`

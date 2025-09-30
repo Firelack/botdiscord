@@ -1,5 +1,5 @@
 function playerStats(message, axios, headers) {
-// Stats d'un joueur
+// Stats of a player
     if (message.content.toLowerCase().startsWith("stats:")) {
       const profilName = message.content.substring(6).trim();
 

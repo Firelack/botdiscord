@@ -1,4 +1,4 @@
-// A installer avec npm install express
+// Download the express package: npm install express
 
 const express = require('express');
 const app = express();

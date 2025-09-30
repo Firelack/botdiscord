@@ -2,7 +2,7 @@ require('dotenv').config();
 const keepAlive = require('./keep_alive');
 const axios = require('axios');
 
-// Import des fonctions pour les commandes
+// Import all functions from API_function
 const { avatarPlayer, actualAvatar, questAvailable, announcement, clanMembers, getClanId, getClanInfo,
   playerStats, playerCards, playerProfil, infoRole, getAdvancedRoles, activeShopOffers, battlepassChallenges,
   roleRotations, idAvatar, searchAvatarId, getApiHat, botInfo, commandList, easterEggs, checkClanChat,
@@ -38,12 +38,11 @@ function start() {
   client.on("ready", async () => {
     console.log("Bot opérationnel");
 
-    // Lancement de la boucle de check toutes les 5 secondes
+    // Start checking for new clan chat messages
     setInterval(() => checkClanChat(client, clanId, chatChannelId, axios, headers), 20000);
     setInterval(() => checkQuestStatus(client, clanId, questChannelId, axios, headers), 600000); // Toutes les 10 minutes
 
 
-    // Récupération du salon Discord de façon asynchrone
     const channel = await client.channels.fetch(chatChannelId);
 
     const messageHour = 10; // 10h
@@ -51,10 +50,10 @@ function start() {
 
     sendMessage(client, messageChannelId, personMentionId, "Envoie ton temps d'écran maintenant !", messageHour, messageMinute);
 
-    // Planification de la tâche de suppression à minuit
+    // Suppression task every day at midnight
     scheduleMidnightTask(async () => {
       resetDailyDeletedMessages();
-      await deleteOldMessages(channel, 2 * 24 * 60 * 60 * 1000); // Supprimer les messages de plus de 2 jours
+      await deleteOldMessages(channel, 2 * 24 * 60 * 60 * 1000); // Delete messages older than 2 days
     });
   });
 
@@ -63,20 +62,20 @@ function start() {
   client.on("messageCreate", async (message) => {
     await handleDiscordMessage(message, clanId, chatChannelId, axios, headers);
 
-    if (message.channel.id !== chatChannelId) { // Ignore les message du salon lié au clan
+    if (message.channel.id !== chatChannelId) { // Ignore messages in the clan chat relay channel
 
-      if (message.content === "!desactiver" && message.author.tag === "firelack") { // Désactivation du bot si Firelack le demande
+      if (message.content === "!desactiver" && message.author.tag === "firelack") { // Desactivation command if Firelack asked
         console.log('Désactivation du bot.');
         client.user.setPresence({ status: 'invisible' });
         client.destroy();
       }
 
-      if (message.author.id === client.user.id) return; // Ignore les messages du bot lui-même
+      if (message.author.id === client.user.id) return; // Ignore messages from the bot itself
 
       if (message.channel.id === participationChannelId) {
       activedesactiveParticipations(message, clanId, participationChannelId, axios, headers);
       changeFlair(message, clanId, participationChannelId, axios, headers);
-      return; // Sort de la fonction pour ne pas traiter les autres commandes
+      return; // Stop processing other commands
     }
 
       commandList(message);

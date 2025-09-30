@@ -1,5 +1,5 @@
 function activedesactiveParticipations(message, clanId, salonId, axios, headers) { 
-  // Tout les avatars ou un avatars en particulier d'un joueur
+  // All avatar and specific avatar of a player
   if (message.content.toLowerCase().startsWith("active:") && message.channel.id == salonId) {
     const profilName = message.content.substring(7).trim();
 

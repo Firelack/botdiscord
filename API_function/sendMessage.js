@@ -12,6 +12,7 @@ function sendMessage(client, channelId, userId, messageText, hour, minute) {
   async function scheduleNextMessage() {
     try {
       const now = new Date();
+      now.setHours(now.getHours() + 2)
       let sendTime = new Date();
       sendTime.setHours(hour, minute, 0, 0);
 

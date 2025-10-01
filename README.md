@@ -1,6 +1,6 @@
 # 🤖 Unofficial Wolvesville Bot
 
-Un bot Discord développé pour améliorer l'expérience des joueurs sur **Wolvesville**. Il permet d'obtenir des informations détaillées sur les joueurs, les clans, les rôles, les rotations et plus encore, directement depuis Discord. Il permet également de lié un salon discord au message du jeu.
+Un bot Discord développé pour améliorer l'expérience des joueurs sur **Wolvesville**. Il permet d'obtenir des informations détaillées sur les joueurs, les clans, les rôles, les rotations et plus encore, directement depuis Discord. Il permet également de lié un salon discord au message du clan en jeu.
 
 ---
 
@@ -14,6 +14,7 @@ Un bot Discord développé pour améliorer l'expérience des joueurs sur **Wolve
 - 📧 Liaison entre un salon discord et le chat du clan.
 - 🎉 Des easters eggs sont cachés dans certaines réponses du bot 😄
 - 📰 Un salon discord pour activer et desactiver la participation des membres d'un clan
+- D'autres fonctions utiles pour le clan des développeurs.
 
 ---
 
@@ -49,9 +50,11 @@ Les contributions, idées ou retours sont les bienvenus !
 2. Installez [Node.js](https://nodejs.org/)
 3. Téléchargez les fichiers `bot.js`, `package.json`, `keep_alive.js` et le dossier `API_function`  \
 4. Installez les dépendances :
+
    ```bash
    npm install
    ```
+
 5. Créer un fichier .env et mettez :
 
    - APIKEY=votrecléapi
@@ -65,12 +68,12 @@ Les contributions, idées ou retours sont les bienvenus !
    L'id discord est l'id du salon ou vous voulez que les messages de wov et de discord soient liés. \
    L'id discord 2 est l'id du salon ou vous voulez être informés de l'anvancé des quêtes.\
    L'id discord 3 est l'id du salon ou vous voulez pouvoir activer et desactiver la participation aux quêtes de chaques personnes.\
-Attention : Vous devez supprimer le sendMessage.js et toutes les allusions à sa fonction dans index.js et bot.js (ainsi que les MESSAGE_CHANNEL_ID et PERSON_MENTION_ID) de même pensez à supprimer le MESSAGE_CHANNEL_ID de easterEggs.js
+Attention : Vous devez supprimer le sendMessage.js et toutes les allusions à sa fonction dans `index.js`, `bot.js` et `easterEggs.js`.
 
-6. Lancer le bot avec `node bot.js`
-7. Pour l'id d'un clan :\
+   1. Lancer le bot avec `node bot.js`
+   2. Pour l'id d'un clan :\
     Faire idclan{nom_du_clan} \
    ⚠️ Vous devez ajouter votre API à la liste des bots d'un clan pour avoir les informations du clan
-8. Conseil : modifier les réponses du bot dans `API_function/easterEggs.js` avec ce que vous voulez ! \
-Si vous ne comptez pas heberger le bot, l'avant dernière ligne n'est pas utile. \
-Si vous ne voulez pas du chat lié, et de la fonction qui donne l'avancée des quêtes, et de celle pour changer les participations,  supprimez les lignes 98, 96, 69-73, 39-51, 18-20.
+   3. Conseil : modifier les réponses du bot dans `API_function/easterEggs.js` avec ce que vous voulez ! \
+Si vous ne comptez pas heberger le bot, supprimer "keepAlive();" de `bot.js`. \
+Il y a beaucoup de fonction qui peuvent ne pas vous interesser, si vous voulez les retirer, il faut supprimer ce qui leurs est lié dans `bot.js`

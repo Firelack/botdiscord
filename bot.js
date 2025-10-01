@@ -3,6 +3,7 @@ const keepAlive = require('./keep_alive');
 const axios = require('axios');
 
 // Import all functions from API_function
+// Delete sendMessage here to disable sendMessage feature
 const { avatarPlayer, actualAvatar, questAvailable, announcement, clanMembers, getClanId, getClanInfo,
   playerStats, playerCards, playerProfil, infoRole, getAdvancedRoles, activeShopOffers, battlepassChallenges,
   roleRotations, idAvatar, searchAvatarId, getApiHat, botInfo, commandList, easterEggs, checkClanChat,
@@ -18,6 +19,8 @@ function start() {
   const chatChannelId = process.env['CHAT_CHANNEL_ID'];
   const questChannelId = process.env['QUEST_CHANNEL_ID'];
   const participationChannelId = process.env['PARTICIPATION_CHANNEL_ID'];
+
+  // Delete these line to disable sendMessage
   const messageChannelId = process.env['MESSAGE_CHANNEL_ID'];
   const personMentionId = process.env['PERSON_MENTION_ID'];
 
@@ -45,9 +48,9 @@ function start() {
 
     const channel = await client.channels.fetch(chatChannelId);
 
+    // Delete these lines to disable sendMessage
     const messageHour = 10; // 10h
     const messageMinute = 0; // 00 minutes
-
     sendMessage(client, messageChannelId, personMentionId, "Envoie ton temps d'écran maintenant !", messageHour, messageMinute);
 
     // Suppression task every day at midnight

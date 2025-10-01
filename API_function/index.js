@@ -32,5 +32,6 @@ module.exports = {
   checkQuestStatus: require('./questChannel'),
   activedesactiveParticipations: require('./activedesactiveParticipation'),
   changeFlair: require('./changeFlair'),
+  // Delete sendMessage here to disable sendMessage feature
   sendMessage: require('./sendMessage').sendMessage
 };

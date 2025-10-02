@@ -1,79 +1,104 @@
 # 🤖 Unofficial Wolvesville Bot
 
-Un bot Discord développé pour améliorer l'expérience des joueurs sur **Wolvesville**. Il permet d'obtenir des informations détaillées sur les joueurs, les clans, les rôles, les rotations et plus encore, directement depuis Discord. Il permet également de lié un salon discord au message du clan en jeu.
+A Discord bot developed to enhance the **Wolvesville** player experience.  
+It provides detailed information about players, clans, roles, rotations, and more — directly from Discord.  
+It can also link a Discord channel to your in-game clan chat.
 
 ---
 
-## ✨ Fonctionnalités principales
+## ✨ Main Features
 
-- 🔍 Obtenir les **profils**, **avatars**, **stats**, **cartes** et autres infos d’un joueur.
-- 🛡️ Consulter les détails d’un **clan** : membres, nom, actualités.
-- 🎭 Voir les descriptions et statistiques des **rôles** disponibles dans le jeu.
-- 🛒 Accéder aux **offres du shop** et aux **challenges du battlepass**.
-- 🎁 Commande spéciale pour récupérer un **chapeau API** si vous possédez un bot wov.
-- 📧 Liaison entre un salon discord et le chat du clan.
-- 🎉 Des easters eggs sont cachés dans certaines réponses du bot 😄
-- 📰 Un salon discord pour activer et desactiver la participation des membres d'un clan
-- D'autres fonctions utiles pour le clan des développeurs.
-
----
-
-## 🧠 Commandes disponibles
-
-Utilisez la commande `!helpme` dans Discord pour afficher la liste complète et mise à jour des commandes.
-
-## 📌 Remarques
-
-- Les noms de rôles sont en anglais avec des tirets `-` à la place des espaces.
-- Les noms de joueurs et de clans doivent être **écrits exactement**, avec la bonne casse.
+- 🔍 Get **profiles**, **avatars**, **stats**, **cards**, and other player info.  
+- 🛡️ View **clan details**: members, name, news.  
+- 🎭 See the descriptions and stats of available **roles** in the game.  
+- 🛒 Access **shop offers** and **battle pass challenges**.  
+- 🎁 Special command to get an **API hat** if you own a Wolvesville bot.  
+- 📧 Link between a Discord channel and clan chat.  
+- 🎉 Easter eggs are hidden in some bot responses 😄  
+- 📰 A Discord channel to enable or disable clan members’ participation.  
+- Additional useful features for developers’ clans.  
 
 ---
 
-## 👨‍💻 Développeurs
+## 🧠 Available Commands
 
-Ce projet a été développer par :
+Use the `!helpme` command in Discord to display the full and up-to-date list of commands.
 
-- [Firelack](https://github.com/Firelack)
-- [Alfakynz](https://github.com/Alfakynz)
+---
 
-Les contributions, idées ou retours sont les bienvenus !
+## 📌 Notes
+
+- Role names are in English with hyphens `-` instead of spaces.  
+- Player and clan names must be written **exactly**, with correct casing.  
+
+---
+
+## 👨‍💻 Developers
+
+This project was developed by:  
+
+- [Firelack](https://github.com/Firelack)  
+- [Alfakynz](https://github.com/Alfakynz)  
+
+Contributions, ideas, or feedback are welcome!  
+
+---
 
 ## 📦 Installation
 
-### ➕ Ajouter le bot à votre serveur
+### ➕ Add the bot to your server
 
-👉 [Lien d’invitation du bot](https://discord.com/oauth2/authorize?client_id=1165928098219433995&permissions=141312&integration_type=0&scope=bot)
+👉 [Bot invitation link](https://discord.com/oauth2/authorize?client_id=1165928098219433995&permissions=141312&integration_type=0&scope=bot)  
 
-### 🛠 Modifier le bot (ex. pour votre propre clan)
+---
 
-1. Créez un bot sur le [portail Discord Developer](https://discord.com/developers/applications)
-2. Installez [Node.js](https://nodejs.org/)
-3. Téléchargez les fichiers `bot.js`, `package.json`, `keep_alive.js` et le dossier `API_function`  \
-4. Installez les dépendances :
+### 🛠 Modify the bot (e.g. for your own clan)
+
+1. Create a bot on the [Discord Developer Portal](https://discord.com/developers/applications)  
+2. Install [Node.js](https://nodejs.org/)  
+3. Download the files `bot.js`, `package.json`, `keep_alive.js` and the `API_function` folder  
+4. Install dependencies:
 
    ```bash
    npm install
    ```
 
-5. Créer un fichier .env et mettez :
+5. Create a `.env` file and add:
 
-   - APIKEY=votrecléapi
-   - BOT_KEY=clédubot
-   - CLAN_ID=idduclan
-   - CHAT_CHANNEL_ID=iddiscord
-   - QUEST_CHANNEL_ID=iddiscord2
-   - PARTICIPATION_CHANNEL_ID=discord3
+   ```bash
+   APIKEY="yourapikey"
+   BOT_KEY="yourbotkey"
+   CLAN_ID="clanid"
+   CHAT_CHANNEL_ID="discordid"
+   QUEST_CHANNEL_ID="discordid2"
+   PARTICIPATION_CHANNEL_ID="discordid3"
+   ```
 
-   La clé du bot est la clé de votre propre bot qu'il faut créer sur Discord Developper \
-   L'id discord est l'id du salon ou vous voulez que les messages de wov et de discord soient liés. \
-   L'id discord 2 est l'id du salon ou vous voulez être informés de l'anvancé des quêtes.\
-   L'id discord 3 est l'id du salon ou vous voulez pouvoir activer et desactiver la participation aux quêtes de chaques personnes.\
-Attention : Vous devez supprimer le sendMessage.js et toutes les allusions à sa fonction dans `index.js`, `bot.js` et `easterEggs.js`.
+   - The bot key is your own bot’s token, which you must create on the [Discord Developer Portal](https://discord.com/developers/applications).  
+   - `discordid` is the channel ID where Wolvesville ↔ Discord messages will be linked.  
+   - `discordid2` is the channel ID where you want to receive quest progress updates.  
+   - `discordid3` is the channel ID where members can enable or disable quest participation.  
 
-   1. Lancer le bot avec `node bot.js`
-   2. Pour l'id d'un clan :\
-    Faire idclan{nom_du_clan} \
-   ⚠️ Vous devez ajouter votre API à la liste des bots d'un clan pour avoir les informations du clan
-   3. Conseil : modifier les réponses du bot dans `API_function/easterEggs.js` avec ce que vous voulez ! \
-Si vous ne comptez pas heberger le bot, supprimer "keepAlive();" de `bot.js`. \
-Il y a beaucoup de fonction qui peuvent ne pas vous interesser, si vous voulez les retirer, il faut supprimer ce qui leurs est lié dans `bot.js`
+   ⚠️ Important: You must delete the `sendMessage.js` file and remove all references to its function in `index.js`, `bot.js`, and `easterEggs.js`.  
+
+6. Run the bot:  
+
+   ```bash
+   node bot.js
+   ```
+
+7. To get a clan ID:\
+   Use in discord :
+
+   ```bash
+   idclan{clan_name}
+   ```
+
+   ⚠️ You must add your API to a clan’s bot list to access clan information.
+8. Tip: edit the bot’s responses in `API_function/easterEggs.js` to customize them!
+
+### 🚨 Additional Notes
+
+- If you don’t plan to host the bot, remove keepAlive(); from bot.js.
+
+- Many features might not be useful to you — if so, delete their related code in bot.js.

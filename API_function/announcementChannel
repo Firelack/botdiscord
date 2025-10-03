@@ -1,0 +1,78 @@
+// announcementChannel.js
+const announcementsMap = new Map(); 
+// Key = Wolvesville announcementId, Value = Discord messageId
+
+async function announcementChannel(client, salonID, clanId, axios, headers) {
+  if (!salonID) return;
+  try {
+    const channel = await client.channels.fetch(salonID);
+    if (!channel) return console.error("Salon introuvable.");
+
+    // Récupération des annonces
+    const response = await axios.get(`https://api.wolvesville.com/clans/${clanId}/announcements`, { headers });
+    const announcements = response.data;
+
+    // Construire un Set pour comparer
+    const currentIds = new Set(announcements.map(a => a.id));
+
+    // --- Vérifier si certaines annonces ont été supprimées ---
+    for (const [annId, msgId] of announcementsMap) {
+      if (!currentIds.has(annId)) {
+        try {
+          const msg = await channel.messages.fetch(msgId);
+          await msg.delete();
+        } catch (e) {
+          console.log("Message déjà supprimé ou introuvable :", e.message);
+        }
+        announcementsMap.delete(annId);
+      }
+    }
+
+    // --- Parcourir annonces actuelles ---
+    for (const announcement of announcements.reverse()) {
+      const annId = announcement.id;
+      const timestamp = new Date(announcement.timestamp).toLocaleString('fr-FR', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hour12: false
+      });
+
+      let content =
+        `**__Date__**: ${timestamp}\n` +
+        `**__Contenu__**:\n${announcement.content}\n` +
+        `**__Auteur__**: ${announcement.author}`;
+
+      if (announcement.editTimestamp) {
+        const editTime = new Date(announcement.editTimestamp).toLocaleString('fr-FR');
+        content += `\n*(Édité par ${announcement.editAuthor} le ${editTime})*`;
+      }
+
+      // --- Vérifier si l’annonce existe déjà ---
+      if (announcementsMap.has(annId)) {
+        const msgId = announcementsMap.get(annId);
+        try {
+          const msg = await channel.messages.fetch(msgId);
+          if (msg.content !== content) {
+            await msg.edit(content); // Mise à jour si le contenu a changé
+          }
+        } catch (e) {
+          console.log("Impossible de mettre à jour :", e.message);
+          announcementsMap.delete(annId);
+        }
+      } else {
+        // Nouvelle annonce → envoyer dans le channel
+        const sent = await channel.send(`**__Annonce__**\n${content}`);
+        announcementsMap.set(annId, sent.id);
+      }
+    }
+
+  } catch (error) {
+    console.error("Erreur lors de la requête :", error);
+  }
+}
+
+module.exports = announcementChannel;

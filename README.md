@@ -2,7 +2,8 @@
 
 A Discord bot developed to enhance the **Wolvesville** player experience.  
 It provides detailed information about players, clans, roles, rotations, and more — directly from Discord.  
-It can also link a Discord channel to your in-game clan chat.
+It can also link a Discord channel to your in-game clan chat. \
+A lot of features are made for the developpers clan "WerewoIf OnIine*" but you can change for your own clan if necessary !
 
 ---
 

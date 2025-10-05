@@ -8,14 +8,14 @@ async function announcementChannel(client, salonID, clanId, axios, headers) {
     const channel = await client.channels.fetch(salonID);
     if (!channel) return console.error("Salon introuvable.");
 
-    // Récupération des annonces
+    // Fetch announcements
     const response = await axios.get(`https://api.wolvesville.com/clans/${clanId}/announcements`, { headers });
     const announcements = response.data;
 
-    // Construire un Set pour comparer
+    // Adjust currentIds set
     const currentIds = new Set(announcements.map(a => a.id));
 
-    // --- Vérifier si certaines annonces ont été supprimées ---
+    // Delete old announcements
     for (const [annId, msgId] of announcementsMap) {
       if (!currentIds.has(annId)) {
         try {
@@ -28,7 +28,7 @@ async function announcementChannel(client, salonID, clanId, axios, headers) {
       }
     }
 
-    // --- Parcourir annonces actuelles ---
+    // Process current announcements
     for (const announcement of announcements.reverse()) {
       const annId = announcement.id;
       const timestamp = new Date(announcement.timestamp).toLocaleString('fr-FR', {
@@ -51,20 +51,20 @@ async function announcementChannel(client, salonID, clanId, axios, headers) {
         content += `\n*(Édité par ${announcement.editAuthor} le ${editTime})*`;
       }
 
-      // --- Vérifier si l’annonce existe déjà ---
+      // Update or send new message
       if (announcementsMap.has(annId)) {
         const msgId = announcementsMap.get(annId);
         try {
           const msg = await channel.messages.fetch(msgId);
           if (msg.content !== content) {
-            await msg.edit(content); // Mise à jour si le contenu a changé
+            await msg.edit(content); // Update message if content changed
           }
         } catch (e) {
           console.log("Impossible de mettre à jour :", e.message);
           announcementsMap.delete(annId);
         }
       } else {
-        // Nouvelle annonce → envoyer dans le channel
+        // New announcement
         const sent = await channel.send(`**__Annonce__**\n${content}`);
         announcementsMap.set(annId, sent.id);
       }

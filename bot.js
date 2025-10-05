@@ -8,7 +8,7 @@ const { avatarPlayer, actualAvatar, questAvailable, announcement, clanMembers, g
   playerStats, playerCards, playerProfil, infoRole, getAdvancedRoles, activeShopOffers, battlepassChallenges,
   roleRotations, idAvatar, searchAvatarId, getApiHat, botInfo, commandList, easterEggs, checkClanChat,
   handleDiscordMessage, scheduleMidnightTask, deleteOldMessages, resetDailyDeletedMessages, actualquest,
-  checkQuestStatus, activedesactiveParticipations, changeFlair, sendMessage } = require('./API_function');
+  checkQuestStatus, activedesactiveParticipations, changeFlair, sendMessage, announcementChannel } = require('./API_function');
 
 function start() {
   const { Client, GatewayIntentBits } = require("discord.js");
@@ -19,6 +19,7 @@ function start() {
   const chatChannelId = process.env['CHAT_CHANNEL_ID'];
   const questChannelId = process.env['QUEST_CHANNEL_ID'];
   const participationChannelId = process.env['PARTICIPATION_CHANNEL_ID'];
+  const announcementChannelId = process.env['ANNOUNCEMENT_CHANNEL_ID'];
 
   // Delete these line to disable sendMessage
   const messageChannelId = process.env['MESSAGE_CHANNEL_ID'];
@@ -45,6 +46,8 @@ function start() {
     setInterval(() => checkClanChat(client, clanId, chatChannelId, axios, headers), 20000);
     setInterval(() => checkQuestStatus(client, clanId, questChannelId, axios, headers), 600000); // Toutes les 10 minutes
 
+    // Start announcement channel feature (once per hour)
+    setInterval(() => announcementChannel(client, announcementChannelId, clanId, axios, headers), 60 * 60 * 1000);
 
     const channel = await client.channels.fetch(chatChannelId);
 

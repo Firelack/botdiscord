@@ -14,7 +14,8 @@ A lot of features are made for the developpers clan "WerewoIf OnIine*" but you c
 - 🎭 See the descriptions and stats of available **roles** in the game.  
 - 🛒 Access **shop offers** and **battle pass challenges**.  
 - 🎁 Special command to get an **API hat** if you own a Wolvesville bot.  
-- 📧 Link between a Discord channel and clan chat.  
+- 📧 Link between a Discord channel and clan chat.
+- 🆕 An announcement channel link to announcements in game.
 - 🎉 Easter eggs are hidden in some bot responses 😄  
 - 📰 A Discord channel to enable or disable clan members’ participation.  
 - Additional useful features for developers’ clans.  
@@ -73,12 +74,14 @@ Contributions, ideas, or feedback are welcome!
    CHAT_CHANNEL_ID="discordid"
    QUEST_CHANNEL_ID="discordid2"
    PARTICIPATION_CHANNEL_ID="discordid3"
+   ANNOUNCEMENT_CHANNEL_ID="announcementChannel"
    ```
 
    - The bot key is your own bot’s token, which you must create on the [Discord Developer Portal](https://discord.com/developers/applications).  
    - `discordid` is the channel ID where Wolvesville ↔ Discord messages will be linked.  
    - `discordid2` is the channel ID where you want to receive quest progress updates.  
    - `discordid3` is the channel ID where members can enable or disable quest participation.  
+   - `announcementChannel` is the channel ID where announcement can be post.  
 
    ⚠️ Important: You must delete the `sendMessage.js` file and remove all references to its function in `index.js`, `bot.js`, and `easterEggs.js`.  
 

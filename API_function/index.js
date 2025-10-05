@@ -33,5 +33,6 @@ module.exports = {
   activedesactiveParticipations: require('./activedesactiveParticipation'),
   changeFlair: require('./changeFlair'),
   // Delete sendMessage here to disable sendMessage feature
-  sendMessage: require('./sendMessage').sendMessage
+  sendMessage: require('./sendMessage').sendMessage,
+  announcementChannel: require('./announcementChannel')
 };

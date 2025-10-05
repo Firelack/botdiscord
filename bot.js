@@ -28,6 +28,7 @@ function start() {
   const client = new Client({
     intents: [
       GatewayIntentBits.Guilds,
+      GatewayIntentBits.GuildMembers,
       GatewayIntentBits.GuildMessages,
       GatewayIntentBits.MessageContent,
     ]
@@ -41,6 +42,18 @@ function start() {
 
   client.on("ready", async () => {
     console.log("Bot opérationnel");
+
+    // Pre-fetch members for all guilds to improve mention resolution
+    // This helps to ensure nicknames and usernames are available in the cache
+    for (const [guildId, guild] of client.guilds.cache) {
+      try {
+        await guild.members.fetch();
+        console.log(`👥 Cache des membres préchargé pour ${guild.name}`);
+      } catch (err) {
+        console.warn(`⚠️ Impossible de précharger les membres pour ${guild.name}:`, err.message);
+      }
+    }
+
 
     // Start checking for new clan chat messages
     setInterval(() => checkClanChat(client, clanId, chatChannelId, axios, headers), 20000);

@@ -4,11 +4,15 @@ const axios = require('axios');
 
 // Import all functions from API_function
 // Delete sendMessage here to disable sendMessage feature
-const { avatarPlayer, actualAvatar, questAvailable, announcement, clanMembers, getClanId, getClanInfo,
-  playerStats, playerCards, playerProfil, infoRole, getAdvancedRoles, activeShopOffers, battlepassChallenges,
-  roleRotations, idAvatar, searchAvatarId, getApiHat, botInfo, commandList, easterEggs, checkClanChat,
-  handleDiscordMessage, scheduleMidnightTask, deleteOldMessages, resetDailyDeletedMessages, actualquest,
-  checkQuestStatus, activedesactiveParticipations, changeFlair, sendMessage, announcementChannel } = require('./API_function');
+const { 
+  activedesactiveParticipations, activeShopOffers, actualAvatar, actualquest, announcement, announcementChannel, avatarPlayer,
+  battlepassChallenges, botInfo, changeFlair, clanMembers, commandList,
+  deleteOldMessages, scheduleMidnightTask, resetDailyDeletedMessages, easterEggs,
+  getAdvancedRoles, getApiHat, getClanId, getClanInfo, idAvatar, infoRole,
+  playerCards, playerProfil, playerStats, questAvailable, checkQuestStatus, roleRotations, 
+  searchAvatarId, checkClanChat, handleDiscordMessage,
+  // Delete sendMessage here to disable sendMessage feature
+  sendMessage } = require('./API_function');
 
 function start() {
   const { Client, GatewayIntentBits } = require("discord.js");

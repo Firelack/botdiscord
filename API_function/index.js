@@ -4,7 +4,7 @@ module.exports = {
   actualAvatar: require('./actualavatar'),
   actualquest: require('./actualquest'),
   announcement: require('./announcement'),
-  announcementChannel: require('./announcementChannel'),
+  announcementChannel: require('./announcementChannel.js'),
   avatarPlayer: require('./avatarplayer'),
   battlepassChallenges: require('./battlepassChallenges'),
   botInfo: require('./botInfo'),

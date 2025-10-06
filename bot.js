@@ -64,7 +64,7 @@ function start() {
     setInterval(() => checkQuestStatus(client, clanId, questChannelId, axios, headers), 600000); // Toutes les 10 minutes
 
     // Start announcement channel feature (once per hour)
-    setInterval(() => announcementChannel(client, announcementChannelId, clanId, axios, headers), 60 * 60 * 1000);
+    setInterval(() => announcementChannel(client, announcementChannelId, clanId, axios, headers), 5 * 1000);
 
     const channel = await client.channels.fetch(chatChannelId);
 

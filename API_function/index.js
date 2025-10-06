@@ -17,7 +17,7 @@ module.exports = {
   easterEggs: require('./easterEggs'),
   getAdvancedRoles: require('./getAdvancedRoles'),
   getApiHat: require('./getApiHat'),
-  getClanId: require('./getClanId.js'),
+  getClanId: require('./getclanId'),
   getClanInfo: require('./getinfoclan'),
   idAvatar: require('./idAvatar'),
   infoRole: require('./infoRole'),

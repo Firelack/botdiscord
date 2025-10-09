@@ -37,12 +37,6 @@ function easterEggs(message) {
       message.reply("Surtout avec de la fourrure 👀");
     } else if (message.content.toLowerCase().includes("patate")) {
       message.reply("Les patates à la farine de platy");
-    } else if (message.content.toLowerCase().includes("mathematiques") || message.content.toLowerCase().includes("maths")) {
-      message.reply("J'adore les maths, surtout quand c'est pour faire des calculs de probabilité pour le jeu !");
-    } else if (message.content.toLowerCase().includes("herbe")) {
-      message.reply("C'est quoi ?");
-    } else if (message.content.toLowerCase().includes("informatique")) {
-      message.reply("J'en dors plus...");
     }
     if (message.content.toLowerCase().includes("!test")) {
       message.reply("Je suis sûr t'as raté");
@@ -63,6 +57,8 @@ function easterEggs(message) {
       message.reply("Elle peut pas répondre elle dors.");
     } else if (message.content.toLowerCase().includes("lost") || message.content.toLowerCase().includes("lostinred")) {
       message.reply("Aboule le FRIC 🔫");
+    } else if (message.content.toLowerCase().includes("herbe")) {
+      message.reply("C'est quoi ?");
     }
   }
 }

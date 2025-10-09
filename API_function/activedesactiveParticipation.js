@@ -1,49 +1,65 @@
 function activedesactiveParticipations(message, clanId, salonId, axios, headers) {
-  // Active one player
-  if (message.content.toLowerCase().startsWith("active:") && message.channel.id == salonId) {
-    const profilName = message.content.substring(7).trim();
+  // === ACTIVE ONE OR MULTIPLE PLAYERS ===
+  if (message.content.toLowerCase().startsWith("active:") && message.channel.id == salonId && !message.content.toLowerCase().includes("all")) {
+    const rawNames = message.content.substring(7).trim();
+    const profilNames = rawNames.split(",").map(n => n.trim()).filter(n => n.length > 0);
 
-    axios.get(`https://api.wolvesville.com/players/search?username=${profilName}`, { headers })
-      .then(response => {
-        const userId = response.data.id;
+    if (profilNames.length === 0) {
+      return message.reply("⚠️ Aucun nom de profil spécifié après `active:`.");
+    }
 
-        axios.put(
-          `https://api.wolvesville.com/clans/${clanId}/members/${userId}/participateInQuests`,
-          { participateInQuests: true },
-          { headers }
-        )
-        .then(() => {
-          message.reply(`✅ La participation de ${profilName} a été activée avec succès !`);
+    message.reply(`🔄 Activation de ${profilNames.length} joueur(s) en cours...`);
+
+    const promises = profilNames.map(profilName =>
+      axios.get(`https://api.wolvesville.com/players/search?username=${profilName}`, { headers })
+        .then(response => {
+          const userId = response.data.id;
+          return axios.put(
+            `https://api.wolvesville.com/clans/${clanId}/members/${userId}/participateInQuests`,
+            { participateInQuests: true },
+            { headers }
+          )
+          .then(() => `✅ ${profilName} activé`)
+          .catch(() => `❌ Erreur lors de l'activation de ${profilName}`);
         })
-        .catch(error => {
-          message.reply("❌ Une erreur s'est produite lors de l'activation de la participation.");
-          console.error(error);
-        });
-      });
+        .catch(() => `⚠️ Joueur introuvable : ${profilName}`)
+    );
 
-  // Desactive one player
+    Promise.all(promises).then(results => {
+      message.reply(results.join("\n"));
+    });
+
+  // === DESACTIVE ONE OR MULTIPLE PLAYERS ===
   } else if (message.content.toLowerCase().startsWith("desactive:") && message.channel.id == salonId && !message.content.toLowerCase().includes("all")) {
-    const profilName = message.content.substring(10).trim();
+    const rawNames = message.content.substring(10).trim();
+    const profilNames = rawNames.split(",").map(n => n.trim()).filter(n => n.length > 0);
 
-    axios.get(`https://api.wolvesville.com/players/search?username=${profilName}`, { headers })
-      .then(response => {
-        const userId = response.data.id;
+    if (profilNames.length === 0) {
+      return message.reply("⚠️ Aucun nom de profil spécifié après `desactive:`.");
+    }
 
-        axios.put(
-          `https://api.wolvesville.com/clans/${clanId}/members/${userId}/participateInQuests`,
-          { participateInQuests: false },
-          { headers }
-        )
-        .then(() => {
-          message.reply(`✅ La participation de ${profilName} a été désactivée avec succès !`);
+    message.reply(`🔄 Désactivation de ${profilNames.length} joueur(s) en cours...`);
+
+    const promises = profilNames.map(profilName =>
+      axios.get(`https://api.wolvesville.com/players/search?username=${profilName}`, { headers })
+        .then(response => {
+          const userId = response.data.id;
+          return axios.put(
+            `https://api.wolvesville.com/clans/${clanId}/members/${userId}/participateInQuests`,
+            { participateInQuests: false },
+            { headers }
+          )
+          .then(() => `✅ ${profilName} désactivé`)
+          .catch(() => `❌ Erreur lors de la désactivation de ${profilName}`);
         })
-        .catch(error => {
-          message.reply("❌ Une erreur s'est produite lors de la désactivation de la participation.");
-          console.error(error);
-        });
-      });
+        .catch(() => `⚠️ Joueur introuvable : ${profilName}`)
+    );
 
-  // Desactive all players
+    Promise.all(promises).then(results => {
+      message.reply(results.join("\n"));
+    });
+
+  // === DESACTIVE ALL ===
   } else if (message.content.toLowerCase() === "desactiveall:" && message.channel.id == salonId) {
     message.reply("🔄 Désactivation de tous les membres en cours...");
 
@@ -53,7 +69,6 @@ function activedesactiveParticipations(message, clanId, salonId, axios, headers)
         const promises = [];
 
         for (const member of members) {
-          // If the member is currently participating, create a promise to disable participation
           if (member.participateInClanQuests) {
             const p = axios.put(
               `https://api.wolvesville.com/clans/${clanId}/members/${member.playerId}/participateInQuests`,
@@ -77,7 +92,8 @@ function activedesactiveParticipations(message, clanId, salonId, axios, headers)
         message.reply("❌ Impossible de récupérer la liste des membres du clan.");
         console.error(error);
       });
-    // Active all players
+
+  // === ACTIVE ALL ===
   } else if (message.content.toLowerCase() === "activeall:" && message.channel.id == salonId) {
     message.reply("🔄 Activation de tous les membres en cours...");
 
@@ -87,7 +103,6 @@ function activedesactiveParticipations(message, clanId, salonId, axios, headers)
         const promises = [];
 
         for (const member of members) {
-          // If the member is currently participating, create a promise to disable participation
           if (!member.participateInClanQuests) {
             const p = axios.put(
               `https://api.wolvesville.com/clans/${clanId}/members/${member.playerId}/participateInQuests`,

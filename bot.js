@@ -21,8 +21,7 @@ function start() {
   const botKey = process.env['BOT_KEY'];
   const clanId = process.env['CLAN_ID'];
   const chatChannelId = process.env['CHAT_CHANNEL_ID'];
-  const questChannelId = process.env['QUEST_CHANNEL_ID'];
-  const participationChannelId = process.env['PARTICIPATION_CHANNEL_ID'];
+  const leaderChannelId = process.env['LEADER_CHANNEL_ID'];
   const announcementChannelId = process.env['ANNOUNCEMENT_CHANNEL_ID'];
 
   // Delete these line to disable sendMessage
@@ -61,7 +60,7 @@ function start() {
 
     // Start checking for new clan chat messages
     setInterval(() => checkClanChat(client, clanId, chatChannelId, axios, headers), 20000);
-    setInterval(() => checkQuestStatus(client, clanId, questChannelId, axios, headers), 600000); // Toutes les 10 minutes
+    setInterval(() => checkQuestStatus(client, clanId, leaderChannelId, axios, headers), 600000); // Toutes les 10 minutes
 
     // Start announcement channel feature (once per hour)
     setInterval(() => announcementChannel(client, announcementChannelId, clanId, axios, headers), 5 * 1000);
@@ -95,9 +94,9 @@ function start() {
 
       if (message.author.id === client.user.id) return; // Ignore messages from the bot itself
 
-      if (message.channel.id === participationChannelId) {
-      activedesactiveParticipations(message, clanId, participationChannelId, axios, headers);
-      changeFlair(message, clanId, participationChannelId, axios, headers);
+      if (message.channel.id === leaderChannelId) {
+      activedesactiveParticipations(message, clanId, leaderChannelId, axios, headers);
+      changeFlair(message, clanId, leaderChannelId, axios, headers);
       return; // Stop processing other commands
     }
 
@@ -123,7 +122,7 @@ function start() {
       actualAvatar(message, axios, headers);
       avatarPlayer(message, axios, headers);
 
-      if (message.channel.id !== participationChannelId) {
+      if (message.channel.id !== leaderChannelId) {
         easterEggs(message); 
       }
     }

@@ -12,6 +12,7 @@ function checkQuestStatus(client, clanId, questChannelId, axios, headers) {
   })
     .then(response => {
       const quest = response.data?.quest;
+      const tierFinished = response.data?.tierFinished;
 
       if (!quest) {
         if (ok) {
@@ -21,7 +22,7 @@ function checkQuestStatus(client, clanId, questChannelId, axios, headers) {
         return;
       }
 
-      if (quest.tierFinished) {
+      if (tierFinished) {
         if (ok) {
           channel.send("L'étape actuelle de la quête est terminée");
           ok = false;

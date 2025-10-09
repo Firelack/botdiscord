@@ -71,16 +71,14 @@ Contributions, ideas, or feedback are welcome!
    APIKEY="yourapikey"
    BOT_KEY="yourbotkey"
    CLAN_ID="clanid"
-   CHAT_CHANNEL_ID="discordid"
-   QUEST_CHANNEL_ID="discordid2"
-   PARTICIPATION_CHANNEL_ID="discordid3"
+   CHAT_CHANNEL_ID="chatdiscordid"
+   LEADER_CHANNEL_ID="leaderchannelid"
    ANNOUNCEMENT_CHANNEL_ID="announcementChannel"
    ```
 
    - The bot key is your own bot’s token, which you must create on the [Discord Developer Portal](https://discord.com/developers/applications).  
-   - `discordid` is the channel ID where Wolvesville ↔ Discord messages will be linked.  
-   - `discordid2` is the channel ID where you want to receive quest progress updates.  
-   - `discordid3` is the channel ID where members can enable or disable quest participation.  
+   - `chatdiscordid` is the channel ID where Wolvesville ↔ Discord messages will be linked.  
+   - `leaderchannelid` is the channel ID for leaders to know if quest is active, to edit flairs, or change participation of members and leaders.  
    - `announcementChannel` is the channel ID where announcement can be post.  
 
    ⚠️ Important: You must delete the `sendMessage.js` file and remove all references to its function in `index.js`, `bot.js`, and `easterEggs.js`.  

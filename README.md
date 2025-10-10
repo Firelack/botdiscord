@@ -17,7 +17,7 @@ A lot of features are made for the developpers clan "WerewoIf OnIine*" but you c
 - 📧 Link between a Discord channel and clan chat.
 - 🆕 An announcement channel link to announcements in game.
 - 🎉 Easter eggs are hidden in some bot responses 😄  
-- 📰 A Discord channel to enable or disable clan members’ participation.  
+- 📰 A Discord channel for leader's to enable or disable clan members’ participation, to change flairs, and to see if quest or if the quest stage is finished.  
 - Additional useful features for developers’ clans.  
 
 ---

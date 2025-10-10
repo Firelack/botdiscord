@@ -1,42 +1,42 @@
 const deletedMessagesToday = new Set();
+const MESSAGE_TO_KEEP = process.env['MESSAGE_TO_KEEP_ID'] || null;
 
 async function deleteOldMessages(channel, dateago) {
   console.log(`Suppression des anciens messages dans le salon ${channel.name} (${channel.id})`);
 
   try {
     const now = Date.now();
+    const MAX_DELETE_AGE = 14 * 24 * 60 * 60 * 1000; // 14 days maximum Discord allows
 
     let lastMessageId = null;
     let totalDeleted = 0;
+    let totalChecked = 0;
 
     while (true) {
-      // Fetch messages in batches of 100, starting from the last one retrieved
       const options = { limit: 100 };
       if (lastMessageId) options.before = lastMessageId;
 
       const messagesFetched = await channel.messages.fetch(options);
-      if (messagesFetched.size === 0) break; // No more messages to fetch
+      if (messagesFetched.size === 0) break; // No more messages to process
 
-      // Filter messages to delete
-      const messagesToDelete = messagesFetched.filter(msg =>
-        now - msg.createdTimestamp > dateago &&
-        !deletedMessagesToday.has(msg.id)
-      );
+      for (const msg of messagesFetched.values()) {
+        totalChecked++;
 
-      if (messagesToDelete.size === 0) {
-        // No messages to delete in this batch, we can stop
-        break;
-      }
+        // Conditions d'exclusion
+        if (msg.id === MESSAGE_TO_KEEP) continue; // :lock: on garde ce message
+        if (deletedMessagesToday.has(msg.id)) continue;
+        const age = now - msg.createdTimestamp;
+        if (age < dateago) continue; // message trop récent
+        if (age > MAX_DELETE_AGE) continue; // message trop vieux pour suppression
 
-      // Sequential deletion to avoid rate limit errors
-      for (const msg of messagesToDelete.values()) {
+        // Tentative de suppression
         try {
           await msg.delete();
           deletedMessagesToday.add(msg.id);
           totalDeleted++;
           console.log(`→ Supprimé : ${msg.author.tag} (${msg.createdAt.toISOString()})`);
         } catch (err) {
-          console.warn(`Échec suppression message ID ${msg.id} (auteur : ${msg.author.tag}) : ${err.message}`);
+          console.warn(`⚠️ Échec suppression message ${msg.id} (${msg.author.tag}) : ${err.message}`);
         }
       }
 
@@ -47,20 +47,19 @@ async function deleteOldMessages(channel, dateago) {
       if (messagesFetched.size < 100) break;
     }
 
-    console.log(`Total messages supprimés : ${totalDeleted}`);
+    console.log(`✔️ Vérifiés : ${totalChecked} | Supprimés : ${totalDeleted}`);
 
   } catch (error) {
     console.error("Erreur suppression anciens messages :", error.message);
   }
 }
-
 function resetDailyDeletedMessages() {
   deletedMessagesToday.clear();
   console.log("🕛 Mémoire des suppressions réinitialisée pour la nouvelle journée.");
 }
 
 function scheduleMidnightTask(task) {
-  const checkInterval = 60 * 1000; // Check every minute
+  const checkInterval = 60 * 1000; // Vérifie chaque minute
   let alreadyRunToday = false;
 
   setInterval(() => {
@@ -80,5 +79,5 @@ function scheduleMidnightTask(task) {
 module.exports = {
   deleteOldMessages,
   resetDailyDeletedMessages,
-    scheduleMidnightTask
+  scheduleMidnightTask
 };

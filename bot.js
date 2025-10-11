@@ -7,10 +7,10 @@ const axios = require('axios');
 const { 
   activedesactiveParticipations, activeShopOffers, actualAvatar, actualquest, announcement, announcementChannel, avatarPlayer,
   battlepassChallenges, botInfo, changeFlair, clanMembers, commandList,
-  deleteOldMessages, scheduleMidnightTask, resetDailyDeletedMessages, easterEggs,
+  deleteOldMessages, resetDailyDeletedMessages, easterEggs,
   getAdvancedRoles, getApiHat, getClanId, getClanInfo, idAvatar, infoRole,
   playerCards, playerProfil, playerStats, questAvailable, checkQuestStatus, roleRotations, 
-  searchAvatarId, checkClanChat, handleDiscordMessage,
+  searchAvatarId, checkClanChat, handleDiscordMessage, scheduleDailyTask,
   // Delete sendMessage here to disable sendMessage feature
   sendMessage } = require('./API_function');
 
@@ -60,7 +60,7 @@ function start() {
 
     // Start checking for new clan chat messages
     setInterval(() => checkClanChat(client, clanId, chatChannelId, axios, headers), 20000);
-    setInterval(() => checkQuestStatus(client, clanId, leaderChannelId, axios, headers), 600000); // Toutes les 10 minutes
+    setInterval(() => checkQuestStatus(client, clanId, leaderChannelId, axios, headers), 600000); // Every 10 minutes
 
     // Start announcement channel feature (once per hour)
     setInterval(() => announcementChannel(client, announcementChannelId, clanId, axios, headers), 5 * 1000);
@@ -72,11 +72,10 @@ function start() {
     const messageMinute = 0; // 00 minutes
     sendMessage(client, messageChannelId, personMentionId, "Envoie ton temps d'écran maintenant !", messageHour, messageMinute);
 
-    // Suppression task every day at midnight
-    scheduleMidnightTask(async () => {
+    scheduleDailyTask(async () => {
       resetDailyDeletedMessages();
       await deleteOldMessages(channel, 2 * 24 * 60 * 60 * 1000); // Delete messages older than 2 days
-    });
+    }, 0, 0); // 0h00
   });
 
   client.login(`Bot ${botKey}`);

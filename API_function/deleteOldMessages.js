@@ -58,26 +58,7 @@ function resetDailyDeletedMessages() {
   console.log("🕛 Mémoire des suppressions réinitialisée pour la nouvelle journée.");
 }
 
-function scheduleMidnightTask(task) {
-  const checkInterval = 60 * 1000; // Vérifie chaque minute
-  let alreadyRunToday = false;
-
-  setInterval(() => {
-    const now = new Date();
-    if (now.getHours() === 0 && now.getMinutes() === 0) {
-      if (!alreadyRunToday) {
-        console.log("🕛 Exécution de la tâche programmée de minuit.");
-        task();
-        alreadyRunToday = true;
-      }
-    } else {
-      alreadyRunToday = false;
-    }
-  }, checkInterval);
-}
-
 module.exports = {
   deleteOldMessages,
   resetDailyDeletedMessages,
-  scheduleMidnightTask
 };

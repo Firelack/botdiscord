@@ -49,8 +49,9 @@ async function announcementChannel(client, salonID, clanId, axios, headers) {
 
     // Process announcements in reverse order (oldest first)
     for (const announcement of announcements.reverse()) {
-      const annId = announcement.id;
-      const timestamp = new Date(announcement.timestamp).toLocaleString('fr-FR', {
+      const date = new Date(announcement.timestamp);
+      date.setHours(date.getHours() + 2); // ✅ Update to UTC+2
+      const timestamp = date.toLocaleString('fr-FR', {
         day: 'numeric',
         month: 'long',
         year: 'numeric',

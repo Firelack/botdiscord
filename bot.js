@@ -10,7 +10,7 @@ const {
   deleteOldMessages, resetDailyDeletedMessages, easterEggs,
   getAdvancedRoles, getApiHat, getClanId, getClanInfo, idAvatar, infoRole,
   playerCards, playerProfil, playerStats, questAvailable, checkQuestStatus, roleRotations, 
-  searchAvatarId, checkClanChat, handleDiscordMessage, scheduleDailyTask,
+  searchAvatarId, checkClanChat, handleDiscordMessage, scheduleDailyTask, mondayAnnouncementTask,
   // Delete sendMessage here to disable sendMessage feature
   sendMessage } = require('./API_function');
 
@@ -63,7 +63,7 @@ function start() {
     setInterval(() => checkQuestStatus(client, clanId, leaderChannelId, axios, headers), 600000); // Every 10 minutes
 
     // Start announcement channel feature (once per hour)
-    setInterval(() => announcementChannel(client, announcementChannelId, clanId, axios, headers), 5 * 1000);
+    setInterval(() => announcementChannel(client, announcementChannelId, clanId, axios, headers), 60 * 60 * 1000);
 
     const channel = await client.channels.fetch(chatChannelId);
 
@@ -76,6 +76,9 @@ function start() {
       resetDailyDeletedMessages();
       await deleteOldMessages(channel, 2 * 24 * 60 * 60 * 1000); // Delete messages older than 2 days
     }, 0, 0); // 0h00
+
+    // Schedule Monday announcement at 6:00 AM
+    scheduleDailyTask(() => mondayAnnouncementTask(clanId, axios, headers), 6, 0);
   });
 
   client.login(`Bot ${botKey}`);

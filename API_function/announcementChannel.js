@@ -50,6 +50,7 @@ async function announcementChannel(client, salonID, clanId, axios, headers) {
     // Process announcements in reverse order (oldest first)
     for (const announcement of announcements.reverse()) {
       const date = new Date(announcement.timestamp);
+      const annId = announcement.id;
       date.setHours(date.getHours() + 2); // ✅ Update to UTC+2
       const timestamp = date.toLocaleString('fr-FR', {
         day: 'numeric',
@@ -68,8 +69,19 @@ async function announcementChannel(client, salonID, clanId, axios, headers) {
         `**__Auteur__**: ${announcement.author}`;
 
       if (announcement.editTimestamp) {
-        const editTime = new Date(announcement.editTimestamp).toLocaleString('fr-FR');
-        content += `\n*(Édité par ${announcement.editAuthor} le ${editTime})*`;
+        const editTime = new Date(announcement.editTimestamp);
+        editTime.setHours(editTime.getHours() + 2); // ✅ Décalage UTC+2
+        const editTimestamp = editTime.toLocaleString('fr-FR', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          second: 'numeric',
+          hour12: false
+        });
+
+        content += `\n*(Édité par ${announcement.editAuthor} le ${editTimestamp})*`;
       }
 
       // If announcement already exists, update it

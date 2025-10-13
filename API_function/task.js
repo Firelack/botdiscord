@@ -6,8 +6,9 @@ function scheduleDailyTask(task, targetHour = 0, targetMinute = 0) {
 
   setInterval(() => {
     const now = new Date();
+    const currentHour = (now.getUTCHours() + 2) % 24; // Adjust for UTC+2
 
-    if (now.getHours() === targetHour && now.getMinutes() === targetMinute) {
+    if (currentHour === targetHour && now.getMinutes() === targetMinute) {
       if (!alreadyRunToday) {
         console.log(`🕒 Exécution de la tâche planifiée à ${targetHour}h${targetMinute.toString().padStart(2, '0')}.`);
         task();
@@ -24,7 +25,8 @@ function mondayAnnouncementTask(clanId, axios, headers) {
   if (now.getDay() === 1) { // Monday = 1
     const message = "Bonjouuur,\n\nPensez à votez pour les quêtes de cette semaine\n(Seulement si vous comptez participer)\n\nBonne semaine à tous ! 😊";
     postAnnouncement(axios, headers, clanId, message);
-  } else {
+    console.log("📢 Annonce du lundi envoyée.");
+    } else {
     console.log("⏭️ Ce n'est pas lundi, aucune annonce envoyée.");
   }
 }

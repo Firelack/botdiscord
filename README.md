@@ -104,3 +104,39 @@ Contributions, ideas, or feedback are welcome!
 - If you don’t plan to host the bot, remove keepAlive(); from bot.js.
 
 - Many features might not be useful to you — if so, delete their related code in bot.js.
+
+## 🧩 To-Do List — WOV Discord Bot
+
+### 📢 Announcement System
+
+- [ ] Implement a **Quest Announcement System**:
+  - [ ] Automatically send weekly quest announcements every **Monday at 8 PM**.  
+  - [ ] Add a command to **enable or disable** the Monday 8 PM announcement.  
+  - [ ] Add a command to **enable or disable** **Gem Quests**.  
+  - [ ] Add a command to **enable or disable default Sub-Chief/Chief roles**.  
+  - [ ] Add a command that lets the bot send an announcement based on configurable parameters (e.g., **gold/gems**, **date/time**).  
+
+---
+
+### 🗃️ Database Integration (Superbase ?)
+
+- [ ] Connect the **database** to store the IDs of already sent announcements.  
+- [ ] Connect the **database** to store if the bot already send quest informations to admin
+- [ ] Store **free quests** in the database.  
+- [ ] Automatically update free quests:
+  - [ ] On launch, decrement the available quest count.  
+  - [ ] Apply a **penalty** if the user lacks enough XP.  
+  - [ ] Apply a **penalty** if a user votes but doesn’t participate.  
+  - [ ] Add a **bonus** if the user reaches **8k × c** (where `c` is a coefficient).  
+- [ ] Update the **Free Quest Announcement** message to reflect these changes.  
+
+---
+
+### ⚙️ Launch Management System
+
+- [ ] Implement logic for handling quest launches:
+  - [ ] If the quest reason contains “**free quest**” or “:skull:”, **decrement** and mark it as launched.  
+  - [ ] If the contribution is exactly **400**, include it in the quest.  
+  - [ ] If the **total contribution** is 400, include it in the quest.  
+  - [ ] If the total is **greater than 400** or spread across multiple entries, trigger a **warning** (check if “quest” is included).  
+  - [ ] Automatically **activate participation** for all members and launch at the scheduled announcement time.  

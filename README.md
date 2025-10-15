@@ -107,6 +107,14 @@ Contributions, ideas, or feedback are welcome!
 
 ## 🧩 To-Do List — WOV Discord Bot
 
+### 📁 Reorganize Files
+
+- [ ] Reorganize all files into proper folders.
+- [ ] Rename all files following the same naming convention (camelCase).
+- [ ] Move `announcements.json` to a new `data` folder.
+- [ ] Ensure each file contains only **one main function**.
+- [ ] Verify that all function names follow the same naming convention.
+
 ### 📢 Announcement System
 
 - [ ] Implement a **Quest Announcement System**:

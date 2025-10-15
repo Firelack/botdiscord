@@ -12,7 +12,7 @@ const {
   playerCards, playerProfil, playerStats, questAvailable, checkQuestStatus, roleRotations, 
   searchAvatarId, checkClanChat, handleDiscordMessage, scheduleDailyTask, mondayAnnouncementTask,
   // Delete sendMessage here to disable sendMessage feature
-  sendMessage } = require('./API_function');
+  sendMessage } = require('./index');
 
 function start() {
   const { Client, GatewayIntentBits } = require("discord.js");

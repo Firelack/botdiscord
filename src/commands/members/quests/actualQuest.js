@@ -1,5 +1,5 @@
 
-function actualquest(message, clanId, axios, headers ) {
+function actualQuest(message, clanId, axios, headers ) {
 // Actual quest of a clan
     if (message.content.toLowerCase().startsWith("actualquest")) {
       axios.get(`https://api.wolvesville.com/clans/${clanId}/quests/active`, {
@@ -36,4 +36,4 @@ function actualquest(message, clanId, axios, headers ) {
         });
     }
 }
-module.exports = actualquest;
+module.exports = actualQuest;

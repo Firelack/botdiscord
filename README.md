@@ -58,7 +58,7 @@ Contributions, ideas, or feedback are welcome!
 
 1. Create a bot on the [Discord Developer Portal](https://discord.com/developers/applications)  
 2. Install [Node.js](https://nodejs.org/)  
-3. Download the files `bot.js`, `package.json`, `keep_alive.js` and the `API_function` folder  
+3. Download the folder `src`, and the file `package.json`
 4. Install dependencies:
 
    ```bash
@@ -81,23 +81,23 @@ Contributions, ideas, or feedback are welcome!
    - `leaderchannelid` is the channel ID for leaders to know if quest is active, to edit flairs, or change participation of members and leaders.  
    - `announcementChannel` is the channel ID where announcement can be post.  
 
-   ⚠️ Important: You must delete the `sendMessage.js` file and remove all references to its function in `index.js`, `bot.js`, and `easterEggs.js`.  
+   ⚠️ Important: You must delete the `events/sendMessage.js` file and remove all references to its function in `utils/index.js`, `bot.js`, and `commands/members/easterEggs.js`.  
 
 6. Run the bot:  
 
    ```bash
-   node bot.js
+   node scr/bot.js
    ```
 
 7. To get a clan ID:\
    Use in discord :
 
    ```bash
-   idclan{clan_name}
+   idclan:{clan_name}
    ```
 
    ⚠️ You must add your API to a clan’s bot list to access clan information.
-8. Tip: edit the bot’s responses in `API_function/easterEggs.js` to customize them!
+8. Tip: edit the bot’s responses in `commands/members/easterEggs.js` to customize them!
 
 ### 🚨 Additional Notes
 
@@ -107,14 +107,19 @@ Contributions, ideas, or feedback are welcome!
 
 ## 🧩 To-Do List — WOV Discord Bot
 
+### 📁 Commands modifications
+
+- [ ] Change bot response for `avatarPlayer`
+- [ ] Fix `questAvailable`
+
 ### 📁 Reorganize Files
 
-- [ ] Reorganize all files into proper folders.
-- [ ] Rename all files following the same naming convention (camelCase).
-- [ ] Move `announcements.json` to a new `data` folder.
-- [ ] Ensure each file contains only **one main function**.
-- [ ] Verify that all function names follow the same naming convention.
-
+- [x] Reorganize all files into proper folders.
+- [x] Rename all files following the same naming convention (camelCase).
+- [x] Ensure each file contains only **one main function**. (except `syncChat`)
+- [x] Verify that all function names follow the same naming convention.
+- [ ] When database integration effective : change `announcementChannel.js`, `deleteOldMessage.js`,
+  
 ### 📢 Announcement System
 
 - [ ] Implement a **Quest Announcement System**:
@@ -128,14 +133,16 @@ Contributions, ideas, or feedback are welcome!
 
 ### 🗃️ Database Integration (Superbase ?)
 
-- [ ] Connect the **database** to store the IDs of already sent announcements.  
-- [ ] Connect the **database** to store if the bot already send quest informations to admin
+- [ ] Store the IDs of already sent announcements (don't use announcement.json).  
+- [ ] Store if the bot already send quest informations to admin.
+- [ ] Store if the bot already send the last message of the clan chat.
+- [ ] Store if the bot already delete discord messages.
 - [ ] Store **free quests** in the database.  
 - [ ] Automatically update free quests:
   - [ ] On launch, decrement the available quest count.  
   - [ ] Apply a **penalty** if the user lacks enough XP.  
   - [ ] Apply a **penalty** if a user votes but doesn’t participate.  
-  - [ ] Add a **bonus** if the user reaches **8k × c** (where `c` is a coefficient).  
+  - [ ] Add a **bonus** if the user reaches **8k × c**.  
 - [ ] Update the **Free Quest Announcement** message to reflect these changes.  
 
 ---

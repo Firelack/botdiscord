@@ -1,18 +1,18 @@
 require('dotenv').config();
-const keepAlive = require('./keep_alive');
+const keepAlive = require('./utils/keepAlive');
 const axios = require('axios');
 
 // Import all functions from API_function
 // Delete sendMessage here to disable sendMessage feature
 const { 
-  activedesactiveParticipations, activeShopOffers, actualAvatar, actualquest, announcement, announcementChannel, avatarPlayer,
+  changeParticipations, activeShopOffers, actualAvatar, actualQuest, announcement, announcementChannel, avatarPlayer,
   battlepassChallenges, botInfo, changeFlair, clanMembers, commandList,
   deleteOldMessages, resetDailyDeletedMessages, easterEggs,
   getAdvancedRoles, getApiHat, getClanId, getClanInfo, idAvatar, infoRole,
   playerCards, playerProfil, playerStats, questAvailable, checkQuestStatus, roleRotations, 
   searchAvatarId, checkClanChat, handleDiscordMessage, scheduleDailyTask, mondayAnnouncementTask,
   // Delete sendMessage here to disable sendMessage feature
-  sendMessage } = require('./index');
+  sendMessage } = require('./utils/index');
 
 function start() {
   const { Client, GatewayIntentBits } = require("discord.js");
@@ -97,14 +97,14 @@ function start() {
       if (message.author.id === client.user.id) return; // Ignore messages from the bot itself
 
       if (message.channel.id === leaderChannelId) {
-      activedesactiveParticipations(message, clanId, leaderChannelId, axios, headers);
+      changeParticipations(message, clanId, leaderChannelId, axios, headers);
       changeFlair(message, clanId, leaderChannelId, axios, headers);
       return; // Stop processing other commands
     }
 
       commandList(message);
       botInfo(message);
-      actualquest(message, clanId, axios, headers);
+      actualQuest(message, clanId, axios, headers);
       getApiHat(message, axios, headers);
       searchAvatarId(message, axios, headers);
       idAvatar(message, axios, headers);

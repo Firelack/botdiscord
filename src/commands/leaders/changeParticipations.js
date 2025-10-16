@@ -1,4 +1,4 @@
-function activedesactiveParticipations(message, clanId, salonId, axios, headers) {
+function changeParticipations(message, clanId, salonId, axios, headers) {
   // === ACTIVE ONE OR MULTIPLE PLAYERS ===
   if (message.content.toLowerCase().startsWith("active:") && message.channel.id == salonId && !message.content.toLowerCase().includes("all")) {
     const rawNames = message.content.substring(7).trim();
@@ -129,4 +129,4 @@ function activedesactiveParticipations(message, clanId, salonId, axios, headers)
   }
 }
 
-module.exports = activedesactiveParticipations;
+module.exports = changeParticipations;

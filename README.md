@@ -109,8 +109,8 @@ Contributions, ideas, or feedback are welcome!
 
 ### 📁 Commands modifications
 
-- [ ] Change bot response for `avatarPlayer`
-- [ ] Fix `questAvailable`
+- [x] Change bot response for `avatarPlayer`
+- [x] Fix `questAvailable`
 
 ### 📁 Reorganize Files
 
@@ -150,7 +150,7 @@ Contributions, ideas, or feedback are welcome!
 ### ⚙️ Launch Management System
 
 - [ ] Implement logic for handling quest launches:
-  - [ ] If the quest reason contains “**free quest**” or “:skull:”, **decrement** and mark it as launched.  
+  - [ ] If the quest reason contains “**free quest**” or “raison”, **decrement** and mark it as launched.  
   - [ ] If the contribution is exactly **400**, include it in the quest.  
   - [ ] If the **total contribution** is 400, include it in the quest.  
   - [ ] If the total is **greater than 400** or spread across multiple entries, trigger a **warning** (check if “quest” is included).  

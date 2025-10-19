@@ -1,68 +1,148 @@
-function avatarPlayer(message, axios, headers) { 
-  // All avatar or a particular avatar of a player
+const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
+const sharp = require('sharp');
+
+// Function to download an image and return its buffer
+async function downloadImage(url, axiosInstance) { 
+  try {
+    const response = await axiosInstance.get(url, {
+      responseType: 'arraybuffer'
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Erreur_téléchargEMENT ${url}:`, error.message); 
+    return null;
+  }
+}
+
+async function avatarPlayer(message, axios, headers) {
+
   if (message.content.toLowerCase().startsWith("avatar:")) {
     const profilNameWithNumber = message.content.substring(7).trim();
-
-    // Use a regular expression to check if the message ends with a space followed by a number
     const match = profilNameWithNumber.match(/^(.*) (\d+)$/);
 
     if (match) {
+      // SINGLE AVATAR
       const profilName = match[1].trim();
       const number = parseInt(match[2], 10);
 
-      axios.get(`https://api.wolvesville.com/players/search?username=${profilName}`, {
-        headers: headers
-      })
+      axios.get(`https://api.wolvesville.com/players/search?username=${profilName}`, { headers: headers })
         .then(response => {
-          const responseData = response.data;
-          const avatars = responseData.avatars;
+          const avatars = response.data.avatars;
           const nouvelleExtension = "@3x.png";
 
-          if (!isNaN(number) && number >= 1 && number <= avatars.length) {
+          if (avatars && !isNaN(number) && number >= 1 && number <= avatars.length) {
             const avatarUrl = avatars[number - 1].url.replace(".png", nouvelleExtension);
-            message.reply(`**__Avatar ${number} de ${profilName}:__**\n[Lien vers l'avatar](${avatarUrl})`);
+            
+            const avatarEmbed = new EmbedBuilder()
+              .setTitle(`Avatar ${number} de ${profilName}`)
+              .setImage(avatarUrl)
+              .setColor("#0099ff")
+              .setURL(avatarUrl); 
+
+            message.reply({ embeds: [avatarEmbed] });
           } else {
-            message.reply(`Numéro d'avatar invalide pour ${profilName}. Veuillez choisir un numéro entre 1 et ${avatars.length}`);
+            message.reply(`Numéro d'avatar invalide pour ${profilName}. (1 à ${avatars ? avatars.length : 0})`);
           }
         })
-        .catch(error => {
-          message.reply("Une erreur s'est produite lors de la requête.");
-          console.error(error);
-        });
+        .catch(error => message.reply("Une erreur s'est produite (joueur introuvable ?)."));
+    
     } else {
+      // All AVATARS PREVIEW
       const profilName = profilNameWithNumber;
 
-      // Use Axios to make the HTTP request for avatars
-      axios.get(`https://api.wolvesville.com/players/search?username=${profilName}`, {
-        headers: headers
-      })
-        .then(response => {
-          const responseData = response.data;
-          const avatars = responseData.avatars;
-          const nouvelleExtension = "@3x.png";
-          const avatarUrls = avatars.map((avatar, index) => {
-            const url = avatar.url.replace(".png", nouvelleExtension);
-            return `!([Avatar ${index + 1}](${url}))`;
-          });
+      try {
+        const response = await axios.get(`https://api.wolvesville.com/players/search?username=${profilName}`, { headers: headers });
+        const avatars = response.data.avatars;
+        
+        if (!avatars || avatars.length === 0) {
+           message.reply(`Aucun avatar trouvé pour ${profilName}.`);
+           return;
+        }
 
-          if (avatarUrls.length <= 12) {
-            const formattedAvatars = avatarUrls.map(url => `> - ${url}`);
-            message.reply(`**__Avatars de ${profilName}:__**\n${formattedAvatars.join('\n')}`);
-          } else {
-            // Divide into groups of 12 avatars maximum
-            const chunkSize = 12;
-            for (let i = 0; i < avatarUrls.length; i += chunkSize) {
-              const chunk = avatarUrls.slice(i, i + chunkSize);
-              const startIndex = i + 1;
-              const endIndex = i + chunk.length;
-              message.reply(`**__Avatars de ${profilName} (${startIndex}-${endIndex}):__**\n${chunk.join('\n')}`);
+        const nouvelleExtension = "@3x.png";
+        const chunkSize = 12; // Numbers of avatars per page
+        const totalPages = Math.ceil(avatars.length / chunkSize);
+
+        for (let i = 0; i < avatars.length; i += chunkSize) {
+          const avatarsChunk = avatars.slice(i, i + chunkSize);
+          const pageNum = (i / chunkSize) + 1;
+
+          // Download all images in the chunk concurrently
+          const imageBuffers = await Promise.all(
+            avatarsChunk.map(avatar => 
+              downloadImage(avatar.url.replace(".png", nouvelleExtension), axios)
+            )
+          );
+          
+          let compositeInputs = [];
+          let descriptionLinks = [];
+          
+          const avatarSize = 128; // Width and height of each avatar in the grid
+          const cols = 3; // 3 columns
+
+          for (let j = 0; j < avatarsChunk.length; j++) {
+            const buffer = imageBuffers[j]; // Get the downloaded buffer
+            const globalIndex = i + j + 1;
+            const originalUrl = avatarsChunk[j].url.replace(".png", nouvelleExtension);
+
+            // Clickable link in description
+            descriptionLinks.push(`[Avatar ${globalIndex}](${originalUrl})`);
+
+            if (buffer) {
+              // If buffer is valid, add to composite inputs
+              const x = (j % cols) * avatarSize;
+              const y = Math.floor(j / cols) * avatarSize;
+
+              compositeInputs.push({
+                input: await sharp(buffer).resize(avatarSize, avatarSize).toBuffer(), // Resize to fit grid
+                top: y,
+                left: x
+              });
             }
           }
-        })
-        .catch(error => {
-          message.reply("Une erreur s'est produite lors de la requête.");
-          console.error(error);
-        });
+          
+          if (compositeInputs.length === 0) {
+              message.reply(`Échec du téléchargement de tous les avatars pour la page ${pageNum}.`);
+              continue; // Skip to next page
+          }
+
+          // Prepare dimensions for composite image
+          const rows = Math.ceil(avatarsChunk.length / cols);
+          const compositeWidth = cols * avatarSize;
+          const compositeHeight = rows * avatarSize;
+
+          // Create composite image
+          const compositeBuffer = await sharp({
+            create: {
+              width: compositeWidth,
+              height: compositeHeight,
+              channels: 4,
+              background: { r: 0, g: 0, b: 0, alpha: 0 } // Transparent background
+            }
+          })
+          .composite(compositeInputs) // Add all valid avatars
+          .png()
+          .toBuffer();
+
+          // Prepare and send the embed message
+          const attachmentName = `avatars_preview_p${pageNum}.png`;
+          const attachment = new AttachmentBuilder(compositeBuffer, { name: attachmentName });
+
+          const embed = new EmbedBuilder()
+            .setTitle(`Avatars de ${profilName} (Page ${pageNum}/${totalPages})`)
+            .setDescription(descriptionLinks.join(' | ')) // All links
+            .setImage(`attachment://${attachmentName}`) // Image from attachment
+            .setColor("#0099ff")
+            .setFooter({ text: `Avatars ${i + 1} à ${i + avatarsChunk.length} sur ${avatars.length}` });
+
+          // Send the message with embed and attachment
+            await message.reply({ embeds: [embed], files: [attachment] });
+        }
+
+      } catch (error) {
+        message.reply("Une erreur majeure est survenue lors de la création de l'aperçu.");
+        console.error(error);
+      }
     }
   }
 }

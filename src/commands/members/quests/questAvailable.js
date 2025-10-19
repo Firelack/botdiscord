@@ -1,14 +1,12 @@
 function questAvailable(message, clanId, axios, headers) {
 // Quest available for a clan
     if (message.content.toLowerCase().startsWith("quest")) {
-          console.log("commande detecte:");
 
       axios.get(`https://api.wolvesville.com/clans/${clanId}/quests/available`, {
         headers: headers
       })
         .then(response => {
           const responseData = response.data;
-          console.log("Réponse reçue:", responseData);
 
           // Loop through each quest in the response
           for (const quest of responseData) {

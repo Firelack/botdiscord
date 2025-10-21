@@ -129,8 +129,6 @@ Contributions, ideas, or feedback are welcome!
   - [ ] Add a command to **enable or disable default Sub-Chief/Chief roles**.  
   - [ ] Add a command that lets the bot send an announcement based on configurable parameters (e.g., **gold/gems**, **date/time**).  
 
----
-
 ### 🗃️ Database Integration (Superbase ?)
 
 - [ ] Store the IDs of already sent announcements (don't use announcement.json).  
@@ -143,9 +141,7 @@ Contributions, ideas, or feedback are welcome!
   - [ ] Apply a **penalty** if the user lacks enough XP.  
   - [ ] Apply a **penalty** if a user votes but doesn’t participate.  
   - [ ] Add a **bonus** if the user reaches **8k × c**.  
-- [ ] Update the **Free Quest Announcement** message to reflect these changes.  
-
----
+- [ ] Post a new **Free Quest Announcement** message to reflect these changes. (Update and delete cannot be done with the API, need to delete old annoucement manual)  
 
 ### ⚙️ Launch Management System
 

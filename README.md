@@ -74,12 +74,15 @@ Contributions, ideas, or feedback are welcome!
    CHAT_CHANNEL_ID="chatdiscordid"
    LEADER_CHANNEL_ID="leaderchannelid"
    ANNOUNCEMENT_CHANNEL_ID="announcementChannel"
+   SUPABASE_URL="supabaseurl"
+   SUPABASE_KEY="supabasekey"
    ```
 
    - The bot key is your own bot’s token, which you must create on the [Discord Developer Portal](https://discord.com/developers/applications).  
    - `chatdiscordid` is the channel ID where Wolvesville ↔ Discord messages will be linked.  
    - `leaderchannelid` is the channel ID for leaders to know if quest is active, to edit flairs, or change participation of members and leaders.  
    - `announcementChannel` is the channel ID where announcement can be post.  
+   - `superbaseurl` and `superbasekey` are credentials to access the Supabase database. These are not used yet; details about the database will be provided later.
 
    ⚠️ Important: You must delete the `events/sendMessage.js` file and remove all references to its function in `utils/index.js`, `bot.js`, and `commands/members/easterEggs.js`.  
 

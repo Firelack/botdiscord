@@ -68,9 +68,7 @@ function start() {
     const channel = await client.channels.fetch(chatChannelId);
 
     // Delete these lines to disable sendMessage
-    const messageHour = 10; // 10h
-    const messageMinute = 0; // 00 minutes
-    sendMessage(client, messageChannelId, personMentionId, "Envoie ton temps d'écran maintenant !", messageHour, messageMinute);
+    sendMessage(client, messageChannelId, personMentionId, "Envoie ton temps d'écran maintenant !", 10, 0);
 
     scheduleDailyTask(async () => {
       resetDailyDeletedMessages();

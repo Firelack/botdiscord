@@ -43,7 +43,7 @@ function start() {
     'Authorization': `Bot ${accessToken}`
   };
 
-  client.on("ready", async () => {
+  client.on("clientReady", async () => {
     console.log("Bot opérationnel");
 
     // Pre-fetch members for all guilds to improve mention resolution
@@ -68,7 +68,9 @@ function start() {
     const channel = await client.channels.fetch(chatChannelId);
 
     // Delete these lines to disable sendMessage
-    sendMessage(client, messageChannelId, personMentionId, "Envoie ton temps d'écran maintenant !", 10, 0);
+    scheduleDailyTask(() => {
+          sendMessage(client, messageChannelId, personMentionId, "Envoie ton temps d'écran maintenant !");
+        }, 10, 0); // 10h00
 
     scheduleDailyTask(async () => {
       resetDailyDeletedMessages();

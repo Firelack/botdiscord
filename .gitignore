@@ -1,6 +1,5 @@
 .env
 node_modules
-package-lock.json
 .vscode
 .DS_Store
 src/events/announcements.json

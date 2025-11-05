@@ -114,6 +114,8 @@ Contributions, ideas, or feedback are welcome!
 
 - [x] Change bot response for `avatarPlayer`
 - [x] Fix `questAvailable`
+- [ ] Add surname on commands
+  - [ ] Gestion wrong surname (other name give (Fire + e -> don't place fire on ambigue list))
 
 ### 📁 Reorganize Files
 
@@ -135,6 +137,7 @@ Contributions, ideas, or feedback are welcome!
 ### 🗃️ Database Integration (Superbase ?)
 
 - [ ] Store the IDs of already sent announcements (don't use announcement.json).  
+- [ ] Store special surname tel by discord users
 - [ ] Store if the bot already send quest informations to admin.
 - [ ] Store if the bot already send the last message of the clan chat.
 - [ ] Store if the bot already delete discord messages.

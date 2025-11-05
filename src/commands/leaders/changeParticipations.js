@@ -1,3 +1,5 @@
+const searchMember = require('../../utils/searchMember.js'); // ADDED
+
 function changeParticipations(message, clanId, salonId, axios, headers) {
   // === ACTIVE ONE OR MULTIPLE PLAYERS ===
   if (message.content.toLowerCase().startsWith("active:") && message.channel.id == salonId && !message.content.toLowerCase().includes("all")) {
@@ -11,18 +13,20 @@ function changeParticipations(message, clanId, salonId, axios, headers) {
     message.reply(`🔄 Activation de ${profilNames.length} joueur(s) en cours...`);
 
     const promises = profilNames.map(profilName =>
-      axios.get(`https://api.wolvesville.com/players/search?username=${profilName}`, { headers })
-        .then(response => {
-          const userId = response.data.id;
+      searchMember(profilName, clanId, axios, headers) // REPLACED search
+        .then(result => {
+          if (result.error) {
+            return result.error;
+          }
+          const { userId, username } = result;
           return axios.put(
             `https://api.wolvesville.com/clans/${clanId}/members/${userId}/participateInQuests`,
             { participateInQuests: true },
             { headers }
           )
-          .then(() => `✅ ${profilName} activé`)
-          .catch(() => `❌ Erreur lors de l'activation de ${profilName}`);
+          .then(() => `✅ ${username} activé`)
+          .catch(() => `❌ Erreur lors de l'activation de ${username}`);
         })
-        .catch(() => `⚠️ Joueur introuvable : ${profilName}`)
     );
 
     Promise.all(promises).then(results => {
@@ -41,18 +45,20 @@ function changeParticipations(message, clanId, salonId, axios, headers) {
     message.reply(`🔄 Désactivation de ${profilNames.length} joueur(s) en cours...`);
 
     const promises = profilNames.map(profilName =>
-      axios.get(`https://api.wolvesville.com/players/search?username=${profilName}`, { headers })
-        .then(response => {
-          const userId = response.data.id;
+      searchMember(profilName, clanId, axios, headers) // REPLACED search
+        .then(result => {
+          if (result.error) {
+            return result.error;
+          }
+          const { userId, username } = result;
           return axios.put(
             `https://api.wolvesville.com/clans/${clanId}/members/${userId}/participateInQuests`,
             { participateInQuests: false },
             { headers }
           )
-          .then(() => `✅ ${profilName} désactivé`)
-          .catch(() => `❌ Erreur lors de la désactivation de ${profilName}`);
+          .then(() => `✅ ${username} désactivé`)
+          .catch(() => `❌ Erreur lors de la désactivation de ${username}`);
         })
-        .catch(() => `⚠️ Joueur introuvable : ${profilName}`)
     );
 
     Promise.all(promises).then(results => {

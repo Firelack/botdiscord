@@ -1,3 +1,5 @@
+const searchMember = require('../../utils/searchMember.js'); // ADDED
+
 function changerFlair(message, clanId, salonId, axios, headers) {
   if (message.channel.id !== salonId) return;
 
@@ -22,28 +24,38 @@ function changerFlair(message, clanId, salonId, axios, headers) {
       return;
     }
 
-    axios.get(`https://api.wolvesville.com/players/search?username=${profilName}`, {
-      headers: headers
-    })
-      .then(response => {
-        const userId = response.data.id;
+    searchMember(profilName, clanId, axios, headers) // REPLACED search
+      .then(result => {
+        if (result.error) {
+          message.reply(result.error);
+          return null; // Stop the promise chain
+        }
+        const { userId, username } = result;
 
         return axios.put(`https://api.wolvesville.com/clans/${clanId}/members/${userId}/flair`, {
           flair: nouveauFlair
         }, {
           headers: headers
+        })
+        .then(() => username) // Pass username to the next then block
+        .catch(error => {
+          console.error(error);
+          message.reply(`❌ Erreur lors du changement de titre pour ${username}.`);
+          return null; // Stop the promise chain
         });
       })
-      .then(() => {
-        if (nouveauFlair === "") {
-          message.reply(`Le titre de ${profilName} a été supprimé ✅`);
-        } else {
-          message.reply(`Le titre de ${profilName} a été changé en : **${nouveauFlair}** ✅`);
+      .then(username => {
+        if (username) {
+          if (nouveauFlair === "") {
+            message.reply(`Le titre de ${username} a été supprimé ✅`);
+          } else {
+            message.reply(`Le titre de ${username} a été changé en : **${nouveauFlair}** ✅`);
+          }
         }
       })
       .catch(error => {
-        console.error(error);
-        message.reply("Une erreur s'est produite lors du changement de titre.");
+        // This catch is for any unexpected error not handled by searchMember or the put request's inner catch
+        console.error("Erreur inattendue dans changerFlair:", error);
       });
   }
 }

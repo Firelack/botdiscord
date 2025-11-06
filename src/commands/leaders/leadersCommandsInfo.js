@@ -27,7 +27,7 @@ function leadersCommandsInfo(message) {
       
       ### 🌐 Redémarrage du Bot
       
-      Si le bot est hors ligne, vous pouvez le relancer ici : [https://botdiscord-6cwc.onrender.com/](https://botdiscord-6cwc.onrender.com/)`
+      Si le bot est hors ligne, vous pouvez le relancer ici : [Hébergeur](https://botdiscord-6cwc.onrender.com/) `
     );
   }
 }

@@ -1,19 +1,18 @@
 /**
  * Searches for a clan member by username or partial nickname (case-insensitive, contains) within the clan members.
- * Returns the unique match's ID and username, or an error object if no unique match is found.
+ * Returns a match object: { unique: { userId, username } } on success,
+ * { error: string } on no match, or { ambiguous: true, matches: [{ userId, username }, ...], nickname: string } on multiple matches.
  * @param {string} nickname - The partial or full username to search for.
  * @param {string} clanId - The ID of the clan.
  * @param {object} axios - Axios instance.
  * @param {object} headers - Headers for the API request.
- * @returns {Promise<{userId: string, username: string} | {error: string}>}
+ * @returns {Promise<{unique: {userId: string, username: string}} | {error: string} | {ambiguous: true, matches: Array<{userId: string, username: string}>, nickname: string}>}
  */
 async function searchMember(nickname, clanId, axios, headers) {
   const searchName = nickname.toLowerCase();
 
   try {
     // 1. Fetch all clan members
-    // Note: The API /clans/{clanId}/members does not have pagination built-in like the clanMembers command handles, 
-    // but the default unpaginated endpoint is used here for simplicity, assuming clan size is manageable.
     const response = await axios.get(`https://api.wolvesville.com/clans/${clanId}/members`, { headers });
     const members = response.data;
 
@@ -27,8 +26,10 @@ async function searchMember(nickname, clanId, axios, headers) {
       // Unique match found
       const uniqueMatch = matches[0];
       return {
-        userId: uniqueMatch.playerId, // Clan member list uses playerId
-        username: uniqueMatch.username,
+        unique: { // Clé 'unique' pour succès
+          userId: uniqueMatch.playerId, // Clan member list uses playerId
+          username: uniqueMatch.username,
+        },
       };
     } else if (matches.length === 0) {
       // No match found
@@ -36,10 +37,11 @@ async function searchMember(nickname, clanId, axios, headers) {
         error: `⚠️ Joueur introuvable (surnom "${nickname}" non trouvé dans le clan).`,
       };
     } else {
-      // Multiple matches found
-      const usernames = matches.map(m => m.username).join(', ');
+      // Multiple matches found - ambiguous
       return {
-        error: `⚠️ Surnom ambigu ("${nickname}" correspond à plusieurs joueurs : ${usernames}). Veuillez être plus spécifique.`,
+        ambiguous: true,
+        matches: matches.map(m => ({ userId: m.playerId, username: m.username })),
+        nickname: nickname, // Return the original nickname for reference
       };
     }
 

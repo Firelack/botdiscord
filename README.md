@@ -17,7 +17,7 @@ A lot of features are made for the developpers clan "WerewoIf OnIine*" but you c
 - 📧 Link between a Discord channel and clan chat.
 - 🆕 An announcement channel link to announcements in game.
 - 🎉 Easter eggs are hidden in some bot responses 😄  
-- 📰 A Discord channel for leader's to enable or disable clan members’ participation, to change flairs, and to see if quest or if the quest stage is finished.  
+- 📰 A Discord channel for leader's to enable or disable clan members’ participation, to change flairs, and to see if quest or if the quest stage is finished (!leadersCommands).
 - Additional useful features for developers’ clans.  
 
 ---
@@ -114,8 +114,7 @@ Contributions, ideas, or feedback are welcome!
 
 - [x] Change bot response for `avatarPlayer`
 - [x] Fix `questAvailable`
-- [ ] Add surname on commands
-  - [ ] Gestion wrong surname (other name give (Fire + e -> don't place fire on ambigue list))
+- [x] Add surname on commands
 
 ### 📁 Reorganize Files
 

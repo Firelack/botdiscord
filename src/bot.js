@@ -8,7 +8,7 @@ const {
   changeParticipations, activeShopOffers, actualAvatar, actualQuest, announcement, announcementChannel, avatarPlayer,
   battlepassChallenges, botInfo, changeFlair, clanMembers, commandList,
   deleteOldMessages, resetDailyDeletedMessages, easterEggs,
-  getAdvancedRoles, getApiHat, getClanId, getClanInfo, idAvatar, infoRole,
+  getAdvancedRoles, getApiHat, getClanId, getClanInfo, idAvatar, infoRole, leadersCommandsInfo,
   playerCards, playerProfil, playerStats, questAvailable, checkQuestStatus, roleRotations, 
   searchAvatarId, checkClanChat, handleDiscordMessage, scheduleDailyTask, mondayAnnouncementTask,
   // Delete sendMessage here to disable sendMessage feature
@@ -97,10 +97,11 @@ function start() {
       if (message.author.id === client.user.id) return; // Ignore messages from the bot itself
 
       if (message.channel.id === leaderChannelId) {
-      changeParticipations(message, clanId, leaderChannelId, axios, headers);
-      changeFlair(message, clanId, leaderChannelId, axios, headers);
-      return; // Stop processing other commands
-    }
+        leadersCommandsInfo(message);
+        await changeParticipations(message, clanId, leaderChannelId, axios, headers);
+        await changeFlair(message, clanId, leaderChannelId, axios, headers);
+        return; // Stop processing other commands
+      }
 
       commandList(message);
       botInfo(message);

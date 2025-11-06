@@ -20,6 +20,7 @@ module.exports = {
   getClanInfo: require('../commands/members/clan/getInfoClan.js'),
   idAvatar: require('../commands/members/player/idAvatar.js'),
   infoRole: require('../commands/members/roles/infoRole.js'),
+  leadersCommandsInfo: require('../commands/leaders/leadersCommandsInfo.js'),
   playerCards: require('../commands/members/player/playerCards.js'),
   playerProfil: require('../commands/members/player/playerProfil.js'),
   playerStats: require('../commands/members/player/playerStats.js'),

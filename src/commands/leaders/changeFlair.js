@@ -1,6 +1,48 @@
-const searchMember = require('../../utils/searchMember.js'); // ADDED
+const searchMember = require('../../utils/searchMember.js');
 
-function changerFlair(message, clanId, salonId, axios, headers) {
+async function processNameAndFlairChange(message, clanId, salonId, axios, headers, profilName, nouveauFlair) {
+  const searchResult = await searchMember(profilName, clanId, axios, headers);
+
+  let matchToProcess = null;
+  let resultMessage = null;
+
+  if (searchResult.unique) {
+    matchToProcess = searchResult.unique;
+  } else if (searchResult.ambiguous) {
+    // Only one ambiguity case here since we process one name at a time
+    const usernames = searchResult.matches.map(m => m.username).join(', ');
+    resultMessage = `⚠️ Surnom ambigu ("${profilName}" correspond à plusieurs joueurs : ${usernames}). Veuillez être plus spécifique.`;
+  } else if (searchResult.error) {
+    resultMessage = searchResult.error;
+  }
+
+  if (matchToProcess) {
+    const { userId, username } = matchToProcess;
+
+    try {
+      await axios.put(`https://api.wolvesville.com/clans/${clanId}/members/${userId}/flair`, {
+        flair: nouveauFlair
+      }, {
+        headers: headers
+      });
+      
+      if (nouveauFlair === "") {
+        resultMessage = `Le titre de ${username} a été supprimé ✅`;
+      } else {
+        resultMessage = `Le titre de ${username} a été changé en : **${nouveauFlair}** ✅`;
+      }
+    } catch (error) {
+      console.error(error);
+      resultMessage = `❌ Erreur lors du changement de titre pour ${username}.`;
+    }
+  }
+
+  if (resultMessage) {
+    message.reply(resultMessage);
+  }
+}
+
+async function changerFlair(message, clanId, salonId, axios, headers) {
   if (message.channel.id !== salonId) return;
 
   // Command : titre:NomDuJoueur[:NouveauTitre]
@@ -11,7 +53,7 @@ function changerFlair(message, clanId, salonId, axios, headers) {
     let profilName, nouveauFlair;
 
     if (premierDeuxPoints === -1) {
-      // No new flair provided, remove flair
+      // No new flair provided, just remove existing flair
       profilName = contenu;
       nouveauFlair = "";
     } else {
@@ -24,39 +66,7 @@ function changerFlair(message, clanId, salonId, axios, headers) {
       return;
     }
 
-    searchMember(profilName, clanId, axios, headers) // REPLACED search
-      .then(result => {
-        if (result.error) {
-          message.reply(result.error);
-          return null; // Stop the promise chain
-        }
-        const { userId, username } = result;
-
-        return axios.put(`https://api.wolvesville.com/clans/${clanId}/members/${userId}/flair`, {
-          flair: nouveauFlair
-        }, {
-          headers: headers
-        })
-        .then(() => username) // Pass username to the next then block
-        .catch(error => {
-          console.error(error);
-          message.reply(`❌ Erreur lors du changement de titre pour ${username}.`);
-          return null; // Stop the promise chain
-        });
-      })
-      .then(username => {
-        if (username) {
-          if (nouveauFlair === "") {
-            message.reply(`Le titre de ${username} a été supprimé ✅`);
-          } else {
-            message.reply(`Le titre de ${username} a été changé en : **${nouveauFlair}** ✅`);
-          }
-        }
-      })
-      .catch(error => {
-        // This catch is for any unexpected error not handled by searchMember or the put request's inner catch
-        console.error("Erreur inattendue dans changerFlair:", error);
-      });
+    await processNameAndFlairChange(message, clanId, salonId, axios, headers, profilName, nouveauFlair);
   }
 }
 

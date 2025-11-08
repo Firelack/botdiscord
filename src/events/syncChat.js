@@ -1,6 +1,38 @@
+const supabase = require('../utils/superbaseClient');
 const playerNameCache = {};
-let lastSeenDate = null;
-let initialized = false;
+
+// Cache en mémoire pour la date du dernier message, pour ce clan uniquement.
+let lastSeenDate = new Date(0); 
+
+/**
+ * Load the last seen chat timestamp from the database for a specific clan.
+ * @param {string} clanId - The ID of the clan.
+ */
+async function loadLastSeenDateFromDB(clanId) {
+  if (!clanId) return;
+
+  let { data, error } = await supabase
+    .from('bot_state')
+    .select('value')
+    .eq('key', 'last_chat_timestamp')
+    .eq('clan_id', clanId) // Load for this specific clan
+    .single();
+  
+  if (data && data.value) {
+    lastSeenDate = new Date(data.value);
+    console.log(`📂 Timestamp chat restauré depuis DB pour ${clanId}: ${lastSeenDate.toISOString()}`);
+  } else {
+    // If no timestamp found, initialize to 30 seconds ago
+    lastSeenDate = new Date(Date.now() - 30000); 
+    console.warn(`Aucun timestamp chat en DB pour ${clanId}. Initialisé à : ${lastSeenDate.toISOString()}`);
+    // Write this initial value back to the DB
+    await supabase.from('bot_state').upsert({ 
+      key: 'last_chat_timestamp', 
+      value: lastSeenDate.toISOString(),
+      clan_id: clanId
+    });
+  }
+}
 
 async function smartReplaceMentions(guild, messageText) {
   const mentionRegex = /@([^\s@]+)/g;
@@ -16,23 +48,19 @@ async function smartReplaceMentions(guild, messageText) {
 
     try {
       let member = guild.members.cache.find(m => m.nickname === pseudo);
-
       if (!member) {
         member = guild.members.cache.find(
           m => m.user.username === pseudo && !m.nickname
         );
       }
-
       if (member) {
         replacement = `<@${member.id}>`;
       }
-
       replaced = replaced.split(rawMatch).join(replacement);
     } catch (err) {
       console.warn(`⚠️ Erreur lors de la tentative de tag ${pseudo} :`, err.message);
     }
   }
-
   return replaced;
 }
 
@@ -50,21 +78,14 @@ async function checkClanChat(client, clanId, salonId, axios, headers) {
 
     const guild = channel.guild;
     const sortedMessages = messages.reverse();
-
-    if (!initialized) {
-      const lastMsgDate = new Date(sortedMessages[sortedMessages.length - 1].date);
-      lastSeenDate = new Date(lastMsgDate.getTime() - 1000);
-      initialized = true;
-      console.log(`Initialisation lastSeenDate à ${lastSeenDate.toISOString()} (1 sec avant dernier message)`);
-    }
-
     let newLastSeen = lastSeenDate;
+    let newMessagesFound = false;
 
     for (const msg of sortedMessages) {
       if (msg.isSystem || msg.playerBotOwnerUsername === "BOT(Firelack)") continue;
 
       const msgDate = new Date(msg.date);
-      if (msgDate <= lastSeenDate) continue;
+      if (msgDate <= lastSeenDate) continue; 
 
       const playerId = msg.playerId;
       let username = playerNameCache[playerId];
@@ -75,17 +96,14 @@ async function checkClanChat(client, clanId, salonId, axios, headers) {
           username = playerResponse.data.username;
           playerNameCache[playerId] = username;
         } catch (e) {
-          console.error(`Erreur joueur ${playerId}:`, e.message);
           username = "Inconnu";
         }
       }
 
-      // Replace mentions in the message
       let formattedMessage;
       try {
         formattedMessage = await smartReplaceMentions(guild, msg.msg);
       } catch (err) {
-        console.error("❌ Erreur remplacement mentions :", err);
         formattedMessage = msg.msg;
       }
 
@@ -98,14 +116,21 @@ async function checkClanChat(client, clanId, salonId, axios, headers) {
       if (msgDate > newLastSeen) {
         newLastSeen = msgDate;
       }
+      newMessagesFound = true;
     }
 
-    if (newLastSeen > lastSeenDate) {
-      lastSeenDate = newLastSeen;
+    if (newMessagesFound) {
+      lastSeenDate = newLastSeen; // Update in-memory timestamp
+      
+      // Update in DB
+      await supabase.from('bot_state').upsert({ 
+        key: 'last_chat_timestamp', 
+        value: lastSeenDate.toISOString(),
+        clan_id: clanId
+      });
     }
-
   } catch (error) {
-    console.error("Erreur chat clan:", error.message);
+    console.error(`Erreur chat clan ${clanId}:`, error.message);
   }
 }
 
@@ -138,17 +163,11 @@ async function handleDiscordMessage(message, clanId, salonId, axios, headers) {
   if (shouldSendToWolvesville(message, salonId)) {
     let content = message.content;
 
-    // If message contains mentions, replace with @username
     if (message.mentions.users.size > 0) {
       for (const [id, user] of message.mentions.users) {
-        // Fetch full member for displayName
         const member = message.guild ? await message.guild.members.fetch(id) : null;
         const displayName = member ? member.displayName : user.username;
-
-        // Build the possible Discord mention (with or without the !)
         const mentionRegex = new RegExp(`<@!?${id}>`, 'g');
-
-        // Replace the mention with @displayName
         content = content.replace(mentionRegex, `@${displayName}`);
       }
     }
@@ -158,8 +177,8 @@ async function handleDiscordMessage(message, clanId, salonId, axios, headers) {
   }
 }
 
-
 module.exports = {
+  loadLastSeenDateFromDB,
   checkClanChat,
   sendToWolvesville,
   handleDiscordMessage

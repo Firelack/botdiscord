@@ -32,6 +32,7 @@ module.exports = {
   mondayAnnouncementTask: require('../tasks/mondayAnnouncementTask.js'),
   searchAvatarId: require('../commands/members/player/searchAvatarId.js'),
   checkClanChat: require('../events/syncChat.js').checkClanChat,
+  loadLastSeenDateFromDB: require('../events/syncChat.js').loadLastSeenDateFromDB,
   sendToWolvesville: require('../events/syncChat.js').sendToWolvesville,
   handleDiscordMessage: require('../events/syncChat.js').handleDiscordMessage,
   // Delete sendMessage here to disable sendMessage feature

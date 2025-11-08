@@ -129,15 +129,15 @@ Contributions, ideas, or feedback are welcome!
   - [ ] Automatically send weekly quest announcements every **Monday at 8 PM**.  
   - [ ] Add a command to **enable or disable** the Monday 8 PM announcement.  
   - [ ] Add a command to **enable or disable** **Gem Quests**.  
-  - [ ] Add a command to **enable or disable default Sub-Chief/Chief roles**.  
+  - [ ] Add a command to **enable or disable default Sub-Chief/Chief participations**.  
   - [ ] Add a command that lets the bot send an announcement based on configurable parameters (e.g., **gold/gems**, **date/time**).  
 
 ### 🗃️ Database Integration (Superbase)
 
 - [x] Store the IDs of already sent announcements (don't use announcement.json).  
 - [ ] Store special surname tel by discord users
-- [ ] Store if the bot already send quest informations to admin.
-- [ ] Store if the bot already send the last message of the clan chat.
+- [x] Store if the bot already send quest informations to admin.
+- [x] Store if the bot already send the last message of the clan chat.
 - [ ] Store **free quests** in the database.  
 - [ ] Automatically update free quests:
   - [ ] On launch, decrement the available quest count.  

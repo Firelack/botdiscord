@@ -2,8 +2,7 @@ require('dotenv').config();
 const keepAlive = require('./utils/keepAlive');
 const axios = require('axios');
 
-// Import all functions from API_function
-// Delete sendMessage here to disable sendMessage feature
+// Import all functions
 const { 
   changeParticipations, activeShopOffers, actualAvatar, actualQuest, announcement, 
   announcementChannel, loadAnnouncementsFromDB, avatarPlayer,
@@ -11,8 +10,8 @@ const {
   deleteOldMessages, easterEggs,
   getAdvancedRoles, getApiHat, getClanId, getClanInfo, idAvatar, infoRole, leadersCommandsInfo,
   playerCards, playerProfil, playerStats, questAvailable, checkQuestStatus, roleRotations, 
-  searchAvatarId, checkClanChat, handleDiscordMessage, scheduleDailyTask, mondayAnnouncementTask,
-  // Delete sendMessage here to disable sendMessage feature
+  searchAvatarId, loadLastSeenDateFromDB,
+  checkClanChat, handleDiscordMessage, scheduleDailyTask, mondayAnnouncementTask,
   sendMessage } = require('./utils/index');
 
 function start() {
@@ -46,16 +45,26 @@ function start() {
 
   client.on("clientReady", async () => {
     console.log("Bot opérationnel");
+    
+    if (!clanId) {
+      console.error("ERREUR CRITIQUE : CLAN_ID n'est pas défini dans .env !");
+      return;
+    }
+    console.log(`Connecté pour le clan : ${clanId}`);
 
-    // Load announcements from DB at startup
+    // Load announcements and last seen chat timestamp from DB at startup
     try {
       await loadAnnouncementsFromDB();
     } catch (err) {
       console.error("❌ Erreur critique lors du chargement initial des annonces :", err);
     }
+    try {
+      await loadLastSeenDateFromDB(clanId); 
+    } catch (err) {
+      console.error("❌ Erreur critique lors du chargement du timestamp chat :", err);
+    }
 
-    // Pre-fetch members for all guilds to improve mention resolution
-    // This helps to ensure nicknames and usernames are available in the cache
+    // Pre-fetch members
     for (const [guildId, guild] of client.guilds.cache) {
       try {
         await guild.members.fetch();
@@ -65,13 +74,14 @@ function start() {
       }
     }
 
-
     // Start checking for new clan chat messages
-    setInterval(() => checkClanChat(client, clanId, chatChannelId, axios, headers), 20000);
-    setInterval(() => checkQuestStatus(client, clanId, leaderChannelId, axios, headers), 600000); // Every 10 minutes
+    setInterval(() => checkClanChat(client, clanId, chatChannelId, axios, headers), 20 * 1000); // 20 sec
 
-    // Start announcement channel feature (once per hour) (after loading from DB)
-    setInterval(() => announcementChannel(client, announcementChannelId, clanId, axios, headers), 60 * 60 * 1000);
+    // Check quest status every 10 minutes
+    setInterval(() => checkQuestStatus(client, clanId, leaderChannelId, axios, headers), 10 * 60 * 1000); // 10 min
+
+    // Announcement channel updates every hour
+    setInterval(() => announcementChannel(client, announcementChannelId, clanId, axios, headers), 60 * 60 * 1000); // 1h
 
     const channel = await client.channels.fetch(chatChannelId);
 
@@ -80,12 +90,12 @@ function start() {
           sendMessage(client, messageChannelId, personMentionId, "Envoie ton temps d'écran maintenant !");
         }, 10, 0); // 10h00
 
+    // Schedule old messages deletion
     scheduleDailyTask(async () => {
-      resetDailyDeletedMessages();
-      await deleteOldMessages(channel, 2 * 24 * 60 * 60 * 1000); // Delete messages older than 2 days
+      await deleteOldMessages(channel, 2 * 24 * 60 * 60 * 1000);
     }, 0, 0); // 0h00
 
-    // Schedule Monday announcement at 6:00 AM
+    // Schedule Monday announcement
     scheduleDailyTask(() => mondayAnnouncementTask(clanId, axios, headers), 6, 0);
   });
 
@@ -111,6 +121,7 @@ function start() {
         return; // Stop processing other commands
       }
 
+      // Member commands
       commandList(message);
       botInfo(message);
       actualQuest(message, clanId, axios, headers);

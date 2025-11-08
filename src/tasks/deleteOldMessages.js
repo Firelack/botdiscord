@@ -1,4 +1,3 @@
-const deletedMessagesToday = new Set();
 const MESSAGE_TO_KEEP = process.env['MESSAGE_TO_KEEP_ID'] || null;
 
 async function deleteOldMessages(channel, dateago) {
@@ -22,17 +21,15 @@ async function deleteOldMessages(channel, dateago) {
       for (const msg of messagesFetched.values()) {
         totalChecked++;
 
-        // Conditions d'exclusion
-        if (msg.id === MESSAGE_TO_KEEP) continue; // :lock: on garde ce message
-        if (deletedMessagesToday.has(msg.id)) continue;
+        // Skip the message to keep and messages newer than dateago or older than 14 days
+        if (msg.id === MESSAGE_TO_KEEP) continue;
         const age = now - msg.createdTimestamp;
-        if (age < dateago) continue; // message trop récent
-        if (age > MAX_DELETE_AGE) continue; // message trop vieux pour suppression
+        if (age < dateago) continue;
+        if (age > MAX_DELETE_AGE) continue;
 
-        // Tentative de suppression
+        // Try to delete the message
         try {
           await msg.delete();
-          deletedMessagesToday.add(msg.id);
           totalDeleted++;
           console.log(`→ Supprimé : ${msg.author.tag} (${msg.createdAt.toISOString()})`);
         } catch (err) {
@@ -53,12 +50,5 @@ async function deleteOldMessages(channel, dateago) {
     console.error("Erreur suppression anciens messages :", error.message);
   }
 }
-function resetDailyDeletedMessages() {
-  deletedMessagesToday.clear();
-  console.log("🕛 Mémoire des suppressions réinitialisée pour la nouvelle journée.");
-}
 
-module.exports = {
-  deleteOldMessages,
-  resetDailyDeletedMessages,
-};
+module.exports = deleteOldMessages;

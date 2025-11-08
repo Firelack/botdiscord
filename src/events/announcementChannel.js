@@ -1,26 +1,36 @@
-// announcementChannel.js
-const fs = require('fs');
-const path = require('path');
-const dataFile = path.join(__dirname, 'announcements.json');
+// Import superbase client
+const supabase = require('../utils/superbaseClient');
 
-// Download existing announcements from file
+// In-memory cache of announcements (announcement_id -> discord_message_id)
 let announcementsMap = new Map();
-if (fs.existsSync(dataFile)) {
-  try {
-    const savedData = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
-    announcementsMap = new Map(Object.entries(savedData));
-    console.log("📂 Annonces restaurées depuis le fichier JSON");
-  } catch (err) {
-    console.error("Erreur lors du chargement du fichier JSON :", err);
+
+/**
+ * Load announcements from Supabase into the in-memory map.
+ * This function should be called at bot startup to restore state.
+ */
+async function loadAnnouncementsFromDB() {
+  const { data, error } = await supabase
+    .from('announcements') // Table name
+    .select('announcement_id, discord_message_id'); // Columns to select
+
+  if (error) {
+    console.error("❌ Erreur lors du chargement des annonces depuis Supabase :", error);
+    return;
   }
+
+  announcementsMap = new Map(data.map(item => [item.announcement_id, item.discord_message_id]));
+  console.log(`📂 ${announcementsMap.size} annonces restaurées depuis Supabase`);
 }
 
-// Save announcements to file
-function saveAnnouncements() {
-  const obj = Object.fromEntries(announcementsMap);
-  fs.writeFileSync(dataFile, JSON.stringify(obj, null, 2), 'utf8');
-}
-
+/**
+ * Announcement channel feature: fetches announcements from Wolvesville API
+ * and posts/updates them in the specified Discord channel.
+ * @param {object} client - Discord client instance.
+ * @param {string} salonID - Discord channel ID for announcements.
+ * @param {string} clanId - Clan ID.
+ * @param {object} axios - Axios instance for HTTP requests.
+ * @param {object} headers - Headers for the API requests.
+ */
 async function announcementChannel(client, salonID, clanId, axios, headers) {
   if (!salonID) return;
   try {
@@ -33,34 +43,48 @@ async function announcementChannel(client, salonID, clanId, axios, headers) {
 
     const currentIds = new Set(announcements.map(a => a.id));
 
-    // Delete old announcements that are no longer present
+    // Delete announcements that no longer exist
     for (const [annId, msgId] of announcementsMap) {
       if (!currentIds.has(annId)) {
         try {
           const msg = await channel.messages.fetch(msgId);
           await msg.delete();
         } catch (e) {
-          console.log("Message déjà supprimé ou introuvable :", e.message);
+          console.log("Message Discord déjà supprimé ou introuvable :", e.message);
         }
+        
+        // Delete from Supabase
+        const { error } = await supabase
+          .from('announcements')
+          .delete()
+          .match({ announcement_id: annId });
+          
+        if (error) console.error("Erreur suppression DB:", error);
+        
         announcementsMap.delete(annId);
-        saveAnnouncements();
       }
     }
+
+    // Date formatting options
+    const formattingOptions = {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      hour12: false,
+      timeZone: 'Europe/Paris'
+    };
 
     // Process announcements in reverse order (oldest first)
     for (const announcement of announcements.reverse()) {
       const date = new Date(announcement.timestamp);
       const annId = announcement.id;
-      date.setHours(date.getHours() + 2); // ✅ Update to UTC+2
-      const timestamp = date.toLocaleString('fr-FR', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-        hour12: false
-      });
+      // date.setHours(date.getHours() + 2); // Supprimé : le hardcodage n'est plus nécessaire
+      
+      // Utilise les options de formatage
+      const timestamp = date.toLocaleString('fr-FR', formattingOptions);
 
       let content =
         `**__Annonce__**\n` +
@@ -70,21 +94,15 @@ async function announcementChannel(client, salonID, clanId, axios, headers) {
 
       if (announcement.editTimestamp) {
         const editTime = new Date(announcement.editTimestamp);
-        editTime.setHours(editTime.getHours() + 2); // ✅ Décalage UTC+2
-        const editTimestamp = editTime.toLocaleString('fr-FR', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-          hour: 'numeric',
-          minute: 'numeric',
-          second: 'numeric',
-          hour12: false
-        });
+        // editTime.setHours(editTime.getHours() + 2); // Supprimé
+        
+        // Utilise les mêmes options de formatage
+        const editTimestamp = editTime.toLocaleString('fr-FR', formattingOptions);
 
         content += `\n*(Édité par ${announcement.editAuthor} le ${editTimestamp})*`;
       }
 
-      // If announcement already exists, update it
+      // If announcement exists, update it; otherwise, create a new message
       if (announcementsMap.has(annId)) {
         const msgId = announcementsMap.get(annId);
         try {
@@ -96,15 +114,29 @@ async function announcementChannel(client, salonID, clanId, axios, headers) {
           }
         } catch (e) {
           console.log("Impossible de mettre à jour :", e.message);
+          // Message no longer exists, remove from DB and map
+          await supabase.from('announcements').delete().match({ announcement_id: annId });
           announcementsMap.delete(annId);
-          saveAnnouncements();
         }
       } else {
-        // New announcement, send it
+        // New announcement, send message
         const sent = await channel.send(content);
-        announcementsMap.set(annId, sent.id);
-        saveAnnouncements();
-        console.log(`🆕 Nouvelle annonce publiée : ${annId}`);
+        
+        //Insert into Supabase
+        const { error } = await supabase
+          .from('announcements')
+          .insert([
+            { announcement_id: annId, discord_message_id: sent.id, clan_id: clanId }
+          ]);
+
+        if (error) {
+          console.error("Erreur insertion DB:", error);
+          // If DB insertion fails, delete the sent message to avoid inconsistency
+          await sent.delete();
+        } else {
+          announcementsMap.set(annId, sent.id);
+          console.log(`🆕 Nouvelle annonce publiée et sauvegardée (DB) : ${annId}`);
+        }
       }
     }
 
@@ -113,4 +145,7 @@ async function announcementChannel(client, salonID, clanId, axios, headers) {
   }
 }
 
-module.exports = announcementChannel;
+module.exports = {
+  announcementChannel,
+  loadAnnouncementsFromDB
+};

@@ -122,7 +122,6 @@ Contributions, ideas, or feedback are welcome!
 - [x] Rename all files following the same naming convention (camelCase).
 - [x] Ensure each file contains only **one main function**. (except `syncChat`)
 - [x] Verify that all function names follow the same naming convention.
-- [ ] When database integration effective : change `announcementChannel.js`, `deleteOldMessage.js`,
   
 ### 📢 Announcement System
 
@@ -133,19 +132,19 @@ Contributions, ideas, or feedback are welcome!
   - [ ] Add a command to **enable or disable default Sub-Chief/Chief roles**.  
   - [ ] Add a command that lets the bot send an announcement based on configurable parameters (e.g., **gold/gems**, **date/time**).  
 
-### 🗃️ Database Integration (Superbase ?)
+### 🗃️ Database Integration (Superbase)
 
-- [ ] Store the IDs of already sent announcements (don't use announcement.json).  
+- [x] Store the IDs of already sent announcements (don't use announcement.json).  
 - [ ] Store special surname tel by discord users
 - [ ] Store if the bot already send quest informations to admin.
 - [ ] Store if the bot already send the last message of the clan chat.
-- [ ] Store if the bot already delete discord messages.
 - [ ] Store **free quests** in the database.  
 - [ ] Automatically update free quests:
   - [ ] On launch, decrement the available quest count.  
   - [ ] Apply a **penalty** if the user lacks enough XP.  
   - [ ] Apply a **penalty** if a user votes but doesn’t participate.  
   - [ ] Add a **bonus** if the user reaches **8k × c**.  
+  - [ ] Delete members that are not longer in the clan.
 - [ ] Post a new **Free Quest Announcement** message to reflect these changes. (Update and delete cannot be done with the API, need to delete old annoucement manual)  
 
 ### ⚙️ Launch Management System

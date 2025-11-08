@@ -5,9 +5,10 @@ const axios = require('axios');
 // Import all functions from API_function
 // Delete sendMessage here to disable sendMessage feature
 const { 
-  changeParticipations, activeShopOffers, actualAvatar, actualQuest, announcement, announcementChannel, avatarPlayer,
+  changeParticipations, activeShopOffers, actualAvatar, actualQuest, announcement, 
+  announcementChannel, loadAnnouncementsFromDB, avatarPlayer,
   battlepassChallenges, botInfo, changeFlair, clanMembers, commandList,
-  deleteOldMessages, resetDailyDeletedMessages, easterEggs,
+  deleteOldMessages, easterEggs,
   getAdvancedRoles, getApiHat, getClanId, getClanInfo, idAvatar, infoRole, leadersCommandsInfo,
   playerCards, playerProfil, playerStats, questAvailable, checkQuestStatus, roleRotations, 
   searchAvatarId, checkClanChat, handleDiscordMessage, scheduleDailyTask, mondayAnnouncementTask,
@@ -46,6 +47,13 @@ function start() {
   client.on("clientReady", async () => {
     console.log("Bot opérationnel");
 
+    // Load announcements from DB at startup
+    try {
+      await loadAnnouncementsFromDB();
+    } catch (err) {
+      console.error("❌ Erreur critique lors du chargement initial des annonces :", err);
+    }
+
     // Pre-fetch members for all guilds to improve mention resolution
     // This helps to ensure nicknames and usernames are available in the cache
     for (const [guildId, guild] of client.guilds.cache) {
@@ -62,7 +70,7 @@ function start() {
     setInterval(() => checkClanChat(client, clanId, chatChannelId, axios, headers), 20000);
     setInterval(() => checkQuestStatus(client, clanId, leaderChannelId, axios, headers), 600000); // Every 10 minutes
 
-    // Start announcement channel feature (once per hour)
+    // Start announcement channel feature (once per hour) (after loading from DB)
     setInterval(() => announcementChannel(client, announcementChannelId, clanId, axios, headers), 60 * 60 * 1000);
 
     const channel = await client.channels.fetch(chatChannelId);

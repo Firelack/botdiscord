@@ -20,8 +20,8 @@ function leadersCommandsInfo(message) {
       
       **Définir/Changer le titre :** \`titre:{joueur}:{nouveautitre}\`
       **Supprimer le titre :** \`titre:{joueur}\` (laissez le champ du titre vide)
-
-      ### 3. Gestion des Annonces de Quêtes
+      
+    ### 3. Gestion des Annonces de Quêtes
       
       **Envoyer une annonce de quête maintenant :** \`announcequest {dateLancement}:{numéro}\` (les deux arguments sont optionnels, la date par défaut est demain 20h00)
       **Activer/Désactiver l'annonce automatique du Lundi 20h00 :** \`togglequest:\`

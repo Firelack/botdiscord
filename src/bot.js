@@ -14,7 +14,8 @@ const {
   checkClanChat, handleDiscordMessage, scheduleDailyTask, 
   mondayAnnouncementTask, sendQuestAnnouncement, mondayQuestAnnouncementTask,
   toggleMondayQuest, toggleGemQuests,
-  sendMessage} = require('./utils/index');
+  sendMessage, triggerDailyScreenTime, setupScreenTimeListener, checkScreenTimeReminder
+} = require('./utils/index');
 
 function start() {
   const { Client, GatewayIntentBits } = require("discord.js");
@@ -76,6 +77,21 @@ function start() {
       }
     }
 
+    // Delete these lines to disable sendMessage
+    // Setup screen time listener and reminders
+    if (personMentionId) {
+      setupScreenTimeListener(client, clanId, personMentionId);
+    }
+    const reminderText = "Envoie ton temps d'écran maintenant !";
+    setInterval(() => {
+      checkScreenTimeReminder(client, clanId, messageChannelId, personMentionId, reminderText);
+    }, 30 * 60 * 1000); // 30 minutes
+
+    // Delete these lines to disable sendMessage
+    scheduleDailyTask(() => {
+      triggerDailyScreenTime(client, clanId, messageChannelId, personMentionId, reminderText);
+    }, 10, 0); // 10h00
+
     // Start checking for new clan chat messages
     setInterval(() => checkClanChat(client, clanId, chatChannelId, axios, headers), 20 * 1000); // 20 sec
 
@@ -86,11 +102,6 @@ function start() {
     setInterval(() => announcementChannel(client, announcementChannelId, clanId, axios, headers), 60 * 60 * 1000); // 1h
 
     const channel = await client.channels.fetch(chatChannelId);
-
-    // Delete these lines to disable sendMessage
-    scheduleDailyTask(() => {
-          sendMessage(client, messageChannelId, personMentionId, "Envoie ton temps d'écran maintenant !");
-        }, 10, 0); // 10h00
 
     // Schedule old messages deletion
     scheduleDailyTask(async () => {

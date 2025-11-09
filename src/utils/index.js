@@ -1,3 +1,5 @@
+const { triggerDailyScreenTime } = require('../tasks/screenTimeTask.js');
+
 module.exports = {
   changeParticipations: require('../commands/leaders/changeParticipations.js'),
   activeShopOffers: require('../commands/members/shop/activeShopOffers.js'),
@@ -45,4 +47,7 @@ module.exports = {
 
   // Delete sendMessage here to disable sendMessage feature
   sendMessage: require('../events/sendMessage.js').sendMessage,
+  triggerDailyScreenTime: require('../tasks/screenTimeTask.js').triggerDailyScreenTime,
+  setupScreenTimeListener: require('../tasks/screenTimeTask.js').setupScreenTimeListener,
+  checkScreenTimeReminder: require('../tasks/screenTimeTask.js').checkScreenTimeReminder
 };

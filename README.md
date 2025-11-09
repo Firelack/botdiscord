@@ -18,7 +18,8 @@ A lot of features are made for the developpers clan "WerewoIf OnIine*" but you c
 - 🆕 An announcement channel link to announcements in game.
 - 🎉 Easter eggs are hidden in some bot responses 😄  
 - 📰 A Discord channel for leader's to enable or disable clan members’ participation, to change flairs, and to see if quest or if the quest stage is finished (!leadersCommands).
-- Additional useful features for developers’ clans.  
+- 🤖 Automatic announcement for developpers' clan.
+- Additional useful features for developers’ clan.  
 
 ---
 
@@ -120,7 +121,6 @@ Contributions, ideas, or feedback are welcome!
 
 - [x] Reorganize all files into proper folders.
 - [x] Rename all files following the same naming convention (camelCase).
-- [x] Ensure each file contains only **one main function**. (except `syncChat`)
 - [x] Verify that all function names follow the same naming convention.
   
 ### 📢 Announcement System
@@ -137,7 +137,7 @@ Contributions, ideas, or feedback are welcome!
 - [ ] Store special surname tel by discord users
 - [x] Store if the bot already send quest informations to admin.
 - [x] Store if the bot already send the last message of the clan chat.
-- [ ] Store send message responde today.
+- [x] Store send message responde today.
 - [ ] Store **free quests** in the database.  
 - [ ] Automatically update free quests:
   - [ ] On launch, decrement the available quest count.  

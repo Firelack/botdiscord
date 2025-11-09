@@ -24,8 +24,8 @@ function leadersCommandsInfo(message) {
       ### 3. Gestion des Annonces de Quêtes
       
       **Envoyer une annonce de quête maintenant :** \`announcequest {dateLancement}:{numéro}\` (les deux arguments sont optionnels, la date par défaut est demain 20h00)
-      **Activer/Désactiver l'annonce automatique du Lundi 20h00 :** \`toggleMondayQuest:\`
-      **Activer/Désactiver les quêtes en gemmes :** \`toggleGemQuests:\`
+      **Activer/Désactiver l'annonce automatique du Lundi 20h00 :** \`togglequest:\`
+      **Activer/Désactiver les quêtes en gemmes :** \`tooglegems:\`
           
       ### 4. Autres Commandes
       

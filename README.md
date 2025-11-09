@@ -125,12 +125,11 @@ Contributions, ideas, or feedback are welcome!
   
 ### 📢 Announcement System
 
-- [ ] Implement a **Quest Announcement System**:
-  - [ ] Automatically send weekly quest announcements every **Monday at 8 PM**.  
-  - [ ] Add a command to **enable or disable** the Monday 8 PM announcement.  
-  - [ ] Add a command to **enable or disable** **Gem Quests**.  
-  - [ ] Add a command to **enable or disable default Sub-Chief/Chief participations**.  
-  - [ ] Add a command that lets the bot send an announcement based on configurable parameters (e.g., **gold/gems**, **date/time**).  
+- [x] Implement a **Quest Announcement System**:
+  - [x] Automatically send weekly quest announcements every **Monday at 8 PM**.  
+  - [x] Add a command to **enable or disable** the Monday 8 PM announcement.  
+  - [x] Add a command to **enable or disable** **Gem Quests**.  
+  - [x] Add a command that lets the bot send an announcement based on configurable parameters (e.g., **questNumber**, **date/time**).  
 
 ### 🗃️ Database Integration (Superbase)
 
@@ -138,6 +137,7 @@ Contributions, ideas, or feedback are welcome!
 - [ ] Store special surname tel by discord users
 - [x] Store if the bot already send quest informations to admin.
 - [x] Store if the bot already send the last message of the clan chat.
+- [ ] Store send message responde today.
 - [ ] Store **free quests** in the database.  
 - [ ] Automatically update free quests:
   - [ ] On launch, decrement the available quest count.  
@@ -155,3 +155,4 @@ Contributions, ideas, or feedback are welcome!
   - [ ] If the **total contribution** is 400, include it in the quest.  
   - [ ] If the total is **greater than 400** or spread across multiple entries, trigger a **warning** (check if “quest” is included).  
   - [ ] Automatically **activate participation** for all members and launch at the scheduled announcement time.  
+  - [ ] Add a command to **enable or disable default Sub-Chief/Chief participations**.  

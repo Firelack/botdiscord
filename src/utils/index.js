@@ -35,6 +35,14 @@ module.exports = {
   loadLastSeenDateFromDB: require('../events/syncChat.js').loadLastSeenDateFromDB,
   sendToWolvesville: require('../events/syncChat.js').sendToWolvesville,
   handleDiscordMessage: require('../events/syncChat.js').handleDiscordMessage,
+  toggleMondayQuest: require('../commands/leaders/toggleMondayQuest.js'),
+  toggleGemQuests: require('../commands/leaders/toggleGemQuests.js'),
+  sendQuestAnnouncement: require('../commands/leaders/sendQuestAnnouncement.js'),
+  findBestQuest: require('../utils/findBestQuest.js'),
+  executeQuestAnnouncement: require('../tasks/executeQuestAnnouncement.js'),
+  mondayQuestAnnouncementTask: require('../tasks/mondayQuestAnnouncementTask.js'),
+  getSpecificQuest: require('../utils/getSpecificQuest.js'),
+
   // Delete sendMessage here to disable sendMessage feature
   sendMessage: require('../events/sendMessage.js').sendMessage,
 };

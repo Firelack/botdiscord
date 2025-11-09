@@ -11,8 +11,10 @@ const {
   getAdvancedRoles, getApiHat, getClanId, getClanInfo, idAvatar, infoRole, leadersCommandsInfo,
   playerCards, playerProfil, playerStats, questAvailable, checkQuestStatus, roleRotations, 
   searchAvatarId, loadLastSeenDateFromDB,
-  checkClanChat, handleDiscordMessage, scheduleDailyTask, mondayAnnouncementTask,
-  sendMessage } = require('./utils/index');
+  checkClanChat, handleDiscordMessage, scheduleDailyTask, 
+  mondayAnnouncementTask, sendQuestAnnouncement, mondayQuestAnnouncementTask,
+  toggleMondayQuest, toggleGemQuests,
+  sendMessage} = require('./utils/index');
 
 function start() {
   const { Client, GatewayIntentBits } = require("discord.js");
@@ -95,8 +97,14 @@ function start() {
       await deleteOldMessages(channel, 2 * 24 * 60 * 60 * 1000);
     }, 0, 0); // 0h00
 
-    // Schedule Monday announcement
+    // Schedule Monday Votes announcement
     scheduleDailyTask(() => mondayAnnouncementTask(clanId, axios, headers), 6, 0);
+
+    // Schedule Monday Quest Announcement
+    scheduleDailyTask(() => {
+      mondayQuestAnnouncementTask(clanId, axios, headers); 
+    }, 20, 0); // 20h00
+
   });
 
   client.login(`Bot ${botKey}`);
@@ -118,6 +126,9 @@ function start() {
         leadersCommandsInfo(message);
         await changeParticipations(message, clanId, leaderChannelId, axios, headers);
         await changeFlair(message, clanId, leaderChannelId, axios, headers);
+        await toggleMondayQuest(message, clanId);
+        await toggleGemQuests(message, clanId);
+        await sendQuestAnnouncement(message, clanId, axios, headers);
         return; // Stop processing other commands
       }
 

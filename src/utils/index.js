@@ -44,6 +44,9 @@ module.exports = {
   executeQuestAnnouncement: require('../tasks/executeQuestAnnouncement.js'),
   mondayQuestAnnouncementTask: require('../tasks/mondayQuestAnnouncementTask.js'),
   getSpecificQuest: require('../utils/getSpecificQuest.js'),
+  syncClanMembers: require('../tasks/syncClanMembers.js'),
+  setNickname: require('../commands/leaders/setNickname.js'),
+  findPlayer: require('../utils/findPlayer.js'),
 
   // Delete sendMessage here to disable sendMessage feature
   sendMessage: require('../events/sendMessage.js').sendMessage,

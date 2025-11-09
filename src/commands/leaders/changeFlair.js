@@ -1,7 +1,7 @@
-const searchMember = require('../../utils/searchMember.js');
+const findPlayer = require('../../utils/findPlayer.js');
 
 async function processNameAndFlairChange(message, clanId, salonId, axios, headers, profilName, nouveauFlair) {
-  const searchResult = await searchMember(profilName, clanId, axios, headers);
+  const searchResult = await findPlayer(profilName, clanId, axios, headers);
 
   let matchToProcess = null;
   let resultMessage = null;

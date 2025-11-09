@@ -1,4 +1,4 @@
-const searchMember = require('../../utils/searchMember.js');
+const findPlayer = require('../../utils/findPlayer.js');
 
 /**
  * Executes a player participation change action (active/desactive) sequentially for a list of names.
@@ -25,7 +25,7 @@ async function processNameList(message, clanId, axios, headers, profilNames, par
   const allSearchResults = await Promise.all(
     profilNames.map(async (profilName) => ({
       profilName, // Original input name
-      result: await searchMember(profilName, clanId, axios, headers),
+      result: await findPlayer(profilName, clanId, axios, headers),
     }))
   );
 

@@ -2,38 +2,39 @@ function leadersCommandsInfo(message) {
   if (message.content.toLowerCase().trim() === "!leaderscommands") {
     message.reply(
       `## 👑 Commandes Chef/Adjoint 👑\n\n` +
-      `Bienvenue ! Ce canal est dédié à la gestion du clan. Vous avez accès à des commandes spéciales.
-      Le bot envoie également des notifications quand une quête ou une étape de quête est terminée.
+      `Bienvenue ! Ce canal est dédié à la gestion du clan. Vous avez accès à des commandes spéciales.\n` +
+      `Le bot envoie également des notifications quand une quête ou une étape de quête est terminée.\n\n` +
       
-      ### 1. Gestion des Participations aux Quêtes
+      `### 1. Gestion des Surnoms\n\n` +
+      `   **Définir/Changer un surnom :** \`surnom:{joueur}:{nouveauSurnom}\`\n` +
+      `   **Supprimer un surnom :** \`surnom:{joueur}:\` (laissez le champ du surnom vide)\n\n` +
       
-      **Activer** 1 joueur : \`active:{joueur}\`
-      **Désactiver** 1 joueur : \`desactive:{joueur}\`
-      **Activer** multiple : \`active:{joueur1},{joueur2},...\`
-      **Désactiver** multiple : \`desactive:{joueur1},{joueur2},...\`
-      **Activer TOUS** : \`activeall:\`
-      **Désactiver TOUS** : \`desactiveall:\`
+      `> **Note :** Vous pouvez utilisez les surnoms pour les commandes de gestion des participations et des titres.\n` +
+      `> Si aucun surnom n'est défini, vous pouvez utilisez une partie du pseudo du joueur ou le pseudo exact.\n` +
+      `> En cas d'ambiguïté, le bot essaiera de résoudre le problème ou vous demandera de préciser.\n\n` +
       
-      > **Note :** Utilisez un surnom (une partie du pseudo) ou le pseudo exact. En cas d'ambiguïté, le bot essaiera de résoudre ou vous demandera de préciser.
+      `### 2. Gestion des Participations aux Quêtes\n\n` +
+      `   **Activer** 1 joueur : \`active:{joueur}\`\n` +
+      `   **Désactiver** 1 joueur : \`desactive:{joueur}\`\n` +
+      `   **Activer** multiple : \`active:{joueur1},{joueur2},...\`\n` +
+      `   **Désactiver** multiple : \`desactive:{joueur1},{joueur2},...\`\n` +
+      `   **Activer TOUS** : \`activeall:\`\n` +
+      `   **Désactiver TOUS** : \`desactiveall:\`\n\n` +
       
-      ### 2. Changer le Titre (Flair) d'un Membre
+      `### 3. Changer le Titre (Flair) d'un Membre\n\n` +
+      `   **Définir/Changer le titre :** \`titre:{joueur}:{nouveautitre}\`\n` +
+      `   **Supprimer le titre :** \`titre:{joueur}\` (laissez le champ du titre vide)\n\n` +
       
-      **Définir/Changer le titre :** \`titre:{joueur}:{nouveautitre}\`
-      **Supprimer le titre :** \`titre:{joueur}\` (laissez le champ du titre vide)
-      
-    ### 3. Gestion des Annonces de Quêtes
-      
-      **Envoyer une annonce de quête maintenant :** \`announcequest {dateLancement}:{numéro}\` (les deux arguments sont optionnels, la date par défaut est demain 20h00)
-      **Activer/Désactiver l'annonce automatique du Lundi 20h00 :** \`togglequest:\`
-      **Activer/Désactiver les quêtes en gemmes :** \`tooglegems:\`
+      `### 4. Gestion des Annonces de Quêtes\n\n` +
+      `   **Envoyer une annonce de quête maintenant :** \`announcequest [dateLancement]:[numéro]\` (les deux arguments sont optionnels, la date par défaut est demain 20h00)\n` +
+      `   **Activer/Désactiver l'annonce automatique du Lundi 20h00 :** \`togglequest\`\n` +
+      `   **Activer/Désactiver les quêtes en gemmes :** \`togglegems\`\n\n` +
           
-      ### 4. Autres Commandes
+      `### 5. Autres Commandes\n\n` +
+      `   **Aide :** \`!leadersCommands\` (Affiche ce message)\n\n` +
       
-      **Aide :** \`!leadersCommands\` (Affiche ce message)
-      
-      ### 🌐 Redémarrage du Bot
-      
-      Si le bot est hors ligne, vous pouvez le relancer ici : [Hébergeur](https://botdiscord-6cwc.onrender.com/) `
+      `### 🌐 Redémarrage du Bot\n\n` +
+      `   Si le bot est hors ligne, vous pouvez le relancer ici : [Hébergeur](https://botdiscord-6cwc.onrender.com/)`
     );
   }
 }

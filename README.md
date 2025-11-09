@@ -134,13 +134,13 @@ Contributions, ideas, or feedback are welcome!
 ### 🗃️ Database Integration (Superbase)
 
 - [x] Store the IDs of already sent announcements (don't use announcement.json).  
-- [ ] Store special surname tel by discord users
+- [x] Store special surname tel by discord users
 - [x] Store if the bot already send quest informations to admin.
 - [x] Store if the bot already send the last message of the clan chat.
 - [x] Store send message responde today.
-- [ ] Store **free quests** in the database.  
+- [ ] Store **free quests** in the database. (add a command to change manually)
 - [ ] Automatically update free quests:
-  - [ ] On launch, decrement the available quest count.  
+  - [ ] On launch, decrement the available quest count and at the end of a quest incrase bonus/malus.
   - [ ] Apply a **penalty** if the user lacks enough XP.  
   - [ ] Apply a **penalty** if a user votes but doesn’t participate.  
   - [ ] Add a **bonus** if the user reaches **8k × c**.  

@@ -14,7 +14,11 @@ const {
   checkClanChat, handleDiscordMessage, scheduleDailyTask, 
   mondayAnnouncementTask, sendQuestAnnouncement, mondayQuestAnnouncementTask,
   toggleMondayQuest, toggleGemQuests,
-  sendMessage, triggerDailyScreenTime, setupScreenTimeListener, checkScreenTimeReminder
+  triggerDailyScreenTime, setupScreenTimeListener, checkScreenTimeReminder,
+
+  syncClanMembers,
+  setNickname
+
 } = require('./utils/index');
 
 function start() {
@@ -67,6 +71,17 @@ function start() {
       console.error("❌ Erreur critique lors du chargement du timestamp chat :", err);
     }
 
+    // --- NOUVELLE TÂCHE DE SYNCHRO ---
+    try {
+      // Lance la synchro une fois au démarrage
+      await syncClanMembers(clanId, axios, headers);
+      // Puis lance-la toutes les 30 minutes
+      setInterval(() => syncClanMembers(clanId, axios, headers), 30 * 60 * 1000); 
+    } catch (err) {
+      console.error("❌ Erreur critique lors de la synchronisation initiale des membres :", err);
+    }
+    // ---------------------------------
+
     // Pre-fetch members
     for (const [guildId, guild] of client.guilds.cache) {
       try {
@@ -85,7 +100,7 @@ function start() {
     const reminderText = "Envoie ton temps d'écran maintenant !";
     setInterval(() => {
       checkScreenTimeReminder(client, clanId, messageChannelId, personMentionId, reminderText);
-    }, 30 * 60 * 1000); // 30 minutes
+    }, 60 * 60 * 1000); // 60 minutes
 
     // Delete these lines to disable sendMessage
     scheduleDailyTask(() => {
@@ -140,6 +155,7 @@ function start() {
         await toggleMondayQuest(message, clanId);
         await toggleGemQuests(message, clanId);
         await sendQuestAnnouncement(message, clanId, axios, headers);
+        await setNickname(message, clanId, axios, headers);
         return; // Stop processing other commands
       }
 

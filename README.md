@@ -138,13 +138,13 @@ Contributions, ideas, or feedback are welcome!
 - [x] Store if the bot already send quest informations to admin.
 - [x] Store if the bot already send the last message of the clan chat.
 - [x] Store send message responde today.
-- [ ] Store **free quests** in the database. (add a command to change manually)
-- [ ] Automatically update free quests:
-  - [ ] On launch, decrement the available quest count and at the end of a quest incrase bonus/malus.
-  - [ ] Apply a **penalty** if the user lacks enough XP.  
-  - [ ] Apply a **penalty** if a user votes but doesn’t participate.  
-  - [ ] Add a **bonus** if the user reaches **8k × c**.  
-  - [ ] Delete members that are not longer in the clan.
+- [x] Store **free quests** in the database. (add a command to change manually)
+- [x] Automatically update free quests: ❗NEED TO BE VERIFY BY REPORT
+  - [x] On launch, decrement the available quest count and at the end of a quest incrase bonus/malus.
+  - [x] Apply a **penalty** if the user lacks enough XP.  
+  - [x] Apply a **penalty** if a user votes but doesn’t participate.  
+  - [x] Add a **bonus** if the user reaches **10k × c**.  
+  - [x] Delete members that are not longer in the clan.
 - [ ] Post a new **Free Quest Announcement** message to reflect these changes. (Update and delete cannot be done with the API, need to delete old annoucement manual)  
 
 ### ⚙️ Launch Management System
@@ -156,3 +156,7 @@ Contributions, ideas, or feedback are welcome!
   - [ ] If the total is **greater than 400** or spread across multiple entries, trigger a **warning** (check if “quest” is included).  
   - [ ] Automatically **activate participation** for all members and launch at the scheduled announcement time.  
   - [ ] Add a command to **enable or disable default Sub-Chief/Chief participations**.  
+
+### Other
+
+- [ ] Fix hours of checkScreenTimeReminder

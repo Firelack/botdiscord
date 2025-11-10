@@ -15,6 +15,13 @@ const {
   mondayAnnouncementTask, sendQuestAnnouncement, mondayQuestAnnouncementTask,
   toggleMondayQuest, toggleGemQuests,
   triggerDailyScreenTime, setupScreenTimeListener, checkScreenTimeReminder,
+  // Quest bonus/malus related commands and tasks
+  processCompletedQuests,
+  setBonusMalus,
+  addBonusMalus,
+  myBonus,
+  questStatus,
+  bonusAnnouncement,
 
   syncClanMembers,
   setNickname
@@ -71,16 +78,19 @@ function start() {
       console.error("❌ Erreur critique lors du chargement du timestamp chat :", err);
     }
 
-    // --- NOUVELLE TÂCHE DE SYNCHRO ---
     try {
-      // Lance la synchro une fois au démarrage
+      // Start initial clan members sync
       await syncClanMembers(clanId, axios, headers);
-      // Puis lance-la toutes les 30 minutes
+      // Re-sync every 30 minutes
       setInterval(() => syncClanMembers(clanId, axios, headers), 30 * 60 * 1000); 
     } catch (err) {
       console.error("❌ Erreur critique lors de la synchronisation initiale des membres :", err);
     }
-    // ---------------------------------
+
+    // Start processing completed quests every 30 minutes
+    setInterval(() => {
+      processCompletedQuests(clanId, axios, headers, client, leaderChannelId);
+    }, 30 * 60 * 1000);
 
     // Pre-fetch members
     for (const [guildId, guild] of client.guilds.cache) {
@@ -156,10 +166,15 @@ function start() {
         await toggleGemQuests(message, clanId);
         await sendQuestAnnouncement(message, clanId, axios, headers);
         await setNickname(message, clanId, axios, headers);
+        await setBonusMalus(message, clanId, axios, headers);
+        await addBonusMalus(message, clanId, axios, headers);
+        await questStatus(message, clanId);
+        await bonusAnnouncement(message, clanId);
         return; // Stop processing other commands
       }
 
       // Member commands
+      await myBonus(message, clanId);
       commandList(message);
       botInfo(message);
       actualQuest(message, clanId, axios, headers);

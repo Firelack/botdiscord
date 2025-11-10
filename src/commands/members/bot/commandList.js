@@ -27,6 +27,7 @@ function commandList(message) {
 - Actualquest
 - Quest
 - Annonce
+- mybonus (Pour voir ton statut de quêtes gratuites/malus)
 
 **__Offres actives du shop:__**
 - Offres

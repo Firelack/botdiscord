@@ -135,7 +135,7 @@ async function executeQuestAnnouncement(clanId, axios, headers, launchTime, mess
   const { questName, akaName } = await getQuestName(questToAnnounce.extractedName);
 
   let messageContent = 
-    `📢 **Prochaine quête ${launchTime} 📢\n\n` +
+    `📢 Prochaine quête ${launchTime} 📢\n\n` +
     `On lancera la quête n°${questNum} nommée ${questName} (${questToAnnounce.voteCount} votes)\n` +
     akaName +
     `Pour participer donnez ${currency === "gemmes" ? 80 : 400} ${currency}.\n\n` +

@@ -1,3 +1,4 @@
+const generateBonusAnnouncement = require('../commands/leaders/generateBonusAnnouncement.js');
 const { triggerDailyScreenTime } = require('../tasks/screenTimeTask.js');
 
 module.exports = {
@@ -47,6 +48,15 @@ module.exports = {
   syncClanMembers: require('../tasks/syncClanMembers.js'),
   setNickname: require('../commands/leaders/setNickname.js'),
   findPlayer: require('../utils/findPlayer.js'),
+  // Quest bonus/malus related commands and tasks
+  processCompletedQuests: require('../tasks/processCompletedQuests.js'),
+  processQuestLaunch: require('../tasks/processQuestLaunch.js'),
+  setBonusMalus: require('../commands/leaders/setBonusMalus.js'),
+  addBonusMalus: require('../commands/leaders/addBonusMalus.js'),
+  myBonus: require('../commands/members/clan/myBonus.js'),
+  questStatus: require('../commands/leaders/questStatus.js'),
+  bonusAnnouncement: require('../commands/leaders/bonusAnnouncement.js'),
+  generateBonusAnnouncement: require('../commands/leaders/generateBonusAnnouncement.js'),
 
   // Delete sendMessage here to disable sendMessage feature
   sendMessage: require('../events/sendMessage.js').sendMessage,

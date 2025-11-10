@@ -1,14 +1,10 @@
 const supabase = require('../utils/superbaseClient');
+// Import trigger 1
+const processQuestLaunch = require('../tasks/processQuestLaunch.js'); 
 
 /**
- * Ensure the quest status is checked for a specific clan,
- * and notify the Discord channel if the quest or tier has just finished.
- * Writes the current quest status back to the database.
- * @param {object} client - The Discord client instance.
- * @param {string} clanId - The ID of the clan to check.
- * @param {string} questChannelId - The ID of the Discord channel to send notifications to.
- * @param {object} axios - The axios instance for making HTTP requests.
- * @param {object} headers - The headers to include in the API requests.
+ * If new quest, trigger processQuestLaunch.
+ * If quest finished, send notification.
  */
 async function checkQuestStatus(client, clanId, questChannelId, axios, headers) {
   const channel = client.channels.cache.get(questChannelId);
@@ -17,58 +13,78 @@ async function checkQuestStatus(client, clanId, questChannelId, axios, headers) 
     return;
   }
 
-  // Read the last known quest status from the database
-  let { data: flag, error: dbError } = await supabase
+  // Read current bot state from DB
+  let { data: botState, error: dbError } = await supabase
     .from('bot_state')
-    .select('value')
-    .eq('key', 'quest_active')
+    .select('key, value')
     .eq('clan_id', clanId)
-    .single();
+    .in('key', ['quest_active', 'current_quest_id']);
 
-  if (dbError && dbError.code !== 'PGRST116') { // PGRST116 = not found
+  if (dbError) {
     console.error(`Erreur DB (checkQuestStatus - read) pour clan ${clanId}:`, dbError);
     return;
   }
 
-  const wasQuestActive = flag && flag.value === 'true';
-  let isQuestActive = false; // By default, assume no active quest
+  const wasQuestActive = botState.find(s => s.key === 'quest_active')?.value === 'true';
+  const lastKnownQuestId = botState.find(s => s.key === 'current_quest_id')?.value;
+
+  let currentQuest = null;
+  let isQuestCurrentlyActive = false;
   let questFinishedMessage = null;
 
   try {
-    // Fetch the current quest status from the Wolvesville API
+    // Fetch current active quest from API
     const response = await axios.get(`https://api.wolvesville.com/clans/${clanId}/quests/active`, { headers });
-    const quest = response.data?.quest;
-    const tierFinished = response.data?.tierFinished;
+    currentQuest = response.data;
     
-    isQuestActive = quest && !tierFinished; // True if there's an active quest and the tier is not finished
+    // Active quest exists and is not finished
+    isQuestCurrentlyActive = currentQuest && !currentQuest.tierFinished;
 
-    if (tierFinished && wasQuestActive) {
+    if (currentQuest && currentQuest.tierFinished && wasQuestActive) {
       questFinishedMessage = "L'étape actuelle de la quête est terminée";
     }
 
   } catch (error) {
-    // If 404, no active quest
-    isQuestActive = false;
+    // Error 404 = no active quest
+    isQuestCurrentlyActive = false;
     if (wasQuestActive) {
       questFinishedMessage = "La quête actuelle est terminée !";
     }
   }
 
-  // Notify if status changed from true to false
-  if (wasQuestActive && !isQuestActive && questFinishedMessage) {
-    channel.send(questFinishedMessage);
-    console.log(`Notification envoyée (Clan ${clanId}): ${questFinishedMessage}`);
-  }
+  // Logic branching based on quest status
 
-  // Always update the database with the current status
-  try {
-    await supabase.from('bot_state').upsert({ 
-      key: 'quest_active', 
-      value: isQuestActive.toString(), // 'true' ou 'false'
-      clan_id: clanId
-    });
-  } catch (dbWriteError) {
-    console.error(`Erreur DB (checkQuestStatus - write) pour clan ${clanId}:`, dbWriteError);
+  if (isQuestCurrentlyActive) {
+    // 1 : New quest detected
+    if (currentQuest.quest.id !== lastKnownQuestId) {
+      console.log(`[Déclencheur 1] Nouvelle quête détectée : ${currentQuest.quest.id}. Lancement du traitement des votes/dons.`);
+      
+      // Start logic for new quest
+      await processQuestLaunch(clanId, currentQuest, axios, headers, client, questChannelId);
+      
+      // Update bot state in DB
+      await supabase.from('bot_state').upsert([
+        { clan_id: clanId, key: 'quest_active', value: 'true' },
+        { clan_id: clanId, key: 'current_quest_id', value: currentQuest.quest.id }
+      ]);
+    }
+    // 2 : Ongoing quest, no change (do nothing)
+    
+  } else {
+    // 3 : Quest finished
+    if (wasQuestActive) {
+      console.log(`[Déclencheur 1] Fin de quête détectée. Envoi de la notification.`);
+      if (channel && questFinishedMessage) {
+        channel.send(questFinishedMessage);
+      }
+      
+      // Update bot state in DB
+      await supabase.from('bot_state').upsert([
+        { clan_id: clanId, key: 'quest_active', value: 'false' },
+        { clan_id: clanId, key: 'current_quest_id', value: 'none' } // Reset ID
+      ]);
+    }
+    // 4 : No quest active, no change (do nothing)
   }
 }
 

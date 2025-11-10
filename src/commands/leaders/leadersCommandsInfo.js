@@ -9,7 +9,7 @@ function leadersCommandsInfo(message) {
       `   **Définir/Changer un surnom :** \`surnom:{joueur}:{nouveauSurnom}\`\n` +
       `   **Supprimer un surnom :** \`surnom:{joueur}:\` (laissez le champ du surnom vide)\n\n` +
       
-      `> **Note :** Vous pouvez utilisez les surnoms pour les commandes de gestion des participations et des titres.\n` +
+      `> **Note :** Vous pouvez utilisez les surnoms pour les commandes de gestion des participations, des titres et des bonus et malus.\n` +
       `> Si aucun surnom n'est défini, vous pouvez utilisez une partie du pseudo du joueur ou le pseudo exact.\n` +
       `> En cas d'ambiguïté, le bot essaiera de résoudre le problème ou vous demandera de préciser.\n\n` +
       
@@ -29,8 +29,15 @@ function leadersCommandsInfo(message) {
       `   **Envoyer une annonce de quête maintenant :** \`announcequest [dateLancement]:[numéro]\` (les deux arguments sont optionnels, la date par défaut est demain 20h00)\n` +
       `   **Activer/Désactiver l'annonce automatique du Lundi 20h00 :** \`togglequest\`\n` +
       `   **Activer/Désactiver les quêtes en gemmes :** \`togglegems\`\n\n` +
+
+      `### 5. Gestion des Bonus/Malus de Quêtes\n\n` +
+      `   **Définir des bonus/malus :** \`setbonus Joueur1 X, Joueur2 Y\` \n` +
+      `   **Ajouter des bonus/malus :** \`addbonus Joueur1 X, Joueur2 Y\` \n` +
+      `   **Lister tous les bonus/malus :** \`statusquetes\`\n\n`+
+      `   **Générer une annonce de bonus/malus :** \`bonusannonce\`\n\n` +
+      `> **Note :** Si vous mettez un nombre négatif, cela correspond à un nombre de malus.\n` +
           
-      `### 5. Autres Commandes\n\n` +
+      `### 6. Autres Commandes\n\n` +
       `   **Aide :** \`!leadersCommands\` (Affiche ce message)\n\n` +
       
       `### 🌐 Redémarrage du Bot\n\n` +

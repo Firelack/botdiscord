@@ -1,5 +1,5 @@
 const supabase = require('../utils/superbaseClient');
-const generateBonusAnnouncement = require('../utils/generateBonusAnnouncement.js');
+const generateBonusAnnouncement = require('../commands/leaders/generateBonusAnnouncement.js');
 
 const ROLES_EXEMPT = ['CHIEF', 'SUB_CHIEF'];
 const XP_MALUS_THRESHOLD_PER_DAY = 300; // 300 XP per day of quest duration
@@ -64,7 +64,7 @@ async function processCompletedQuests(clanId, axios, headers, client, leaderChan
       const questStartTime = new Date(quest.tierStartTime);
       const questEndTime = new Date(quest.tierEndTime);
       
-      // Calcul de la durée de la quête en jours (arrondi au supérieur)
+      // Calculate quest duration in days
       const durationMs = questEndTime.getTime() - questStartTime.getTime();
       let durationDays = Math.ceil(durationMs / (1000 * 60 * 60 * 24));
       if (durationDays < 1) durationDays = 1; // Minimum 1 jour

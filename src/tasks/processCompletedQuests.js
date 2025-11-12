@@ -61,13 +61,18 @@ async function processCompletedQuests(clanId, axios, headers, client, leaderChan
     // Process each new quest
     for (const quest of newQuests) {
       const questId = quest.quest.id;
-      const questStartTime = new Date(quest.tierStartTime);
-      const questEndTime = new Date(quest.tierEndTime);
+      const questEndTime = new Date(quest.tierEndTime); //End time
+      
+      const launchEntry = ledger.find(e => e.type === 'CLAN_QUEST' && e.clanQuestId === questId); // Find launch entry = start time
+      
+      // If we don't find the entry (very rare), we use the 'tierStartTime' of the 1st tier
+      // (which is not in this object, so we take the current 'tierStartTime' as fallback)
+      const questStartTime = launchEntry ? new Date(launchEntry.creationTime) : new Date(quest.tierStartTime);
       
       // Calculate quest duration in days
       const durationMs = questEndTime.getTime() - questStartTime.getTime();
       let durationDays = Math.ceil(durationMs / (1000 * 60 * 60 * 24));
-      if (durationDays < 1) durationDays = 1; // Minimum 1 jour
+      if (durationDays < 1) durationDays = 1; // Minimum 1 day
       
       const xpMalusThreshold = XP_MALUS_THRESHOLD_PER_DAY * durationDays;
       
@@ -139,7 +144,7 @@ async function processCompletedQuests(clanId, axios, headers, client, leaderChan
       // Send bonus announcement
       console.log("[Quests Fin] Génération de l'annonce à copier/coller...");
       const announcementText = await generateBonusAnnouncement(clanId);
-      await channel.send("Annonce à copier/coller (mise à jour après XP) :\n```\n" + announcementText + "\n```");
+      await channel.send(announcementText);
     }
 
     // Update last processed quest time in DB

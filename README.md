@@ -18,7 +18,7 @@ A lot of features are made for the developpers clan "WerewoIf OnIine*" but you c
 - 🆕 An announcement channel link to announcements in game.
 - 🎉 Easter eggs are hidden in some bot responses 😄  
 - 📰 A Discord channel for leader's to enable or disable clan members’ participation, to change flairs, and to see if quest or if the quest stage is finished (!leadersCommands).
-- 🤖 Automatic announcement for developpers' clan.
+- 🤖 Automatic announcement and bonuses/maluses for developpers' clan.
 - Additional useful features for developers’ clan.  
 
 ---

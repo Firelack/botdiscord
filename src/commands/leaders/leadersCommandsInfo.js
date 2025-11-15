@@ -1,7 +1,7 @@
-function leadersCommandsInfo(message) {
+async function leadersCommandsInfo(message) { // Ajout de 'async'
   if (message.content.toLowerCase().trim() === "!leaderscommands") {
-    message.reply(
-      `## 👑 Commandes Chef/Adjoint 👑\n\n` +
+    
+    const msg1 = `## 👑 Commandes Chef/Adjoint 👑\n\n` +
       `Bienvenue ! Ce canal est dédié à la gestion du clan. Vous avez accès à des commandes spéciales.\n` +
       `Le bot envoie également des notifications quand une quête ou une étape de quête est terminée.\n\n` +
       
@@ -19,18 +19,22 @@ function leadersCommandsInfo(message) {
       `   **Activer** multiple : \`active:{joueur1},{joueur2},...\`\n` +
       `   **Désactiver** multiple : \`desactive:{joueur1},{joueur2},...\`\n` +
       `   **Activer TOUS** : \`activeall:\`\n` +
-      `   **Désactiver TOUS** : \`desactiveall:\`\n\n` +
-      
-      `### 3. Changer le Titre (Flair) d'un Membre\n\n` +
+      `   **Désactiver TOUS** : \`desactiveall:\``;
+    
+    await message.reply(msg1);
+
+    const msg2 = `### 3. Changer le Titre (Flair) d'un Membre\n\n` +
       `   **Définir/Changer le titre :** \`titre:{joueur}:{nouveautitre}\`\n` +
       `   **Supprimer le titre :** \`titre:{joueur}\` (laissez le champ du titre vide)\n\n` +
       
       `### 4. Gestion des Annonces de Quêtes\n\n` +
       `   **Envoyer une annonce de quête maintenant :** \`announcequest [dateLancement]:[numéro]\` (les deux arguments sont optionnels, la date par défaut est demain 20h00)\n` +
       `   **Activer/Désactiver l'annonce automatique du Lundi 20h00 :** \`togglequest\`\n` +
-      `   **Activer/Désactiver les quêtes en gemmes :** \`togglegems\`\n\n` +
+      `   **Activer/Désactiver les quêtes en gemmes :** \`togglegems\``;
+    
+    await message.channel.send(msg2);
 
-      `### 5. Gestion des Bonus/Malus de Quêtes\n\n` +
+    const msg3 = `### 5. Gestion des Bonus/Malus de Quêtes\n\n` +
       `   **Définir des bonus/malus :** \`setbonus Joueur1 X, Joueur2 Y\` \n` +
       `   **Ajouter des bonus/malus :** \`addbonus Joueur1 X, Joueur2 Y\` \n` +
       `   **Lister tous les bonus/malus :** \`statusquetes\`\n\n`+
@@ -41,8 +45,9 @@ function leadersCommandsInfo(message) {
       `   **Aide :** \`!leadersCommands\` (Affiche ce message)\n\n` +
       
       `### 🌐 Redémarrage du Bot\n\n` +
-      `   Si le bot est hors ligne, vous pouvez le relancer ici : [Hébergeur](https://botdiscord-6cwc.onrender.com/)`
-    );
+      `   Si le bot est hors ligne, vous pouvez le relancer ici : [Hébergeur](https://botdiscord-6cwc.onrender.com/)`;
+
+    await message.channel.send(msg3);
   }
 }
 

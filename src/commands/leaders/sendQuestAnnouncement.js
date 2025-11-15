@@ -1,5 +1,22 @@
 const executeQuestAnnouncement = require('../../tasks/executeQuestAnnouncement.js');
 
+// Helper function to get tomorrow's day name in French with default time 20:00
+function getTomorrowDefaultTime() {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  
+  // Use toLocaleString to get the day name in French
+  const dayName = tomorrow.toLocaleString('fr-FR', { 
+    weekday: 'long', 
+    timeZone: 'Europe/Paris' 
+  });
+  
+  // Format the day name to capitalize the first letter
+  const capitalizedDayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+  
+  return `${capitalizedDayName} 20h00`;
+}
+
 /**
  * Command to send a quest announcement.
  * Usage: announcequest [launchTime]:[questNumber]

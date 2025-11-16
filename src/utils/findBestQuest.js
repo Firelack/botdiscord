@@ -21,16 +21,30 @@ async function findBestQuest(clanId, axios, headers) {
   const allowGems = (gemConfig && gemConfig.value === 'false') ? false : true; 
   
   try {
-    // Fetch available quests, votes, and history
-    const [availableRes, votesRes, historyRes] = await Promise.all([
+    // Fetch available quests, votes, history, and the active quest
+    const [availableRes, votesRes, historyRes, activeRes] = await Promise.all([
       axios.get(`https://api.wolvesville.com/clans/${clanId}/quests/available`, { headers }),
       axios.get(`https://api.wolvesville.com/clans/${clanId}/quests/votes`, { headers }),
-      axios.get(`https://api.wolvesville.com/clans/${clanId}/quests/history`, { headers })
+      axios.get(`https://api.wolvesville.com/clans/${clanId}/quests/history`, { headers }),
+      
+      // Fetch active quest, handle 404 if no active quest
+      axios.get(`https://api.wolvesville.com/clans/${clanId}/quests/active`, { headers })
+        .catch(error => {
+          // If 404, return null data
+          if (error.response && error.response.status === 404) {
+            return { data: null };
+          }
+          throw error; // Status other than 404, rethrow the error
+        })
     ]);
 
     const availableQuests = availableRes.data;
     const votes = votesRes.data.votes;
     const history = historyRes.data;
+    const activeQuest = activeRes.data; // null if no active quest (404)
+
+    // Find the active quest ID if there is one
+    const activeQuestId = (activeQuest && !activeQuest.tierFinished) ? activeQuest.quest.id : null;
 
     // Create a set of quest IDs completed in the last 7 days
     const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
@@ -59,6 +73,9 @@ async function findBestQuest(clanId, axios, headers) {
     let eligibleQuests = mappedQuests.filter(quest => {
       // Exclude if completed recently
       if (recentQuestIds.has(quest.id)) return false;
+      
+      // Exclude if it's the active quest
+      if (activeQuestId && quest.id === activeQuestId) return false;
       
       // Exclude if gems not allowed and quest requires gems
       if (!allowGems && quest.purchasableWithGems) return false;

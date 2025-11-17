@@ -25,13 +25,15 @@ async function processCompletedQuests(clanId, axios, headers, client, leaderChan
 
     const lastProcessedTime = lastQuestState ? new Date(lastQuestState.value) : new Date(Date.now() - 3 * 24 * 60 * 60 * 1000);
 
-    // Fetch quest history and clan members
-    const [historyRes, membersRes] = await Promise.all([
+    // Fetch quest history, clan members and ledger
+    const [historyRes, membersRes, ledgerRes] = await Promise.all([
       axios.get(`https://api.wolvesville.com/clans/${clanId}/quests/history`, { headers }),
-      axios.get(`https://api.wolvesville.com/clans/${clanId}/members`, { headers })
+      axios.get(`https://api.wolvesville.com/clans/${clanId}/members`, { headers }),
+      axios.get(`https://api.wolvesville.com/clans/${clanId}/ledger`, { headers }) // Ajout de la requête ledger
     ]);
 
     const questHistory = historyRes.data;
+    const ledger = ledgerRes.data;
     const clanMembers = new Map(membersRes.data.map(m => [m.playerId, m.role]));
 
     // Fetch players from DB

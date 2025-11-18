@@ -32,7 +32,6 @@ const {
  * Start the Discord bot and set up event handlers.
  * @return {Promise<void>}
  */
-async
 function start() {
   const { Client, GatewayIntentBits } = require("discord.js");
 

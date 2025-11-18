@@ -1,6 +1,9 @@
 const executeQuestAnnouncement = require('../../tasks/executeQuestAnnouncement.js');
 
-// Helper function to get tomorrow's day name in French with default time 20:00
+/** 
+ * Helper function to get tomorrow's day name in French with default time 20:00
+ * @return {string} Formatted string like "Mardi 20h00"
+*/
 function getTomorrowDefaultTime() {
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);

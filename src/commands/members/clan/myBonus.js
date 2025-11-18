@@ -5,6 +5,9 @@ const MALUS_PAYMENT = 400; // Cost increase per malus
 /**
  * Command for a clan member to check their own bonus/malus status.
  * mybonus
+ * @param {Object} message - The message object from Discord.
+ * @param {string} clanId - The ID of the clan.
+ * @returns {void}
  */
 async function myBonus(message, clanId) {
   if (!message.content.toLowerCase().startsWith("mybonus")) return;

@@ -2,9 +2,10 @@ const supabase = require('../../utils/superbaseClient');
 
 /**
  * Command to toggle Monday 8 PM quest announcement
+ * togglequest
  * @param {object} message - The Discord message object
  * @param {string} clanId - The clan ID
- * togglequest
+ * @return {void}
  */
 async function toggleMondayQuest(message, clanId) {
   if (message.content.toLowerCase() !== "togglequest") return;

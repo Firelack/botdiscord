@@ -1,3 +1,8 @@
+/**
+ * Sends information about the bot when the command is triggered.
+ * @param {Object} message - The message object from Discord.
+ * @returns {void}
+ */
 function botInfo(message) {
   if (message.content.toLowerCase() === "!botinfo") {
     message.reply(

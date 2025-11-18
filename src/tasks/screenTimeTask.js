@@ -3,6 +3,12 @@ const SCREEN_TIME_KEY = 'screentime_replied';
 
 /**
  * Define state to "not replied" and send the initial message.
+ * @param {object} client - The Discord client instance.
+ * @param {string} clanId - The ID of the clan.
+ * @param {string} channelId - The ID of the Discord channel to send the message to.
+ * @param {string} userId - The ID of the user to mention.
+ * @param {string} messageText - The message text to send.
+ * @returns {Promise<void>}
  */
 async function triggerDailyScreenTime(client, clanId, channelId, userId, messageText) {
   console.log(`🕒 Déclenchement de la tâche "Temps d'écran" pour ${userId}`);
@@ -27,6 +33,10 @@ async function triggerDailyScreenTime(client, clanId, channelId, userId, message
 
 /**
  * Setup a listener to capture the user's response.
+ * @param {object} client - The Discord client instance.
+ * @param {string} clanId - The ID of the clan.
+ * @param {string} userId - The ID of the user to listen for.
+ * @returns {void}
  */
 function setupScreenTimeListener(client, clanId, userId) {
   console.log(`🎧 Mise en place du listener 'Temps d'écran' pour ${userId}`);
@@ -63,6 +73,12 @@ function setupScreenTimeListener(client, clanId, userId) {
 
 /**
  * Check if a reminder should be sent.
+ * @param {object} client - The Discord client instance.
+ * @param {string} clanId - The ID of the clan.
+ * @param {string} channelId - The ID of the Discord channel to send the reminder to.
+ * @param {string} userId - The ID of the user to mention.
+ * @param {string} messageText - The reminder message text to send.
+ * @returns {Promise<void>}
  */
 async function checkScreenTimeReminder(client, clanId, channelId, userId, messageText) {
   const now = new Date();

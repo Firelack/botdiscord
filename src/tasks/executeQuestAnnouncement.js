@@ -4,13 +4,21 @@ const postAnnouncement = require('./postAnnouncement.js');
 const supabase = require('../utils/superbaseClient');
 const { translate } = require('@vitalets/google-translate-api');
 
-// Function to capitalize the first letter of a string
+/**
+ * Capitalize the first letter of a string
+ * @param {string} s - The string to capitalize
+ * @returns {string}
+ */
 function capitalize(s) {
   if (typeof s !== 'string') return '';
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-// Formats a key string for translation by replacing underscores and camelCase with spaces
+/**
+ * Format quest key for translation
+ * @param {string} key - The quest key
+ * @returns {string}
+ */
 function formatKeyForTranslation(key) {
   return key
     .replace(/_/g, ' ') // "wolf_hunter" -> "wolf hunter"

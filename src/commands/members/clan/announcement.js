@@ -1,3 +1,11 @@
+/**
+ * Fetches and displays clan announcements when the "annonce" command is triggered.
+ * @param {Object} message - The message object from Discord.
+ * @param {string} clanId - The ID of the clan.
+ * @param {Object} axios - The axios instance for making HTTP requests.
+ * @param {Object} headers - The headers to include in the HTTP request.
+ * @returns {void}
+ */
 function announcement(message, clanId, axios, headers) {
 // Announcement of a clan
     if (message.content.toLowerCase().startsWith("annonce")) {

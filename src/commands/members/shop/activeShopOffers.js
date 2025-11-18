@@ -1,4 +1,10 @@
-
+/**
+ * Handles the "offres" command to fetch and display active shop offers.
+ * @param {Object} message - The message object from the chat.
+ * @param {Object} axios - The axios instance for making HTTP requests.
+ * @param {Object} headers - The headers to include in the HTTP request.
+ * @returns {void}
+ */
 function activeShopOffers(message, axios, headers) {
 // Active shop offers
     if (message.content.toLowerCase() === "offres") {

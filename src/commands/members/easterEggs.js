@@ -1,3 +1,8 @@
+/**
+ * Handles easter egg responses based on specific keywords in messages.
+ * @param {Object} message - The message object from the chat.
+ * @returns {void}
+ */
 function easterEggs(message) {
 // If someone tags the bot
 

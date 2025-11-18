@@ -1,5 +1,16 @@
 const findPlayer = require('../../utils/findPlayer.js');
 
+/**
+ * Process a single player's name and flair change.
+ * @param {Object} message - The message object from Discord.
+ * @param {number} clanId - The clan ID.
+ * @param {number} salonId - The channel ID where the command was issued.
+ * @param {Object} axios - Axios instance for HTTP requests.
+ * @param {Object} headers - Headers for HTTP requests.
+ * @param {string} profilName - The player's name.
+ * @param {string} nouveauFlair - The new flair/title to set.
+ * @return {void}
+ */
 async function processNameAndFlairChange(message, clanId, salonId, axios, headers, profilName, nouveauFlair) {
   const searchResult = await findPlayer(profilName, clanId, axios, headers);
 
@@ -42,6 +53,16 @@ async function processNameAndFlairChange(message, clanId, salonId, axios, header
   }
 }
 
+/**
+ * Command to change a player's flair/title.
+ * Format: titre:PlayerName[:NewFlair]
+ * @param {Object} message - The message object from Discord.
+ * @param {number} clanId - The clan ID.
+ * @param {number} salonId - The channel ID where the command was issued.
+ * @param {Object} axios - Axios instance for HTTP requests.
+ * @param {Object} headers - Headers for HTTP requests.
+ * @return {void}
+ */
 async function changerFlair(message, clanId, salonId, axios, headers) {
   if (message.channel.id !== salonId) return;
 

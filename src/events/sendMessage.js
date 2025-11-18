@@ -4,6 +4,7 @@
  * @param {string} channelId - Channel ID where the message will be sent
  * @param {string} userId - User ID to mention in the message
  * @param {string} messageText - Message content to send
+ * @return {Promise<void>}
  */
 async function sendMessage(client, channelId, userId, messageText) {
   try {

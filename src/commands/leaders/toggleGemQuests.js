@@ -2,9 +2,10 @@ const supabase = require('../../utils/superbaseClient');
 
 /**
  * Command to toggle gem quests announcements
+ * togglegems
  * @param {object} message - The Discord message object
  * @param {string} clanId - The clan ID
- * togglegems
+ * @return {void}
  */
 async function toggleGemQuests(message, clanId) {
   if (message.content.toLowerCase() !== "togglegems") return;

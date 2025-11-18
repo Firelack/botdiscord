@@ -1,4 +1,10 @@
-    // Actual avatar of a player
+/**
+ * Fetches and displays the actual avatar of a player when the "actualavatar:" command is triggered.
+ * @param {Object} message - The message object from Discord.
+ * @param {Object} axios - The axios instance for making HTTP requests.
+ * @param {Object} headers - The headers to include in the HTTP request.
+ * @returns {void}
+ */
 function actualAvatar(message, axios, headers) {
     if (message.content.toLowerCase().startsWith("actualavatar:")) {
       const profilName = message.content.substring(13).trim();

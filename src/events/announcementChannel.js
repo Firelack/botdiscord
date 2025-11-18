@@ -7,6 +7,7 @@ let announcementsMap = new Map();
 /**
  * Load announcements from Supabase into the in-memory map.
  * This function should be called at bot startup to restore state.
+ * @return {Promise<void>}
  */
 async function loadAnnouncementsFromDB() {
   const { data, error } = await supabase
@@ -30,6 +31,7 @@ async function loadAnnouncementsFromDB() {
  * @param {string} clanId - Clan ID.
  * @param {object} axios - Axios instance for HTTP requests.
  * @param {object} headers - Headers for the API requests.
+ * @return {Promise<void>}
  */
 async function announcementChannel(client, salonID, clanId, axios, headers) {
   if (!salonID) return;

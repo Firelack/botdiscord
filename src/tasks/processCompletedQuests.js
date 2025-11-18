@@ -8,6 +8,12 @@ const XP_BONUS_THRESHOLD = 10000; // 1 bonus for every 10,000 XP earned
 /**
  * Trigger 2: Process completed quests.
  * Apply XP-based bonuses/maluses.
+ * @param {string} clanId - The ID of the clan.
+ * @param {object} axios - The axios instance for making HTTP requests.
+ * @param {object} headers - The headers to include in the request.
+ * @param {object} client - The Discord client instance.
+ * @param {string} leaderChannelId - The ID of the Discord channel for leader reports.
+ * @returns {Promise<void>}
  */
 async function processCompletedQuests(clanId, axios, headers, client, leaderChannelId) {
   console.log(`[Quests Fin] Vérification des quêtes terminées pour ${clanId}...`);

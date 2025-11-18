@@ -6,6 +6,7 @@ const supabase = require('../utils/superbaseClient');
  * @param {string} clanId - The ID of the clan to synchronize.
  * @param {Object} axios - Axios instance for HTTP requests.
  * @param {Object} headers - Headers for HTTP requests.
+ * @returns {Promise<void>}
  */
 async function syncClanMembers(clanId, axios, headers) {
   if (!clanId) {

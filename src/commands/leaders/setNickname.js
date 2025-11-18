@@ -9,6 +9,7 @@ const findPlayer = require('../../utils/findPlayer.js');
  * @param {string} clanId - The ID of the clan.
  * @param {Object} axios - Axios instance for HTTP requests.
  * @param {Object} headers - Headers for HTTP requests.
+ * @return {void}
  */
 async function setNickname(message, clanId, axios, headers) {
   if (!message.content.toLowerCase().startsWith("surnom:")) return;

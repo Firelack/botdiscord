@@ -1,3 +1,10 @@
+/**
+ * Fetches and replies with player statistics based on a provided profile name.
+ * @param {Object} message - The message object containing user input.
+ * @param {Object} axios - The axios instance for making HTTP requests.
+ * @param {Object} headers - The headers to include in the HTTP request.
+ * @returns {void}
+ */
 function playerStats(message, axios, headers) {
 // Stats of a player
     if (message.content.toLowerCase().startsWith("stats:")) {

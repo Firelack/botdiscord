@@ -5,7 +5,6 @@ const supabase = require('./superbaseClient');
  * 1. Searches an exact nickname (case-sensitive).
  * 2. Searches an exact username (case-insensitive).
  * 3. Searches partial username matches (case-insensitive).
- * 
  * @param {string} searchTerm - The nickname or username to search for.
  * @param {number} clanId - The clan ID to filter players by.
  * @param {object} axios - Axios instance for HTTP requests (not used here but kept for consistency).

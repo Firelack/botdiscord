@@ -1,3 +1,10 @@
+/**
+ * Fetches and replies with avatar ID based on a provided profile name and slot number.
+ * @param {Object} message - The message object containing user input.
+ * @param {Object} axios - The axios instance for making HTTP requests.
+ * @param {Object} headers - The headers to include in the HTTP request.
+ * @returns {void}
+ */
 function searchAvatarId(message, axios, headers) {
 // Fetch avatar ID of a avatar in a specific slot for a player
     if (message.content.toLowerCase().startsWith("searchid:")) {

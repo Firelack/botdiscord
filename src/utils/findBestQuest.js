@@ -5,7 +5,7 @@ const supabase = require('./superbaseClient');
  * @param {string} clanId - The ID of the clan.
  * @param {object} axios - The axios instance for making HTTP requests.
  * @param {object} headers - The headers to include in the API requests.
- * * @returns {object|null} The best quest object or null if none found.
+ * @returns {object|null} The best quest object or null if none found.
  */
 async function findBestQuest(clanId, axios, headers) {
     

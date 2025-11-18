@@ -1,3 +1,10 @@
+/**
+ * Fetches and replies with player profile information based on a provided profile name.
+ * @param {Object} message - The message object containing user input.
+ * @param {Object} axios - The axios instance for making HTTP requests.
+ * @param {Object} headers - The headers to include in the HTTP request.
+ * @returns {void}
+ */
 function playerProfil(message, axios, headers) {
 // Fetch player profile
     if (message.content.toLowerCase().startsWith("profil:")) {

@@ -1,6 +1,3 @@
-const generateBonusAnnouncement = require('../commands/leaders/generateBonusAnnouncement.js');
-const { triggerDailyScreenTime } = require('../tasks/screenTimeTask.js');
-
 module.exports = {
   changeParticipations: require('../commands/leaders/changeParticipations.js'),
   activeShopOffers: require('../commands/members/shop/activeShopOffers.js'),

@@ -1,3 +1,10 @@
+/**
+ * Fetch role rotations for a specified game mode from Wolvesville API and reply to the message.
+ * @param {Object} message - The message object from the chat.
+ * @param {Object} axios - The axios instance for making HTTP requests.
+ * @param {Object} headers - The headers to include in the HTTP request.
+ * @returns {void}
+ */
 function roleRotations(message, axios, headers) {
 // Role rotations for a game mode
     if (message.content.toLowerCase().startsWith("rolerotations:")) {

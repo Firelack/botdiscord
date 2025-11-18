@@ -1,7 +1,12 @@
 const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const sharp = require('sharp');
 
-// Function to download an image and return its buffer
+/**
+ * Downloads an image from a given URL.
+ * @param {string} url - The URL of the image to download.
+ * @param {Object} axiosInstance - The axios instance for making HTTP requests.
+ * @returns {Promise<Buffer|null>} - A promise that resolves to the image buffer or null if an error occurs.
+ */
 async function downloadImage(url, axiosInstance) { 
   try {
     const response = await axiosInstance.get(url, {

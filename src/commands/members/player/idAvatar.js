@@ -1,3 +1,10 @@
+/**
+ * Fetches and replies with avatar information based on a provided avatar ID.
+ * @param {Object} message - The message object containing user input.
+ * @param {Object} axios - The axios instance for making HTTP requests.
+ * @param {Object} headers - The headers to include in the HTTP request.
+ * @returns {void}
+ */
 function idAvatar(message, axios, headers) {
 // Fetch avatar ID
     if (message.content.toLowerCase().startsWith("idavatar:")) {

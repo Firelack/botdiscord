@@ -6,6 +6,13 @@ const MALUS_PAYMENT = 400;
 /**
  * Trigger 1: Process quest launch.
  * Apply bonuses/maluses.
+ * @param {string} clanId - The ID of the clan.
+ * @param {object} activeQuest - The active quest object.
+ * @param {object} axios - The axios instance for making HTTP requests.
+ * @param {object} headers - The headers to include in the request.
+ * @param {object} client - The Discord client instance.
+ * @param {string} leaderChannelId - The ID of the Discord channel for leader reports.
+ * @returns {Promise<void>}
  */
 async function processQuestLaunch(clanId, activeQuest, axios, headers, client, leaderChannelId) {
   const channel = client.channels.cache.get(leaderChannelId);

@@ -3,6 +3,9 @@ const supabase = require('../../utils/superbaseClient');
 /**
  * Command to display the current quest status of all clan members.
  * statusquetes
+ * @param {Object} message - The message object from Discord.
+ * @param {number} clanId - The clan ID.
+ * @return {void}
  */
 async function questStatus(message, clanId) {
   if (!message.content.toLowerCase().startsWith("statusquetes")) return;

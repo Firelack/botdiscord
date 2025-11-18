@@ -1,3 +1,10 @@
+/**
+ * Fetches and replies with player card information based on a provided profile name.
+ * @param {Object} message - The message object containing user input.
+ * @param {Object} axios - The axios instance for making HTTP requests.
+ * @param {Object} headers - The headers to include in the HTTP request.
+ * @returns {void}
+ */
 function playerCards(message, axios, headers) {
   // Card of a player
   if (message.content.toLowerCase().startsWith("cartes:")) {

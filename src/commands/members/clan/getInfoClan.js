@@ -1,3 +1,10 @@
+/**
+ * Fetches and displays clan information when the "clan:" command is triggered.
+ * @param {Object} message - The message object from Discord.
+ * @param {Object} axios - The axios instance for making HTTP requests.
+ * @param {Object} headers - The headers to include in the HTTP request.
+ * @returns {void}
+ */
 function getClanInfo(message, axios, headers) {
 // Fetch clan information
     if (message.content.toLowerCase().startsWith("clan:")) {

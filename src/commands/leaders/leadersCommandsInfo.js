@@ -1,4 +1,10 @@
-async function leadersCommandsInfo(message) { // Ajout de 'async'
+/**
+ * Command to display information about leader commands.
+ * !leadersCommands
+ * @param {Object} message - The message object from Discord.
+ * @return {void}
+ */
+async function leadersCommandsInfo(message) {
   if (message.content.toLowerCase().trim() === "!leaderscommands") {
     
     const msg1 = `## 👑 Commandes Chef/Adjoint 👑\n\n` +

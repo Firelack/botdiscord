@@ -5,6 +5,12 @@ const processQuestLaunch = require('../tasks/processQuestLaunch.js');
 /**
  * If new quest, trigger processQuestLaunch.
  * If quest finished, send notification.
+ * @param {object} client - Discord client instance.
+ * @param {string} clanId - Clan ID.
+ * @param {string} questChannelId - Discord channel ID for quest notifications.
+ * @param {object} axios - Axios instance for HTTP requests.
+ * @param {object} headers - Headers for the API requests.
+ * @return {Promise<void>}
  */
 async function checkQuestStatus(client, clanId, questChannelId, axios, headers) {
   const channel = client.channels.cache.get(questChannelId);

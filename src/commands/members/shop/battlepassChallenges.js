@@ -1,3 +1,10 @@
+/**
+ * Handles the "battlepass" command to fetch and display active battlepass challenges.
+ * @param {Object} message - The message object from the chat.
+ * @param {Object} axios - The axios instance for making HTTP requests.
+ * @param {Object} headers - The headers to include in the HTTP request.
+ * @returns {void}
+ */
 function battlepassChallenges(message, axios, headers) {
 // Battlepass active challenges
     if (message.content.toLowerCase().startsWith("battlepass")) {

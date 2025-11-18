@@ -1,5 +1,11 @@
 const MESSAGE_TO_KEEP = process.env['MESSAGE_TO_KEEP_ID'] || null;
 
+/**
+ * Delete old messages in a Discord channel except for a specific message.
+ * @param {import('discord.js').TextChannel} channel - The Discord channel to clean up.
+ * @param {number} dateago - The age in milliseconds; messages older than this will be deleted.
+ * @returns {Promise<void>}
+ */
 async function deleteOldMessages(channel, dateago) {
   console.log(`Suppression des anciens messages dans le salon ${channel.name} (${channel.id})`);
 

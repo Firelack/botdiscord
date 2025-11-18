@@ -1,3 +1,10 @@
+/**
+ * Fetch role information from Wolvesville API and reply to the message.
+ * @param {Object} message - The message object from the chat.
+ * @param {Object} axios - The axios instance for making HTTP requests.
+ * @param {Object} headers - The headers to include in the HTTP request.
+ * @returns {void}
+ */
 function infoRole(message, axios, headers) {
 // Fetch role information
     if (message.content.toLowerCase().startsWith("role:") || message.content.toLowerCase().startsWith("rôle:")) {

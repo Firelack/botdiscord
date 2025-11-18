@@ -104,6 +104,16 @@ async function processNameList(message, clanId, axios, headers, profilNames, par
   }
 }
 
+/**
+ * Command to change players' participation in clan quests.
+ * Supports activating/deactivating individual players or all players.
+ * @param {Object} message - The message object from Discord.
+ * @param {number} clanId - The clan ID.
+ * @param {number} salonId - The channel ID where the command was issued.
+ * @param {Object} axios - Axios instance for HTTP requests.
+ * @param {Object} headers - Headers for HTTP requests.
+ * @return {void}
+ */
 async function changeParticipations(message, clanId, salonId, axios, headers) {
   // === ACTIVE ONE OR MULTIPLE PLAYERS ===
   if (message.content.toLowerCase().startsWith("active:") && message.channel.id == salonId && !message.content.toLowerCase().includes("all")) {

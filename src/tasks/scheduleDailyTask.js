@@ -1,3 +1,10 @@
+/**
+ * Schedule a daily task to run at a specific hour and minute in the 'Europe/Paris' timezone.
+ * @param {Function} task - The task function to execute daily.
+ * @param {number} targetHour - The hour (0-23) at which to run the task.
+ * @param {number} targetMinute - The minute (0-59) at which to run the task.
+ * @returns {void}
+ */
 function scheduleDailyTask(task, targetHour = 0, targetMinute = 0) {
   const checkInterval = 60 * 1000; // Check every minute
   let alreadyRunToday = false;

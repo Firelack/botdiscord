@@ -1,3 +1,9 @@
+/**
+ * Redeems an API hat for a user when the "apichapeau:" command is triggered.
+ * @param {Object} message - The message object from Discord.
+ * @returns {void}
+ */
+const axios = require('axios');
 function getApiHat(message) {
 // Get API hat
     if (message.content.toLowerCase().startsWith("apichapeau:")) {

@@ -1,3 +1,11 @@
+/**
+ * gets the available quests of a clan and replies with details
+ * @param {object} message - The message object from Discord
+ * @param {string} clanId - The ID of the clan
+ * @param {object} axios - The axios instance for making HTTP requests
+ * @param {object} headers - The headers for the HTTP request
+ * @returns {void}
+ */
 function questAvailable(message, clanId, axios, headers) {
 // Quest available for a clan
     if (message.content.toLowerCase().startsWith("quest")) {

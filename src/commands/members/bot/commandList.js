@@ -1,3 +1,8 @@
+/**
+ * Sends a list of available commands when the help command is triggered.
+ * @param {Object} message - The message object from Discord.
+ * @returns {void}
+ */
 function commandList(message) {
   if (message.content.toLowerCase() === "!helpme") {
     message.reply(

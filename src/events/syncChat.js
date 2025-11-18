@@ -7,6 +7,7 @@ let lastSeenDate = new Date(0);
 /**
  * Load the last seen chat timestamp from the database for a specific clan.
  * @param {string} clanId - The ID of the clan.
+ * @return {Promise<void>}
  */
 async function loadLastSeenDateFromDB(clanId) {
   if (!clanId) return;
@@ -34,6 +35,12 @@ async function loadLastSeenDateFromDB(clanId) {
   }
 }
 
+/**
+ * Replace pseudo mentions with actual Discord mentions.
+ * @param {Guild} guild - Discord guild instance.
+ * @param {string} messageText - Message content to process.
+ * @return {Promise<string>} - Processed message with mentions replaced.
+ */
 async function smartReplaceMentions(guild, messageText) {
   const mentionRegex = /@([^\s@]+)/g;
   const matches = [...messageText.matchAll(mentionRegex)];
@@ -64,6 +71,15 @@ async function smartReplaceMentions(guild, messageText) {
   return replaced;
 }
 
+/**
+ * Check the clan chat for new messages and post them to the Discord channel.
+ * @param {object} client - Discord client instance.
+ * @param {string} clanId - Clan ID.
+ * @param {string} salonId - Discord channel ID for clan chat.
+ * @param {object} axios - Axios instance for HTTP requests.
+ * @param {object} headers - Headers for the API requests.
+ * @return {Promise<void>}
+ */
 async function checkClanChat(client, clanId, salonId, axios, headers) {
   try {
     const response = await axios.get(`https://api.wolvesville.com/clans/${clanId}/chat`, { headers });
@@ -134,6 +150,15 @@ async function checkClanChat(client, clanId, salonId, axios, headers) {
   }
 }
 
+/**
+ * Send a message to Wolvesville clan chat.
+ * @param {string} authorName - Name of the message author.
+ * @param {string} content - Message content.
+ * @param {string} clanId - Clan ID.
+ * @param {object} axios - Axios instance for HTTP requests.
+ * @param {object} headers - Headers for the API requests.
+ * @return {Promise<void>}
+ */
 async function sendToWolvesville(authorName, content, clanId, axios, headers) {
   try {
     await axios.post(
@@ -146,6 +171,12 @@ async function sendToWolvesville(authorName, content, clanId, axios, headers) {
   }
 }
 
+/** 
+ * Determine if a Discord message should be sent to Wolvesville clan chat.
+ * @param {Message} message - Discord message object.
+ * @param {string} salonId - Discord channel ID for clan chat.
+ * @return {boolean}
+ */
 function shouldSendToWolvesville(message, salonId) {
   const discordEmojiRegex = /<a?:\w+:\d+>/g;
 
@@ -159,6 +190,15 @@ function shouldSendToWolvesville(message, salonId) {
   );
 }
 
+/** 
+ * Handle a Discord message and send it to Wolvesville clan chat if applicable.
+ * @param {Message} message - Discord message object.
+ * @param {string} clanId - Clan ID.
+ * @param {string} salonId - Discord channel ID for clan chat.
+ * @param {object} axios - Axios instance for HTTP requests.
+ * @param {object} headers - Headers for the API requests.
+ * @return {Promise<void>}
+ */
 async function handleDiscordMessage(message, clanId, salonId, axios, headers) {
   if (shouldSendToWolvesville(message, salonId)) {
     let content = message.content;

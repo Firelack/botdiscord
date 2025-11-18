@@ -3,10 +3,10 @@ const supabase = require('../utils/superbaseClient.js');
 
 /**
  * Send a quest announcement on Mondays if enabled in the bot configuration.
- * 
  * @param {string} clanId - The ID of the clan.
  * @param {object} axios - The axios instance for making HTTP requests.
  * @param {object} headers - The headers for the HTTP requests.
+ * @returns {Promise<void>}
  */
 async function mondayQuestAnnouncementTask(clanId, axios, headers) {
   const now = new Date();

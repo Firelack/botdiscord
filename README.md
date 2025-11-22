@@ -111,44 +111,9 @@ Contributions, ideas, or feedback are welcome!
 
 ## 🧩 To-Do List — WOV Discord Bot
 
-### 📁 Commands modifications
+### ⚙️ Automatic clan system
 
-- [x] Change bot response for `avatarPlayer`
-- [x] Fix `questAvailable`
-- [x] Add surname on commands
-
-### 📁 Reorganize Files
-
-- [x] Reorganize all files into proper folders.
-- [x] Rename all files following the same naming convention (camelCase).
-- [x] Verify that all function names follow the same naming convention.
-  
-### 📢 Announcement System
-
-- [x] Implement a **Quest Announcement System**:
-  - [x] Automatically send weekly quest announcements every **Monday at 8 PM**.  
-  - [x] Add a command to **enable or disable** the Monday 8 PM announcement.  
-  - [x] Add a command to **enable or disable** **Gem Quests**.  
-  - [x] Add a command that lets the bot send an announcement based on configurable parameters (e.g., **questNumber**, **date/time**).  
-
-### 🗃️ Database Integration (Superbase)
-
-- [x] Store the IDs of already sent announcements (don't use announcement.json).  
-- [x] Store special surname tel by discord users
-- [x] Store if the bot already send quest informations to admin.
-- [x] Store if the bot already send the last message of the clan chat.
-- [x] Store send message responde today.
-- [x] Store **free quests** in the database. (add a command to change manually)
-- [x] Automatically update free quests: ❗NEED TO BE VERIFY BY REPORT
-  - [x] On launch, decrement the available quest count and at the end of a quest incrase bonus/malus.
-  - [x] Apply a **penalty** if the user lacks enough XP.  
-  - [x] Apply a **penalty** if a user votes but doesn’t participate.  
-  - [x] Add a **bonus** if the user reaches **10k × c**.  
-  - [x] Delete members that are not longer in the clan.
 - [ ] Post a new **Free Quest Announcement** message to reflect these changes. (Update and delete cannot be done with the API, need to delete old annoucement manual)  
-
-### ⚙️ Launch Management System
-
 - [ ] Implement logic for handling quest launches:
   - [ ] If the quest reason contains “**free quest**” or “raison”, **decrement** and mark it as launched.  
   - [ ] If the contribution is exactly **400**, include it in the quest.  

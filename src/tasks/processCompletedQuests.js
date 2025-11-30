@@ -1,7 +1,6 @@
 const supabase = require('../utils/superbaseClient');
 const generateBonusAnnouncement = require('../commands/leaders/generateBonusAnnouncement.js');
 
-const ROLES_EXEMPT = ['CHIEF', 'SUB_CHIEF'];
 const XP_MALUS_THRESHOLD_PER_DAY = 300; // 300 XP per day of quest duration
 const XP_BONUS_THRESHOLD = 10000; // 1 bonus for every 10,000 XP earned
 
@@ -31,16 +30,18 @@ async function processCompletedQuests(clanId, axios, headers, client, leaderChan
 
     const lastProcessedTime = lastQuestState ? new Date(lastQuestState.value) : new Date(Date.now() - 3 * 24 * 60 * 60 * 1000);
 
-    // Fetch quest history, clan members and ledger
-    const [historyRes, membersRes, ledgerRes] = await Promise.all([
+    // Fetch quest history, clan members, ledger and clan info in parallel
+    const [historyRes, membersRes, ledgerRes, clanInfoRes] = await Promise.all([
       axios.get(`https://api.wolvesville.com/clans/${clanId}/quests/history`, { headers }),
       axios.get(`https://api.wolvesville.com/clans/${clanId}/members`, { headers }),
-      axios.get(`https://api.wolvesville.com/clans/${clanId}/ledger`, { headers }) // Ajout de la requête ledger
+      axios.get(`https://api.wolvesville.com/clans/${clanId}/ledger`, { headers }),
+      axios.get(`https://api.wolvesville.com/clans/${clanId}/info`, { headers }) 
     ]);
 
     const questHistory = historyRes.data;
     const ledger = ledgerRes.data;
-    const clanMembers = new Map(membersRes.data.map(m => [m.playerId, m.role]));
+    const leaderId = clanInfoRes.data.leaderId;
+    const clanMembers = new Map(membersRes.data.map(m => [m.playerId, m]));
 
     // Fetch players from DB
     let { data: dbPlayers } = await supabase
@@ -72,7 +73,7 @@ async function processCompletedQuests(clanId, axios, headers, client, leaderChan
       const questEndTime = new Date(quest.tierEndTime); //End time
       
       const launchEntry = ledger.find(e => e.type === 'CLAN_QUEST' && e.clanQuestId === questId); // Find launch entry = start time
-      
+
       // If we don't find the entry (very rare), we use the 'tierStartTime' of the 1st tier
       // (which is not in this object, so we take the current 'tierStartTime' as fallback)
       const questStartTime = launchEntry ? new Date(launchEntry.creationTime) : new Date(quest.tierStartTime);
@@ -88,8 +89,12 @@ async function processCompletedQuests(clanId, axios, headers, client, leaderChan
       finalReport.push(`--- Traitement XP Quête ${questId.substring(0, 6)} (Durée: ${durationDays}j, Seuil Malus: ${xpMalusThreshold} XP) ---`);
 
       for (const [playerId, player] of dbPlayerMap.entries()) {
-        const role = clanMembers.get(playerId);
-        if (ROLES_EXEMPT.includes(role)) continue; // Exempt Chef/Adjoint
+        const memberInfo = clanMembers.get(playerId);
+        
+        // If player is exempt (leader or co-leader), skip
+        if (memberInfo && (memberInfo.playerId === leaderId || memberInfo.isCoLeader)) {
+          continue; 
+        }
 
         const playerState = updates.get(playerId);
         

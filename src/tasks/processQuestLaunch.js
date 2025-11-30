@@ -1,6 +1,5 @@
 const supabase = require('../utils/superbaseClient');
 
-const ROLES_EXEMPT = ['CHIEF', 'SUB_CHIEF'];
 const MALUS_PAYMENT = 400;
 
 /**
@@ -33,12 +32,15 @@ async function processQuestLaunch(clanId, activeQuest, axios, headers, client, l
     const lastQuestTime = lastQuestState ? new Date(lastQuestState.value) : new Date(Date.now());
     const launchTime = new Date(activeQuest.tierStartTime);
 
-    // Fetch votes, ledger, members
-    const [votesRes, ledgerRes, membersRes] = await Promise.all([
+    // Fetch votes, ledger, members and clan info in parallel
+    const [votesRes, ledgerRes, membersRes, clanInfoRes] = await Promise.all([
       axios.get(`https://api.wolvesville.com/clans/${clanId}/quests/votes`, { headers }),
       axios.get(`https://api.wolvesville.com/clans/${clanId}/ledger`, { headers }),
-      axios.get(`https://api.wolvesville.com/clans/${clanId}/members`, { headers })
+      axios.get(`https://api.wolvesville.com/clans/${clanId}/members`, { headers }),
+      axios.get(`https://api.wolvesville.com/clans/${clanId}/info`, { headers })
     ]);
+
+    const leaderId = clanInfoRes.data.leaderId;
 
     // Fetch players from DB
     let { data: dbPlayers } = await supabase
@@ -54,7 +56,7 @@ async function processQuestLaunch(clanId, activeQuest, axios, headers, client, l
     const questId = activeQuest.quest.id;
     const voterIds = new Set(votesRes.data.votes[questId] || []);
     const participantIds = new Set(activeQuest.participants.map(p => p.playerId));
-    const clanMembers = new Map(membersRes.data.map(m => [m.playerId, m.role]));
+    const clanMembers = new Map(membersRes.data.map(m => [m.playerId, m]));
     
     // Filter ledger for donations between last quest and launch time
     const donations = ledgerRes.data.filter(e => 
@@ -68,8 +70,12 @@ async function processQuestLaunch(clanId, activeQuest, axios, headers, client, l
 
     // On all players in DB
     for (const [playerId, player] of dbPlayerMap.entries()) {
-      const role = clanMembers.get(playerId);
-      if (ROLES_EXEMPT.includes(role)) continue; // Exempt Chef/Adjoint
+      const memberInfo = clanMembers.get(playerId);
+      
+      // Exempt leader and co-leaders
+      if (memberInfo && (memberInfo.playerId === leaderId || memberInfo.isCoLeader)) {
+        continue;
+      }
 
       let modifierChange = 0;
       let reports = [];

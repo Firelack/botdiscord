@@ -17,9 +17,14 @@ async function generateBonusAnnouncement(clanId) {
 
     if (error) throw error;
 
-    // Split players into bonus and malus lists
-    const bonusPlayers = players.filter(p => p.quest_modifier < 0);
-    const malusPlayers = players.filter(p => p.quest_modifier > 0);
+    // Split players into bonus and malus lists and sort them alphabetically
+    const bonusPlayers = players
+      .filter(p => p.quest_modifier < 0)
+      .sort((a, b) => a.username.localeCompare(b.username));
+
+    const malusPlayers = players
+      .filter(p => p.quest_modifier > 0)
+      .sort((a, b) => a.username.localeCompare(b.username));
 
     // Format the announcement message
     const bonusString = bonusPlayers
@@ -30,11 +35,11 @@ async function generateBonusAnnouncement(clanId) {
       .map(p => `${p.username} x${p.quest_modifier}`)
       .join(', ');
 
-    // 5. Construire le message final
+    // Build final message
     const finalMessage = 
       `Annonce des BONUS et MALUS :\n\n` +
       `Quête gratuite : ${bonusString.length > 0 ? bonusString : 'Personne'}\n` +
-      `(Pour l’utiliser : donnez 1or au clan et précisez « quête gratuite » dans la raison. ARRETEZ DE METTRE RAISON ÇA VEUT RIEN DIRE)\n\n` +
+      `(Pour l'utiliser : donnez 1or au clan et précisez « quête gratuite » dans la raison. ARRETEZ DE METTRE RAISON ÇA VEUT RIEN DIRE)\n\n` +
       `Malus : ${malusString.length > 0 ? malusString : 'Personne'}\n` +
       `(Donnez 400*votre nombre de malus en plus des 400 de base pour participer)`;
 

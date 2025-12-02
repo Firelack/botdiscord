@@ -3,7 +3,7 @@ const findPlayer = require('../../utils/findPlayer');
 
 /**
  * Manually add bonus/malus to players' quest modifiers.
- * Format: !addbonus name1 X, name2 Y, name3 Z
+ * Format: !addbonus name1 X name2 Y name3 Z
  * (X > 0 = Bonus, X < 0 = Malus)
  * @param {Object} message - The message object from Discord.
  * @param {number} clanId - The clan ID.
@@ -20,7 +20,7 @@ async function addBonusMalus(message, clanId, axios, headers) {
     return;
   }
 
-  const args = argsString.split(',');
+  const args = argsString.split(' ');
   let reports = ["**📊 Rapport d'AJOUT Bonus/Malus 📊**"];
   const dbUpdates = [];
 

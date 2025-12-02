@@ -1,4 +1,5 @@
 const supabase = require('../utils/superbaseClient');
+const generateBonusAnnouncement = require('../commands/leaders/generateBonusAnnouncement.js');
 
 const MALUS_PAYMENT = 400;
 

@@ -3,7 +3,7 @@ const findPlayer = require('../../utils/findPlayer');
 
 /**
  * Manage setting bonus/malus for clan members.
- * Format: !setbonus name1 X name2 Y name3 Z
+ * Format: setbonus name1 X name2 Y name3 Z
  * (X > 0 = Bonus, X < 0 = Malus)
  * @param {Object} message - The message object from Discord.
  * @param {number} clanId - The clan ID.

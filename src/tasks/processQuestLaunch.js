@@ -149,11 +149,12 @@ async function processQuestLaunch(clanId, activeQuest, axios, headers, client, l
     // Send detailed report to leaders
     if (finalReport.length > 1) {
       await channel.send(finalReport.join('\n'));
-    }
+
       // Send bonus announcement
-      console.log("[Quest Started] Génération de l'annonce à copier/coller...");
       const announcementText = await generateBonusAnnouncement(clanId);
       await channel.send(announcementText);
+    }
+    console.log("[Quest Started] Génération de l'annonce à copier/coller...");
 
 
   } catch (error) {

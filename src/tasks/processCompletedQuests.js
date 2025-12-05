@@ -70,12 +70,9 @@ async function processCompletedQuests(clanId, axios, headers, client, leaderChan
     // Process each new quest
     for (const quest of newQuests) {
       const questId = quest.quest.id;
-      const questEndTime = new Date(quest.tierEndTime); //End time
+      const questEndTime = new Date(Date.now() - 30 * 60 * 1000); 
       
-      const launchEntry = ledger.find(e => e.type === 'CLAN_QUEST' && e.clanQuestId === questId); // Find launch entry = start time
-
-      // If we don't find the entry (very rare), we use the 'tierStartTime' of the 1st tier
-      // (which is not in this object, so we take the current 'tierStartTime' as fallback)
+      const launchEntry = ledger.find(e => e.type === 'CLAN_QUEST' && e.clanQuestId === questId); // Find launch entry
       const questStartTime = launchEntry ? new Date(launchEntry.creationTime) : new Date(quest.tierStartTime);
       
       // Calculate quest duration in days
@@ -152,12 +149,13 @@ async function processCompletedQuests(clanId, axios, headers, client, leaderChan
           reportMsg += line + "\n";
         }
         await channel.send(reportMsg);
+
+        // Send bonus announcement
+        const announcementText = await generateBonusAnnouncement(clanId);
+        await channel.send(announcementText);
       }
 
-      // Send bonus announcement
       console.log("[Quests Fin] Génération de l'annonce à copier/coller...");
-      const announcementText = await generateBonusAnnouncement(clanId);
-      await channel.send(announcementText);
     }
 
     // Update last processed quest time in DB

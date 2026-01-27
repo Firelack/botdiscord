@@ -68,8 +68,11 @@ async function checkQuestStatus(client, clanId, questChannelId, axios, headers) 
       // Start logic for new quest
       await processQuestLaunch(clanId, currentQuest, axios, headers, client, questChannelId);
       
-      // Update bot state in DB
-      await supabase.from('bot_state').upsert([
+      // Update bot state in DB (Suppression before insertion to avoid duplicates)
+      await supabase.from('bot_state').delete().eq('clan_id', clanId).eq('key', 'quest_active');
+      await supabase.from('bot_state').delete().eq('clan_id', clanId).eq('key', 'current_quest_id');
+
+      await supabase.from('bot_state').insert([
         { clan_id: clanId, key: 'quest_active', value: 'true' },
         { clan_id: clanId, key: 'current_quest_id', value: currentQuest.quest.id }
       ]);
@@ -84,8 +87,11 @@ async function checkQuestStatus(client, clanId, questChannelId, axios, headers) 
         channel.send(questFinishedMessage);
       }
       
-      // Update bot state in DB
-      await supabase.from('bot_state').upsert([
+      // Update bot state in DB (Suppression before insertion to avoid duplicates)
+      await supabase.from('bot_state').delete().eq('clan_id', clanId).eq('key', 'quest_active');
+      await supabase.from('bot_state').delete().eq('clan_id', clanId).eq('key', 'current_quest_id');
+
+      await supabase.from('bot_state').insert([
         { clan_id: clanId, key: 'quest_active', value: 'false' },
         { clan_id: clanId, key: 'current_quest_id', value: 'none' } // Reset ID
       ]);

@@ -34,7 +34,7 @@ async function leadersCommandsInfo(message) {
       `   **Supprimer le titre :** \`titre:{joueur}\` (laissez le champ du titre vide)\n\n` +
       
       `### 4. Gestion des Annonces de Quêtes\n\n` +
-      `   **Envoyer une annonce de quête maintenant :** \`announcequest [dateLancement]:[numéro]\` (les deux arguments sont optionnels, la date par défaut est demain 20h00)\n` +
+      `   **Envoyer une annonce de quête maintenant :** \`annoncequest [dateLancement]:[numéro]\` (les deux arguments sont optionnels, la date par défaut est demain 20h00)\n` +
       `   **Activer/Désactiver l'annonce automatique du Lundi 20h00 :** \`togglequest\`\n` +
       `   **Activer/Désactiver les quêtes en gemmes :** \`togglegems\``;
     

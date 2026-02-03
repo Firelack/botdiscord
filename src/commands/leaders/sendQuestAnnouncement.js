@@ -32,7 +32,7 @@ function getTomorrowDefaultTime() {
  * @return {void}
  */
 async function sendQuestAnnouncement(message, clanId, axios, headers) {
-  if (!message.content.toLowerCase().startsWith("announcequest")) return;
+  if (!message.content.toLowerCase().startsWith("annoncequest")) return;
 
   // Extract arguments
   const rawArgs = message.content.substring(13).trim();

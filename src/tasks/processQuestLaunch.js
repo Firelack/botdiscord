@@ -87,7 +87,7 @@ async function processQuestLaunch(clanId, activeQuest, axios, headers, client, l
 
       // A1. Free quest usage
       const freeQuestDonation = playerDonations.find(d => 
-        d.message && (d.message.toLowerCase().includes('quête gratuite') || d.message.toLowerCase().includes('raison'))
+        d.comment && (d.comment.toLowerCase().includes('quête gratuite') || d.comment.toLowerCase().includes('raison'))
       );
       
       if (freeQuestDonation && currentModifier < 0) {

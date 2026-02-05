@@ -65,10 +65,8 @@ async function checkQuestStatus(client, clanId, questChannelId, axios, headers) 
     if (currentQuest.quest.id !== lastKnownQuestId) {
       console.log(`[Déclencheur 1] Nouvelle quête détectée : ${currentQuest.quest.id}. Lancement du traitement des votes/dons.`);
       
-      // Start logic for new quest
-      await processQuestLaunch(clanId, currentQuest, axios, headers, client, questChannelId);
-      
-      // Update bot state in DB (Suppression before insertion to avoid duplicates)
+      // Update bot state in DB FIRST (Suppression before insertion to avoid duplicates)
+      // We do this BEFORE processQuestLaunch so if the process crashes, we don't spam the message again.
       await supabase.from('bot_state').delete().eq('clan_id', clanId).eq('key', 'quest_active');
       await supabase.from('bot_state').delete().eq('clan_id', clanId).eq('key', 'current_quest_id');
 
@@ -76,6 +74,14 @@ async function checkQuestStatus(client, clanId, questChannelId, axios, headers) 
         { clan_id: clanId, key: 'quest_active', value: 'true' },
         { clan_id: clanId, key: 'current_quest_id', value: currentQuest.quest.id }
       ]);
+
+      // Start logic for new quest (Wrapped in try/catch to prevent bot crash if it fails)
+      try {
+        await processQuestLaunch(clanId, currentQuest, axios, headers, client, questChannelId);
+      } catch (error) {
+        console.error("Erreur critique lors de processQuestLaunch :", error);
+        channel.send("⚠️ Une nouvelle quête a été détectée, mais une erreur est survenue lors de la génération du rapport détaillé.");
+      }
     }
     // 2 : Ongoing quest, no change (do nothing)
     

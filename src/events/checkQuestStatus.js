@@ -74,7 +74,7 @@ async function checkQuestStatus(client, clanId, questChannelId, axios, headers) 
         { clan_id: clanId, key: 'quest_active', value: 'true' },
         { clan_id: clanId, key: 'current_quest_id', value: currentQuest.quest.id }
       ]);
-
+      
       // Start logic for new quest (Wrapped in try/catch to prevent bot crash if it fails)
       try {
         await processQuestLaunch(clanId, currentQuest, axios, headers, client, questChannelId);
@@ -97,9 +97,15 @@ async function checkQuestStatus(client, clanId, questChannelId, axios, headers) 
       await supabase.from('bot_state').delete().eq('clan_id', clanId).eq('key', 'quest_active');
       await supabase.from('bot_state').delete().eq('clan_id', clanId).eq('key', 'current_quest_id');
 
+      // Determine next ID value: if it's just a tier finish, keep the ID so we don't trigger "New Quest" on next tier.
+      let nextIdValue = 'none';
+      if (currentQuest && currentQuest.tierFinished) {
+          nextIdValue = currentQuest.quest.id;
+      }
+
       await supabase.from('bot_state').insert([
         { clan_id: clanId, key: 'quest_active', value: 'false' },
-        { clan_id: clanId, key: 'current_quest_id', value: 'none' } // Reset ID
+        { clan_id: clanId, key: 'current_quest_id', value: nextIdValue } // Reset ID only if really finished
       ]);
     }
     // 4 : No quest active, no change (do nothing)

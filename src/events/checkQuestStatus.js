@@ -82,31 +82,45 @@ async function checkQuestStatus(client, clanId, questChannelId, axios, headers) 
         console.error("Erreur critique lors de processQuestLaunch :", error);
         channel.send("⚠️ Une nouvelle quête a été détectée, mais une erreur est survenue lors de la génération du rapport détaillé.");
       }
+      
+    } else if (!wasQuestActive) {
+      // 2 : Same quest, but a NEW tier just started
+      // We need to mark the quest as active again so we can track when this new tier finishes
+      console.log(`[Déclencheur] Nouvelle étape de la quête en cours détectée.`);
+      await supabase.from('bot_state').delete().eq('clan_id', clanId).eq('key', 'quest_active');
+      await supabase.from('bot_state').insert([
+        { clan_id: clanId, key: 'quest_active', value: 'true' }
+      ]);
     }
-    // 2 : Ongoing quest, no change (do nothing)
     
   } else {
     // 3 : Quest finished
     if (wasQuestActive) {
       console.log(`[Déclencheur 1] Fin de quête détectée. Envoi de la notification.`);
-      if (channel && questFinishedMessage) {
-        channel.send(questFinishedMessage);
-      }
       
-      // Update bot state in DB (Suppression before insertion to avoid duplicates)
-      await supabase.from('bot_state').delete().eq('clan_id', clanId).eq('key', 'quest_active');
-      await supabase.from('bot_state').delete().eq('clan_id', clanId).eq('key', 'current_quest_id');
-
       // Determine next ID value: if it's just a tier finish, keep the ID so we don't trigger "New Quest" on next tier.
       let nextIdValue = 'none';
       if (currentQuest && currentQuest.tierFinished) {
           nextIdValue = currentQuest.quest.id;
       }
 
+      // Update bot state in DB FIRST (Suppression before insertion to avoid duplicates)
+      await supabase.from('bot_state').delete().eq('clan_id', clanId).eq('key', 'quest_active');
+      await supabase.from('bot_state').delete().eq('clan_id', clanId).eq('key', 'current_quest_id');
+
       await supabase.from('bot_state').insert([
         { clan_id: clanId, key: 'quest_active', value: 'false' },
         { clan_id: clanId, key: 'current_quest_id', value: nextIdValue } // Reset ID only if really finished
       ]);
+
+      // Then send the notification message
+      if (channel && questFinishedMessage) {
+        try {
+          await channel.send(questFinishedMessage);
+        } catch (err) {
+          console.error("Erreur lors de l'envoi du message de fin :", err);
+        }
+      }
     }
     // 4 : No quest active, no change (do nothing)
   }

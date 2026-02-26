@@ -64,13 +64,23 @@ async function processCompletedQuests(clanId, axios, headers, client, leaderChan
     }
 
     console.log(`[Quests Fin] ${newQuests.length} nouvelle(s) quête(s) terminée(s) à traiter.`);
-    let lastQuestTime = lastProcessedTime;
+    
+    // Update last processed quest time in DB before to avoid double processing in case of errors during processing.
+    let lastQuestTime = new Date(newQuests[newQuests.length - 1].tierEndTime);
+
+    await supabase.from('bot_state').upsert({
+      clan_id: clanId,
+      key: 'last_processed_quest_time',
+      value: lastQuestTime.toISOString()
+    });
+    // ----------------------------------------------------------
+
     let finalReport = [];
 
     // Process each new quest
     for (const quest of newQuests) {
       const questId = quest.quest.id;
-      const questEndTime = new Date(Date.now() - 30 * 60 * 1000); 
+      const questEndTime = lastQuestTime; 
       
       const launchEntry = ledger.find(e => e.type === 'CLAN_QUEST' && e.clanQuestId === questId); // Find launch entry
       const questStartTime = launchEntry ? new Date(launchEntry.creationTime) : new Date(quest.tierStartTime);
@@ -111,7 +121,6 @@ async function processCompletedQuests(clanId, axios, headers, client, leaderChan
           playerState.change += modifierChange;
         }
       }
-      lastQuestTime = questEndTime; // Update last processed time
     }
 
     // Apply all updates to DB
@@ -148,7 +157,9 @@ async function processCompletedQuests(clanId, axios, headers, client, leaderChan
           }
           reportMsg += line + "\n";
         }
-        await channel.send(reportMsg);
+        if (reportMsg.trim().length > 0) {
+            await channel.send(reportMsg);
+        }
 
         // Send bonus announcement
         const announcementText = await generateBonusAnnouncement(clanId);
@@ -157,13 +168,6 @@ async function processCompletedQuests(clanId, axios, headers, client, leaderChan
 
       console.log("[Quests Fin] Génération de l'annonce à copier/coller...");
     }
-
-    // Update last processed quest time in DB
-    await supabase.from('bot_state').upsert({
-      clan_id: clanId,
-      key: 'last_processed_quest_time',
-      value: lastQuestTime.toISOString()
-    });
 
   } catch (error) {
     console.error("❌ Erreur lors du traitement des quêtes terminées:", error.message);

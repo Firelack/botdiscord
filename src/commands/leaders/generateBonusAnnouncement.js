@@ -41,6 +41,7 @@ async function generateBonusAnnouncement(clanId) {
       `Quête gratuite : ${bonusString.length > 0 ? bonusString : 'Personne'}\n` +
       `(Pour l'utiliser : donnez 1or au clan et précisez « quête gratuite » dans la raison. ARRETEZ DE METTRE RAISON ÇA VEUT RIEN DIRE)\n\n` +
       `Malus : ${malusString.length > 0 ? malusString : 'Personne'}\n` +
+      `Vous avez jusqu’à DIMANCHE pour payer votre malus (n’oubliez pas de préciser « malus » lorsque vous payez )!!\n`+
       `(Donnez 400*votre nombre de malus en plus des 400 de base pour participer)`;
 
     return finalMessage;

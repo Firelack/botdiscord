@@ -2,7 +2,7 @@ const supabase = require('../utils/superbaseClient');
 const generateBonusAnnouncement = require('../commands/leaders/generateBonusAnnouncement.js');
 
 const XP_MALUS_THRESHOLD_PER_DAY = 300; // 300 XP per day of quest duration
-const XP_BONUS_THRESHOLD = 8000; // 1 bonus for every 8,000 XP earned
+const XP_BONUS_THRESHOLD = 10000; // 1 bonus for every 8,000 XP earned
 
 /**
  * Trigger 2: Process completed quests.

@@ -75,6 +75,7 @@ Contributions, ideas, or feedback are welcome!
    CHAT_CHANNEL_ID="chatdiscordid"
    LEADER_CHANNEL_ID="leaderchannelid"
    ANNOUNCEMENT_CHANNEL_ID="announcementChannel"
+   MESSAGE_TO_KEEP_ID="messageToKeepId"
    SUPABASE_URL="supabaseurl"
    SUPABASE_KEY="supabasekey"
    ```
@@ -83,14 +84,15 @@ Contributions, ideas, or feedback are welcome!
    - `chatdiscordid` is the channel ID where Wolvesville ↔ Discord messages will be linked.  
    - `leaderchannelid` is the channel ID for leaders to know if quest is active, to edit flairs, or change participation of members and leaders.  
    - `announcementChannel` is the channel ID where announcement can be post.  
+   - `messageToKeepId` is the first message of the sync channel to go up easly.
    - `superbaseurl` and `superbasekey` are credentials to access the Supabase database. These are not used yet; details about the database will be provided later.
 
-   ⚠️ Important: You must delete the `events/sendMessage.js` file and remove all references to its function in `utils/index.js`, `bot.js`, and `commands/members/easterEggs.js`.  
+   ⚠️ Important: You must delete the `commands/members/easterEggs.js` or replace easter eggs for your clan.  
 
 6. Run the bot:  
 
    ```bash
-   node scr/bot.js
+   node src/bot.js
    ```
 
 7. To get a clan ID:\
@@ -121,7 +123,3 @@ Contributions, ideas, or feedback are welcome!
   - [ ] If the total is **greater than 400** or spread across multiple entries, trigger a **warning** (check if “quest” is included).  
   - [ ] Automatically **activate participation** for all members and launch at the scheduled announcement time.  
   - [ ] Add a command to **enable or disable default Sub-Chief/Chief participations**.  
-
-### Other
-
-- [ ] Fix hours of checkScreenTimeReminder

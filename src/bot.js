@@ -16,15 +16,8 @@ const {
   toggleMondayQuest, toggleGemQuests,
   triggerDailyScreenTime, setupScreenTimeListener, checkScreenTimeReminder,
   // Quest bonus/malus related commands and tasks
-  processCompletedQuests,
-  setBonusMalus,
-  addBonusMalus,
-  myBonus,
-  questStatus,
-  bonusAnnouncement,
-
-  syncClanMembers,
-  setNickname
+  processCompletedQuests, setBonusMalus, addBonusMalus, myBonus, questStatus, bonusAnnouncement,
+  syncClanMembers, setNickname
 
 } = require('./utils/index');
 
@@ -43,8 +36,8 @@ function start() {
   const announcementChannelId = process.env['ANNOUNCEMENT_CHANNEL_ID'];
 
   // Delete these line to disable sendMessage
-  const messageChannelId = process.env['MESSAGE_CHANNEL_ID'];
-  const personMentionId = process.env['PERSON_MENTION_ID'];
+  //const messageChannelId = process.env['MESSAGE_CHANNEL_ID'];
+  //const personMentionId = process.env['PERSON_MENTION_ID'];
 
   const client = new Client({
     intents: [
@@ -105,7 +98,7 @@ function start() {
         console.warn(`⚠️ Impossible de précharger les membres pour ${guild.name}:`, err.message);
       }
     }
-
+    /*
     // Delete these lines to disable sendMessage
     // Setup screen time listener and reminders
     if (personMentionId) {
@@ -120,7 +113,8 @@ function start() {
     scheduleDailyTask(() => {
       triggerDailyScreenTime(client, clanId, messageChannelId, personMentionId, reminderText);
     }, 10, 0); // 10h00
-
+    */
+   
     // Start checking for new clan chat messages
     setInterval(() => checkClanChat(client, clanId, chatChannelId, axios, headers), 20 * 1000); // 20 sec
 

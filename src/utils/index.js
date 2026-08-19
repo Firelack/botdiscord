@@ -56,8 +56,8 @@ module.exports = {
   generateBonusAnnouncement: require('../commands/leaders/generateBonusAnnouncement.js'),
 
   // Delete sendMessage here to disable sendMessage feature
-  sendMessage: require('../events/sendMessage.js').sendMessage,
-  triggerDailyScreenTime: require('../tasks/screenTimeTask.js').triggerDailyScreenTime,
-  setupScreenTimeListener: require('../tasks/screenTimeTask.js').setupScreenTimeListener,
-  checkScreenTimeReminder: require('../tasks/screenTimeTask.js').checkScreenTimeReminder
+  //sendMessage: require('../events/sendMessage.js').sendMessage,
+  //triggerDailyScreenTime: require('../tasks/screenTimeTask.js').triggerDailyScreenTime,
+  //setupScreenTimeListener: require('../tasks/screenTimeTask.js').setupScreenTimeListener,
+  //checkScreenTimeReminder: require('../tasks/screenTimeTask.js').checkScreenTimeReminder
 };

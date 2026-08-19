@@ -59,7 +59,7 @@ Contributions, ideas, or feedback are welcome!
 
 1. Create a bot on the [Discord Developer Portal](https://discord.com/developers/applications)  
 2. Install [Node.js](https://nodejs.org/)  
-3. Download the folder `src`, and the file `package.json`
+3. Fork this repository
 4. Install dependencies:
 
    ```bash

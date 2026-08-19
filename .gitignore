@@ -1,4 +1,6 @@
 .env
+.envperso
+.envdev
 node_modules
 .vscode
 .DS_Store

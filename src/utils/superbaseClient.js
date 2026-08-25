@@ -1,14 +1,21 @@
-// Connect to Supabase
-const { createClient } = require('@supabase/supabase-js');
-require('dotenv').config(); // Load .env variables
+// Connect to Supabase using the service_role key (server-side only, bypasses RLS)
+const { createClient } = require("@supabase/supabase-js");
+require("dotenv").config(); // Load .env variables
 
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
-  console.error("❌ Erreur: SUPABASE_URL ou SUPABASE_KEY n'est pas défini dans .env");
+if (!supabaseUrl || !supabaseServiceRoleKey) {
+  console.error(
+    "❌ Erreur: SUPABASE_URL ou SUPABASE_SERVICE_ROLE_KEY n'est pas défini dans .env",
+  );
 }
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false,
+  },
+});
 
-module.exports = supabase;  
+module.exports = supabase;

@@ -1,20 +1,37 @@
-// Download the express package: npm install express
+// Express server: health check + API proxy routes (Wolvesville + Supabase bonus/malus)
+const express = require("express");
+const cors = require("cors");
+const wolvesvilleRoutes = require("../api/wolvesvilleRoutes");
+const bonusRoutes = require("../api/bonusRoutes");
 
-const express = require('express');
 const app = express();
 
-app.get('/', (req, res) => {
-  res.send('Le bot est en ligne !');
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "*",
+  }),
+);
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("Le bot est en ligne !");
+});
+
+app.use("/api/wolvesville", wolvesvilleRoutes);
+app.use("/api/bonus", bonusRoutes);
+
+app.use((req, res) => {
+  res.status(404).json({ error: "Route non trouvée." });
 });
 
 /**
- * Keep the bot alive by running a minimal Express server.
- * This is useful for hosting platforms that require an active web server.
+ * Keep the bot alive and expose the API proxy routes.
  * @returns {void}
  */
 function keepAlive() {
-  app.listen(8080, () => {
-    console.log('Serveur express démarré sur le port 8080');
+  const PORT = process.env.PORT || 8080;
+  app.listen(PORT, () => {
+    console.log(`✅ Serveur Express (proxy API) démarré sur le port ${PORT}`);
   });
 }
 
